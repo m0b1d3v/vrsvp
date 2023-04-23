@@ -1,0 +1,17 @@
+# https://editorconfig.org/
+
+root = true # Do not search any further up the file system tree for overriding configs for this project
+
+[*] # Settings for all files
+
+charset = utf-8 # File character encoding: latin1, utf-8, utf-16be, utf-16le
+end_of_line = lf # Format of line endings: lf, crlf, cr
+indent_size = 4 # Number of columns used for each indentation level
+indent_style = tab # How to handle indentations when the "tab" key is used: space, tab
+insert_final_newline = true # Whether newlines should end a file: true, false
+trim_trailing_whitespace = true # Whether whitespace should be trimmed: true, false
+
+[*{.yml,.yaml}] # Settings for YAML files
+
+indent_size = 2
+indent_style = space
