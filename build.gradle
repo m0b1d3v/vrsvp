@@ -22,6 +22,9 @@ repositories {
 }
 
 dependencies {
+
+	implementation 'io.javalin:javalin-bundle:5.5.0'
+
 	testImplementation 'org.junit.jupiter:junit-jupiter:5.9.3'
 }
 
