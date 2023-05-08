@@ -1,0 +1,58 @@
+import org.gradle.api.tasks.testing.logging.TestLogEvent
+
+plugins {
+
+	id 'jacoco'
+	id 'java'
+
+	id 'com.github.ben-manes.versions' version '0.46.0'
+	id 'org.owasp.dependencycheck' version '8.2.1'
+	id 'org.sonarqube' version '4.0.0.2929'
+}
+
+group = 'com.mobiusk.vrsvp'
+version = '1.0-SNAPSHOT'
+description = 'Virtual RSVP system for Discord-based communities.'
+
+java.sourceCompatibility = JavaVersion.VERSION_17
+java.targetCompatibility = JavaVersion.VERSION_17
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	testImplementation 'org.junit.jupiter:junit-jupiter:5.9.3'
+}
+
+test {
+
+	useJUnitPlatform()
+
+	finalizedBy jacocoTestReport
+
+	testLogging {
+		events = [
+			TestLogEvent.PASSED,
+			TestLogEvent.SKIPPED,
+			TestLogEvent.FAILED,
+		]
+	}
+}
+
+jacocoTestReport {
+
+	dependsOn test
+
+	reports {
+		xml.required = true
+	}
+}
+
+sonarqube {
+	properties {
+		property('sonar.host.url', 'https://sonarcloud.io')
+		property('sonar.organization', 'mobiusk')
+		property('sonar.projectKey', 'mobiusk_vrsvp')
+	}
+}
