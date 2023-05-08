@@ -4,6 +4,9 @@ all:
 clean:
 	./gradlew clean
 
+jar:
+	./gradlew shadowJar
+
 javadoc:
 	./gradlew javadoc
 
