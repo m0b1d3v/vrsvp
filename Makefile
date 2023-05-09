@@ -13,6 +13,12 @@ javadoc:
 test:
 	./gradlew test
 
+testI:
+	./gradlew test --tests '*IntegrationTest'
+
+testU:
+	./gradlew test --tests '*UnitTest'
+
 owasp:
 	./gradlew dependencyCheckAnalyze
 
