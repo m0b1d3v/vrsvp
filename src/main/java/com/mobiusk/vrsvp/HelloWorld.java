@@ -5,18 +5,14 @@ import io.javalin.Javalin;
 public class HelloWorld {
 
 	public static void main(String[] args) {
-		var hello = new HelloWorld();
-		var greeting = hello.greeting();
-		hello.createApp(greeting).start();
+		var javalin = Javalin.create();
+		configure(javalin, "Hello, world");
+		javalin.start();
 	}
 
-	public Javalin createApp(String greeting) {
-		return Javalin.create()
+	public static void configure(Javalin javalin, String greeting) {
+		javalin
 			.get("/", context -> context.result(greeting));
-	}
-
-	public String greeting() {
-		return "Hello, world!";
 	}
 
 }
