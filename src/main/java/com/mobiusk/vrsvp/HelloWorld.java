@@ -12,6 +12,7 @@ public class HelloWorld {
 
 	public static void configure(Javalin javalin, String greeting) {
 		javalin
+			.updateConfig(config -> config.showJavalinBanner = false)
 			.get("/", context -> context.result(greeting));
 	}
 
