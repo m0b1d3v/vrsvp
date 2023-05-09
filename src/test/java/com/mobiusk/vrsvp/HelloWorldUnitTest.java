@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-class HelloWorldUnitTest {
+class HelloWorldUnitTest extends BaseUnitTest {
 
     @Test void appHasAGreeting() {
 		var hello = new HelloWorld();
