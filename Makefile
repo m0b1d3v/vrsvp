@@ -10,6 +10,9 @@ jar:
 javadoc:
 	./gradlew javadoc
 
+tasks:
+	./gradlew tasks
+
 test:
 	./gradlew test
 
