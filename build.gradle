@@ -25,7 +25,7 @@ java.sourceCompatibility = JavaVersion.VERSION_17
 java.targetCompatibility = JavaVersion.VERSION_17
 
 application {
-	mainClassName 'com.mobiusk.vrsvp.HelloWorld'
+	mainClassName 'com.mobiusk.vrsvp.Main'
 }
 
 dependencies {

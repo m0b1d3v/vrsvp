@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-class HelloWorldIntegrationTest extends BaseIntegrationTest {
+class HttpServerIntegrationTest extends TestBase {
 
 	@Test
 	void appReturnsGreetingForRootRoute() {
