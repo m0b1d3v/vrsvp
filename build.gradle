@@ -19,8 +19,10 @@ group = 'com.mobiusk.vrsvp'
 version = '1.0-SNAPSHOT'
 description = 'Virtual RSVP system for Discord-based communities.'
 
-java.sourceCompatibility = JavaVersion.VERSION_17
-java.targetCompatibility = JavaVersion.VERSION_17
+java {
+	sourceCompatibility = JavaVersion.VERSION_17
+	targetCompatibility = JavaVersion.VERSION_17
+}
 
 application {
 	mainClass.set('com.mobiusk.vrsvp.Main')
