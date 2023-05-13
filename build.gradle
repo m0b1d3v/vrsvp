@@ -4,10 +4,8 @@ plugins {
 
 	id 'application'
 	id 'jacoco'
-	id 'java'
 
 	id 'com.github.ben-manes.versions' version '0.46.0'
-	id 'com.github.johnrengelman.shadow' version '8.1.1'
 	id 'io.freefair.lombok' version '8.0.1'
 	id 'org.owasp.dependencycheck' version '8.2.1'
 	id 'org.sonarqube' version '4.0.0.2929'
@@ -25,7 +23,7 @@ java.sourceCompatibility = JavaVersion.VERSION_17
 java.targetCompatibility = JavaVersion.VERSION_17
 
 application {
-	mainClassName 'com.mobiusk.vrsvp.Main'
+	mainClass.set('com.mobiusk.vrsvp.Main')
 }
 
 dependencies {

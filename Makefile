@@ -1,11 +1,11 @@
 all:
 	cat Makefile
 
+build:
+	./gradlew assembleDist
+
 clean:
 	./gradlew clean
-
-jar:
-	./gradlew shadowJar
 
 javadoc:
 	./gradlew javadoc
