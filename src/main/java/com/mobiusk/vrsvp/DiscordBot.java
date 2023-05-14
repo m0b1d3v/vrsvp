@@ -1,15 +1,16 @@
 package com.mobiusk.vrsvp;
 
+import lombok.RequiredArgsConstructor;
 import net.dv8tion.jda.api.JDABuilder;
 
+
+@RequiredArgsConstructor
 public class DiscordBot {
 
-	private static final String DISCORD_BOT_SECRET_TOKEN = System.getenv("VRSVP_DISCORD_BOT_SECRET_TOKEN");
+	private final JDABuilder jdaBuilder;
 
-	private JDABuilder jdaBuilder;
-
-	public void create() {
-		jdaBuilder = JDABuilder.createDefault(DISCORD_BOT_SECRET_TOKEN);
+	public static JDABuilder create(String discordBotToken) {
+		return JDABuilder.createDefault(discordBotToken);
 	}
 
 	public void configure() {

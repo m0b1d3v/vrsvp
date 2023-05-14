@@ -8,7 +8,6 @@ import org.mockito.Mock;
 import org.mockito.Spy;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.verify;
@@ -19,16 +18,10 @@ class DiscordBotUnitTest extends TestBase {
 	private DiscordBot discordBot;
 
 	@Spy
-	private JDABuilder jdaBuilder = JDABuilder.createDefault("Testing");
+	private JDABuilder jdaBuilder = DiscordBot.create("Testing");
 
 	@Mock
 	private JDA jda;
-
-	@Test
-	void defaultJdaBuilderCreated() {
-		discordBot.create();
-		assertNotNull(jdaBuilder);
-	}
 
 	@Test
 	void startingDiscordBotWithoutTokenThrowsException() {
