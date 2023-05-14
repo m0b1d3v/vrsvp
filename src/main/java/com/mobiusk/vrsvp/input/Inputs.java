@@ -1,8 +1,12 @@
 package com.mobiusk.vrsvp.input;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Data
+@Getter
+@NoArgsConstructor
+@Setter
 public class Inputs {
 
     private int blocks;
