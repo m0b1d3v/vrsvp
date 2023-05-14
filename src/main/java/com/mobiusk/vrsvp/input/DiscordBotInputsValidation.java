@@ -39,7 +39,7 @@ public class DiscordBotInputsValidation {
 
 		var validationErrors = validationMessages.stream().filter(message -> ! message.isBlank()).toList();
 
-		return String.join("\n\n", validationErrors);
+		return String.join("\n", validationErrors);
     }
 
     private static String validateBlocksMaximum(int blocks) {

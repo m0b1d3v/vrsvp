@@ -137,7 +137,6 @@ class DiscordBotInputsValidationUnitTest extends TestBase {
 
 		assertValidation("""
 			The minimum amount of blocks required in VRSVP is 1, otherwise there is nothing to RSVP for. Please retry this command with a larger block count.
-
 			The minimum amount of slots required in VRSVP is 1, otherwise there is nothing to RSVP for. Please retry this command with a larger slots count.""");
 	}
 
