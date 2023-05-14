@@ -121,7 +121,7 @@ class DiscordBotEventListenerTest extends TestBase {
 	}
 
 	@Test
-	void slashCommandDefaultsInputsToZeroIfNotFound() {
+	void slashCommandDefaultsInputsToInvalidValuesIfNotFound() {
 
 		IntStream.range(0, SLASH_COMMAND_INPUT_COUNT).forEach(ignored -> when(slashCommandEvent.getOption(any())).thenReturn(null));
 
@@ -129,7 +129,13 @@ class DiscordBotEventListenerTest extends TestBase {
 
 		verify(slashCommandEvent).reply(stringArgumentCaptor.capture());
 
-		assertSlashCommandReplyExpectation(stringArgumentCaptor.getValue(), 0, 0, 0, 0);
+		var expectation = """
+			The minimum amount of blocks required in VRSVP is 1, otherwise there is nothing to RSVP for. Please retry this command with a larger block count.
+			The minimum duration in minutes for each slot in VRSVP is one minute. Please retry this command with a larger duration.
+			The minimum amount of slots required in VRSVP is 1, otherwise there is nothing to RSVP for. Please retry this command with a larger slots count.
+			The minimum start timestamp in VRSVP is 0, which equates to 1970-01-01. This is to ensure compatibility with Discord timestamp formatting. Please retry this command with a larger start timestamp.""";
+
+		assertEquals(expectation, stringArgumentCaptor.getValue());
 	}
 
 	@Test

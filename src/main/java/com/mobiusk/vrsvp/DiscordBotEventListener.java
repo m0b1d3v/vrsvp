@@ -70,7 +70,7 @@ public class DiscordBotEventListener extends ListenerAdapter {
 
 		var option = event.getOption(inputsEnum.getInput());
 		if (option == null) {
-			return 0;
+			return -1;
 		}
 
 		return option.getAsInt();
