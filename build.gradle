@@ -30,11 +30,11 @@ application {
 
 dependencies {
 
-	implementation 'io.javalin:javalin-bundle:5.5.0'
-
 	implementation('net.dv8tion:JDA:5.0.0-beta.9') {
 		exclude module: 'opus-java'
 	}
+
+	implementation 'ch.qos.logback:logback-classic:1.4.6'
 
 	testImplementation 'org.junit.jupiter:junit-jupiter:5.9.3'
 	testImplementation 'org.mockito:mockito-junit-jupiter:5.3.1'
