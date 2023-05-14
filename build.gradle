@@ -34,7 +34,7 @@ dependencies {
 		exclude module: 'opus-java'
 	}
 
-	implementation 'ch.qos.logback:logback-classic:1.4.6'
+	implementation 'ch.qos.logback:logback-classic:1.4.7'
 
 	testImplementation 'org.junit.jupiter:junit-jupiter:5.9.3'
 	testImplementation 'org.mockito:mockito-junit-jupiter:5.3.1'
