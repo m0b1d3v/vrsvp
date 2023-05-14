@@ -14,6 +14,7 @@ public class DiscordBotCommands {
 
 	public static final String SLASH = "vrsvp";
 
+	// While these are all int, when mapped to autocomplete choices later they require longs
 	public static final Map<String, List<Long>> INPUT_AUTOCOMPLETE_OPTIONS = Map.of(
 		DiscordBotInputsEnum.BLOCKS.getInput(), List.of(1L, 2L, 3L, 4L),
 		DiscordBotInputsEnum.DURATION.getInput(), List.of(60L, 30L, 20L, 15L),
@@ -28,6 +29,7 @@ public class DiscordBotCommands {
 		var data = Commands.slash(SLASH, "Create virtual RSVP")
 			.setDefaultPermissions(DefaultMemberPermissions.DISABLED);
 
+		// Order matters here, this was chosen for the most logical flow
 		addOption(data, DiscordBotInputsEnum.START, "Timestamp from https://hammertime.cyou/ like '1684043839'", false);
 		addOption(data, DiscordBotInputsEnum.BLOCKS, "One each for separate set of slots, like for each DJ at a rave", true);
 		addOption(data, DiscordBotInputsEnum.SLOTS, "How many slots to have for each block", true);
