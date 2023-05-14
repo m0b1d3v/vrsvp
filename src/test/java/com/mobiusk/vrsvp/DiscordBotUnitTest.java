@@ -98,7 +98,7 @@ class DiscordBotUnitTest extends TestBase {
 		var command = commandDataArgumentCaptor.getValue();
 
 		assertEquals(Command.Type.SLASH, command.getType());
-		assertEquals("vrsvp", command.getName());
+		assertEquals(DiscordBot.SLASH_COMMAND, command.getName());
 		assertEquals(DefaultMemberPermissions.DISABLED, command.getDefaultPermissions());
 	}
 

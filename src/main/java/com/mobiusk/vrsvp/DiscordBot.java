@@ -12,6 +12,8 @@ import java.util.EnumSet;
 @RequiredArgsConstructor
 public class DiscordBot {
 
+	public static final String SLASH_COMMAND = "vrsvp";
+
 	private final JDABuilder jdaBuilder;
 
 	private JDA jda;
@@ -54,7 +56,7 @@ public class DiscordBot {
 
 	private void updateBotSlashCommands() {
 
-		var slashCommand = Commands.slash("vrsvp", "Create virtual RSVP")
+		var slashCommand = Commands.slash(SLASH_COMMAND, "Create virtual RSVP")
 			.setDefaultPermissions(DefaultMemberPermissions.DISABLED);
 
 		jda.updateCommands()
