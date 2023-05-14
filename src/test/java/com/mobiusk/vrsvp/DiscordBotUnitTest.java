@@ -3,6 +3,7 @@ package com.mobiusk.vrsvp;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.interactions.commands.Command;
+import net.dv8tion.jda.api.interactions.commands.DefaultMemberPermissions;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.requests.restaction.CommandListUpdateAction;
 import org.junit.jupiter.api.BeforeEach;
@@ -80,7 +81,7 @@ class DiscordBotUnitTest extends TestBase {
 	}
 
 	@Test
-	void botSlashCommandIsWellFormed() {
+	void botSlashCommandIsWellFormedAndOnlyUsableByAdmins() {
 
 		startDiscordBot();
 
@@ -90,6 +91,7 @@ class DiscordBotUnitTest extends TestBase {
 
 		assertEquals(Command.Type.SLASH, command.getType());
 		assertEquals("vrsvp", command.getName());
+		assertEquals(DefaultMemberPermissions.DISABLED, command.getDefaultPermissions());
 	}
 
 	// Test utility method(s)

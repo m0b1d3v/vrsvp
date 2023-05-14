@@ -3,6 +3,7 @@ package com.mobiusk.vrsvp;
 import lombok.RequiredArgsConstructor;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
+import net.dv8tion.jda.api.interactions.commands.DefaultMemberPermissions;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 
@@ -45,7 +46,8 @@ public class DiscordBot {
 
 	private void updateBotSlashCommands() {
 
-		var slashCommand = Commands.slash("vrsvp", "Create virtual RSVP");
+		var slashCommand = Commands.slash("vrsvp", "Create virtual RSVP")
+			.setDefaultPermissions(DefaultMemberPermissions.DISABLED);
 
 		jda.updateCommands()
 			.addCommands(slashCommand)
