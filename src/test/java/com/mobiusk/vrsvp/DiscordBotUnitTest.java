@@ -2,14 +2,10 @@ package com.mobiusk.vrsvp;
 
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
-import net.dv8tion.jda.api.interactions.commands.Command;
-import net.dv8tion.jda.api.interactions.commands.DefaultMemberPermissions;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.requests.restaction.CommandListUpdateAction;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
@@ -36,9 +32,6 @@ class DiscordBotUnitTest extends TestBase {
 
 	@Mock
 	private CommandListUpdateAction commandListUpdateAction;
-
-	@Captor
-	private ArgumentCaptor<CommandData> commandDataArgumentCaptor;
 
 	@BeforeEach
 	public void beforeEach() {
@@ -86,20 +79,6 @@ class DiscordBotUnitTest extends TestBase {
 		verify(jda).updateCommands();
 		verify(commandListUpdateAction).addCommands(any(CommandData.class));
 		verify(commandListUpdateAction).queue();
-	}
-
-	@Test
-	void botSlashCommandIsWellFormedAndOnlyUsableByAdmins() {
-
-		startDiscordBot();
-
-		verify(commandListUpdateAction).addCommands(commandDataArgumentCaptor.capture());
-
-		var command = commandDataArgumentCaptor.getValue();
-
-		assertEquals(Command.Type.SLASH, command.getType());
-		assertEquals(DiscordBot.SLASH_COMMAND, command.getName());
-		assertEquals(DefaultMemberPermissions.DISABLED, command.getDefaultPermissions());
 	}
 
 	// Test utility method(s)
