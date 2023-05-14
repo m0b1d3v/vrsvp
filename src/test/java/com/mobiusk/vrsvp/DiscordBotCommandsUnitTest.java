@@ -8,13 +8,21 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class DiscordBotCommandsUnitTest extends TestBase {
 
+	private final SlashCommandData command = DiscordBotCommands.create();
+
 	@Test
-	void slashCommandIsWellFormedAndOnlyUsableByAdmins() {
+	void utilityClass() throws NoSuchMethodException {
+		assertUtilityClass(DiscordBotCommands.class);
+	}
 
-		var command = DiscordBotCommands.slash();
-
+	@Test
+	void formed() {
 		assertEquals(Command.Type.SLASH, command.getType());
 		assertEquals(DiscordBotCommands.SLASH, command.getName());
+	}
+
+	@Test
+	void onlyUsableByAdmins() {
 		assertEquals(DefaultMemberPermissions.DISABLED, command.getDefaultPermissions());
 	}
 
