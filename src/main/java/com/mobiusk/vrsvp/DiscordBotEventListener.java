@@ -34,22 +34,26 @@ public class DiscordBotEventListener extends ListenerAdapter {
 			return;
 		}
 
-		var blocks = getSlashCommandInput(event, DiscordBotInputsEnum.BLOCKS);
-		var slots = getSlashCommandInput(event, DiscordBotInputsEnum.SLOTS);
-		var duration = getSlashCommandInput(event, DiscordBotInputsEnum.DURATION);
-		var start = getSlashCommandInput(event, DiscordBotInputsEnum.START);
+		var inputs = new DiscordBotInputs();
+		inputs.setBlocks(getSlashCommandInput(event, DiscordBotInputsEnum.BLOCKS));
+		inputs.setSlots(getSlashCommandInput(event, DiscordBotInputsEnum.SLOTS));
+		inputs.setDurationInMinutes(getSlashCommandInput(event, DiscordBotInputsEnum.DURATION));
+		inputs.setStartTimestamp(getSlashCommandInput(event, DiscordBotInputsEnum.START));
 
-		var reply = buildSlashCommandReply(blocks, slots, duration, start);
+		var reply = buildSlashCommandReply(inputs);
 
 		event.reply(reply)
 			.setEphemeral(true)
 			.queue();
 	}
 
-	private String buildSlashCommandReply(int blocks, int slots, int duration, int start) {
+	private String buildSlashCommandReply(DiscordBotInputs inputs) {
 		return String.format(
 			"Will build RSVP form with %d blocks, %d slots each, %d minutes per slot, starting at <t:%d:F>",
-			blocks, slots, duration, start
+			inputs.getBlocks(),
+			inputs.getSlots(),
+			inputs.getDurationInMinutes(),
+			inputs.getStartTimestamp()
 		);
 	}
 
