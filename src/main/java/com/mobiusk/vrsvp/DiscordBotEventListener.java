@@ -48,6 +48,12 @@ public class DiscordBotEventListener extends ListenerAdapter {
 	}
 
 	private String buildSlashCommandReply(DiscordBotInputs inputs) {
+
+		var validationErrorMessage = DiscordBotInputsValidation.buildValidationErrorMessage(inputs);
+		if ( ! validationErrorMessage.isBlank()) {
+			return validationErrorMessage;
+		}
+
 		return String.format(
 			"Will build RSVP form with %d blocks, %d slots each, %d minutes per slot, starting at <t:%d:F>",
 			inputs.getBlocks(),
