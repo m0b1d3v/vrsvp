@@ -52,7 +52,7 @@ public class DiscordBot {
 
 	private void updateBotSlashCommands() {
 
-		var slashCommand = DiscordBotCommands.slash();
+		var slashCommand = DiscordBotCommands.create();
 
 		jda.updateCommands()
 			.addCommands(slashCommand)

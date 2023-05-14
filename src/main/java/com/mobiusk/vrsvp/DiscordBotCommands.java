@@ -24,7 +24,7 @@ public class DiscordBotCommands {
 	/**
 	 * Builds the only slash command this bot concerns itself with and supplies the required input options
 	 */
-	public static SlashCommandData slash() {
+	public static SlashCommandData create() {
 
 		var data = Commands.slash(SLASH, "Create virtual RSVP")
 			.setDefaultPermissions(DefaultMemberPermissions.DISABLED);
