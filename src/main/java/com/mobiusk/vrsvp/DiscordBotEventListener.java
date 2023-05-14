@@ -1,5 +1,8 @@
 package com.mobiusk.vrsvp;
 
+import com.mobiusk.vrsvp.input.DiscordBotInputs;
+import com.mobiusk.vrsvp.input.DiscordBotInputsEnum;
+import com.mobiusk.vrsvp.input.DiscordBotInputsValidation;
 import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;

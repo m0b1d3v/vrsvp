@@ -1,4 +1,4 @@
-package com.mobiusk.vrsvp;
+package com.mobiusk.vrsvp.input;
 
 import lombok.experimental.UtilityClass;
 import net.dv8tion.jda.api.entities.Message;

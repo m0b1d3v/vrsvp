@@ -1,5 +1,6 @@
 package com.mobiusk.vrsvp;
 
+import com.mobiusk.vrsvp.input.DiscordBotInputsEnum;
 import net.dv8tion.jda.api.interactions.commands.Command;
 import net.dv8tion.jda.api.interactions.commands.DefaultMemberPermissions;
 import net.dv8tion.jda.api.interactions.commands.OptionType;

@@ -1,5 +1,6 @@
-package com.mobiusk.vrsvp;
+package com.mobiusk.vrsvp.input;
 
+import com.mobiusk.vrsvp.TestBase;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
