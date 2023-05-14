@@ -4,12 +4,12 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public enum DiscordBotCommandInputsEnum {
+public enum DiscordBotInputsEnum {
 
-	START("start"),
 	BLOCKS("blocks"),
+	DURATION("duration"),
 	SLOTS("slots"),
-	DURATION("duration");
+	START("start");
 
 	@Getter
 	private final String input;
