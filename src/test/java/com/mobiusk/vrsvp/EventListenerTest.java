@@ -1,6 +1,6 @@
 package com.mobiusk.vrsvp;
 
-import com.mobiusk.vrsvp.input.DiscordBotInputsEnum;
+import com.mobiusk.vrsvp.input.InputsEnum;
 import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.AutoCompleteQuery;
@@ -27,10 +27,10 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-class DiscordBotEventListenerTest extends TestBase {
+class EventListenerTest extends TestBase {
 
 	@InjectMocks
-	private DiscordBotEventListener eventListener;
+	private EventListener eventListener;
 
 	@Mock
 	private CommandAutoCompleteInteractionEvent commandAutoCompleteEvent;
@@ -53,7 +53,7 @@ class DiscordBotEventListenerTest extends TestBase {
 	@Captor
 	private ArgumentCaptor<String> stringArgumentCaptor;
 
-	private final int SLASH_COMMAND_INPUT_COUNT = DiscordBotInputsEnum.values().length;
+	private final int SLASH_COMMAND_INPUT_COUNT = InputsEnum.values().length;
 
 	@BeforeEach
 	public void beforeEach() {
@@ -71,7 +71,7 @@ class DiscordBotEventListenerTest extends TestBase {
 	@Test
 	void unexpectedCommandAutoCompleteEventsAreIgnored() {
 
-		var fieldNames = List.of("unknown-field", DiscordBotInputsEnum.START.getInput());
+		var fieldNames = List.of("unknown-field", InputsEnum.START.getInput());
 
 		for (var fieldName : fieldNames) {
 			runCommandAutoComplete(fieldName);
@@ -84,17 +84,17 @@ class DiscordBotEventListenerTest extends TestBase {
 
 	@Test
 	void commandAutoCompleteOptionsBlocks() {
-		assertCommandAutoCompleteOptions(DiscordBotInputsEnum.BLOCKS);
+		assertCommandAutoCompleteOptions(InputsEnum.BLOCKS);
 	}
 
 	@Test
 	void commandAutoCompleteOptionsDuration() {
-		assertCommandAutoCompleteOptions(DiscordBotInputsEnum.DURATION);
+		assertCommandAutoCompleteOptions(InputsEnum.DURATION);
 	}
 
 	@Test
 	void commandAutoCompleteOptionsSlots() {
-		assertCommandAutoCompleteOptions(DiscordBotInputsEnum.SLOTS);
+		assertCommandAutoCompleteOptions(InputsEnum.SLOTS);
 	}
 
 	// Slash command tests
@@ -144,16 +144,16 @@ class DiscordBotEventListenerTest extends TestBase {
 		// Mockito does not allow us to inline these mock creations inside .thenReturn()
 		var options = IntStream.range(1, SLASH_COMMAND_INPUT_COUNT + 1).mapToObj(this::mockOptionMapping).toList();
 
-		when(slashCommandEvent.getOption(DiscordBotInputsEnum.BLOCKS.getInput())).thenReturn(options.get(0));
-		when(slashCommandEvent.getOption(DiscordBotInputsEnum.SLOTS.getInput())).thenReturn(options.get(1));
-		when(slashCommandEvent.getOption(DiscordBotInputsEnum.DURATION.getInput())).thenReturn(options.get(2));
-		when(slashCommandEvent.getOption(DiscordBotInputsEnum.START.getInput())).thenReturn(options.get(3));
+		when(slashCommandEvent.getOption(InputsEnum.BLOCKS.getInput())).thenReturn(options.get(0));
+		when(slashCommandEvent.getOption(InputsEnum.SLOTS.getInput())).thenReturn(options.get(1));
+		when(slashCommandEvent.getOption(InputsEnum.DURATION.getInput())).thenReturn(options.get(2));
+		when(slashCommandEvent.getOption(InputsEnum.START.getInput())).thenReturn(options.get(3));
 
 		runSlashCommand();
 
 		verify(slashCommandEvent).reply(stringArgumentCaptor.capture());
 
-		assertSlashCommandReplyExpectation(stringArgumentCaptor.getValue(), 1, 2, 3, 4);
+		assertEquals("Will build RSVP form with 1 blocks, 2 slots each, 3 minutes per slot, starting at <t:4:F>", stringArgumentCaptor.getValue());
 	}
 
 	// Test utility method(s)
@@ -164,7 +164,7 @@ class DiscordBotEventListenerTest extends TestBase {
 	}
 
 	private void runSlashCommand() {
-		when(slashCommandEvent.getName()).thenReturn(DiscordBotCommands.SLASH);
+		when(slashCommandEvent.getName()).thenReturn(Commands.SLASH);
 		eventListener.onSlashCommandInteraction(slashCommandEvent);
 	}
 
@@ -174,7 +174,7 @@ class DiscordBotEventListenerTest extends TestBase {
 		return optionMapping;
 	}
 
-	private void assertCommandAutoCompleteOptions(DiscordBotInputsEnum inputsEnum) {
+	private void assertCommandAutoCompleteOptions(InputsEnum inputsEnum) {
 
 		var input = inputsEnum.getInput();
 
@@ -184,14 +184,7 @@ class DiscordBotEventListenerTest extends TestBase {
 		verify(autoCompleteCallbackAction).queue();
 
 		var choices = listLongArgumentCaptor.getValue();
-		assertEquals(DiscordBotCommands.INPUT_AUTOCOMPLETE_OPTIONS.get(input), choices);
-	}
-
-	private void assertSlashCommandReplyExpectation(String reply, int blocks, int slots, int duration, int start) {
-		assertEquals(
-			String.format("Will build RSVP form with %d blocks, %d slots each, %d minutes per slot, starting at <t:%d:F>", blocks, slots, duration, start),
-			reply
-		);
+		assertEquals(Commands.INPUT_AUTOCOMPLETE_OPTIONS.get(input), choices);
 	}
 
 }

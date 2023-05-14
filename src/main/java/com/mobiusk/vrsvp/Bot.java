@@ -8,7 +8,7 @@ import net.dv8tion.jda.api.requests.GatewayIntent;
 import java.util.EnumSet;
 
 @RequiredArgsConstructor
-public class DiscordBot {
+public class Bot {
 
 	private final JDABuilder jdaBuilder;
 
@@ -45,14 +45,14 @@ public class DiscordBot {
 
 	private void addEventListeners() {
 
-		var eventListener = new DiscordBotEventListener();
+		var eventListener = new EventListener();
 
 		jda.addEventListener(eventListener);
 	}
 
 	private void updateBotSlashCommands() {
 
-		var slashCommand = DiscordBotCommands.create();
+		var slashCommand = Commands.create();
 
 		jda.updateCommands()
 			.addCommands(slashCommand)

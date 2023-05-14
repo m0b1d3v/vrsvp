@@ -7,7 +7,7 @@ import net.dv8tion.jda.api.interactions.components.selections.SelectMenu;
 import java.util.List;
 
 @UtilityClass
-public class DiscordBotInputsValidation {
+public class InputsValidation {
 
 	// 9 (The 10th is used for event information)
 	public static final int BLOCKS_MAXIMUM = Message.MAX_EMBED_COUNT - 1;
@@ -20,7 +20,7 @@ public class DiscordBotInputsValidation {
 	// 2035-01-01
 	public static final int TIMESTAMP_MAXIMUM = 2_051_244_000;
 
-    public static String buildValidationErrorMessage(DiscordBotInputs inputs) {
+    public static String buildValidationErrorMessage(Inputs inputs) {
 
         var validationMessages = List.of(
 

@@ -6,9 +6,9 @@ public class Main {
 
 	public static void main(String[] args) throws InterruptedException {
 
-		var javaDiscordApi = DiscordBot.create(DISCORD_BOT_SECRET_TOKEN);
+		var javaDiscordApi = Bot.create(DISCORD_BOT_SECRET_TOKEN);
 
-		var discordBot = new DiscordBot(javaDiscordApi);
+		var discordBot = new Bot(javaDiscordApi);
 		discordBot.start();
 	}
 

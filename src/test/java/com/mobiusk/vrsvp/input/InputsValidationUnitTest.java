@@ -6,9 +6,9 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class DiscordBotInputsValidationUnitTest extends TestBase {
+class InputsValidationUnitTest extends TestBase {
 
-	private final DiscordBotInputs inputs = new DiscordBotInputs();
+	private final Inputs inputs = new Inputs();
 
 	@BeforeEach
 	public void beforeEach() {
@@ -20,14 +20,14 @@ class DiscordBotInputsValidationUnitTest extends TestBase {
 
 	@Test
 	void utilityClass() throws NoSuchMethodException {
-		assertUtilityClass(DiscordBotInputsValidation.class);
+		assertUtilityClass(InputsValidation.class);
 	}
 
 	// Blocks
 
 	@Test
 	void blocksMaximum() {
-		inputs.setBlocks(DiscordBotInputsValidation.BLOCKS_MAXIMUM + 1);
+		inputs.setBlocks(InputsValidation.BLOCKS_MAXIMUM + 1);
 		assertValidation("The maximum amount of blocks allowed in VRSVP is 9 due to a Discord limitation, as 1 is reserved for event information. Please retry this command with a smaller block count, or split your RSVP into more than one form.");
 	}
 
@@ -40,7 +40,7 @@ class DiscordBotInputsValidationUnitTest extends TestBase {
 	@Test
 	void blocksValid() {
 
-		inputs.setBlocks(DiscordBotInputsValidation.BLOCKS_MAXIMUM);
+		inputs.setBlocks(InputsValidation.BLOCKS_MAXIMUM);
 		assertValidation("");
 
 		inputs.setBlocks(1);
@@ -51,7 +51,7 @@ class DiscordBotInputsValidationUnitTest extends TestBase {
 
 	@Test
 	void durationMaximum() {
-		inputs.setDurationInMinutes(DiscordBotInputsValidation.TIMESTAMP_MAXIMUM + 1);
+		inputs.setDurationInMinutes(InputsValidation.TIMESTAMP_MAXIMUM + 1);
 		assertValidation("The maximum duration in minutes for each slot in VRSVP is equal to one week. This is a mostly-arbitrary decision on our part to guard from any programming errors. If you have a legitimate need for this edge case, we are willing to adjust it. Please retry this command with a smaller duration.");
 	}
 
@@ -64,7 +64,7 @@ class DiscordBotInputsValidationUnitTest extends TestBase {
 	@Test
 	void durationValid() {
 
-		inputs.setDurationInMinutes(DiscordBotInputsValidation.DURATION_IN_MINUTES_MAXIMUM);
+		inputs.setDurationInMinutes(InputsValidation.DURATION_IN_MINUTES_MAXIMUM);
 		assertValidation("");
 
 		inputs.setDurationInMinutes(1);
@@ -78,7 +78,7 @@ class DiscordBotInputsValidationUnitTest extends TestBase {
 
 		var expectedMessage = "The maximum amount of (blocks * slots) allowed in VRSVP is 25 due to a Discord limitation. Please retry this command with a smaller total block/slot count, or split your RSVP into more than one form.";
 
-		inputs.setSlots(DiscordBotInputsValidation.BLOCKS_AND_SLOTS_PRODUCT_MAXIMUM + 1);
+		inputs.setSlots(InputsValidation.BLOCKS_AND_SLOTS_PRODUCT_MAXIMUM + 1);
 		assertValidation(expectedMessage);
 
 		inputs.setBlocks(2);
@@ -95,7 +95,7 @@ class DiscordBotInputsValidationUnitTest extends TestBase {
 	@Test
 	void slotsValid() {
 
-		inputs.setSlots(DiscordBotInputsValidation.BLOCKS_AND_SLOTS_PRODUCT_MAXIMUM);
+		inputs.setSlots(InputsValidation.BLOCKS_AND_SLOTS_PRODUCT_MAXIMUM);
 		assertValidation("");
 
 		inputs.setBlocks(5);
@@ -107,7 +107,7 @@ class DiscordBotInputsValidationUnitTest extends TestBase {
 
 	@Test
 	void startTimestampMaximum() {
-		inputs.setStartTimestamp(DiscordBotInputsValidation.TIMESTAMP_MAXIMUM + 1);
+		inputs.setStartTimestamp(InputsValidation.TIMESTAMP_MAXIMUM + 1);
 		assertValidation("The maximum start timestamp in VRSVP equates to 2035-01-01. This is a mostly-arbitrary decision on our part to guard from any programming errors. If you have a legitimate need for this edge case, we are willing to adjust it. Please retry this command with a smaller start timestamp.");
 	}
 
@@ -120,7 +120,7 @@ class DiscordBotInputsValidationUnitTest extends TestBase {
 	@Test
 	void startTimestampValid() {
 
-		inputs.setStartTimestamp(DiscordBotInputsValidation.TIMESTAMP_MAXIMUM);
+		inputs.setStartTimestamp(InputsValidation.TIMESTAMP_MAXIMUM);
 		assertValidation("");
 
 		inputs.setStartTimestamp(1);
@@ -143,7 +143,7 @@ class DiscordBotInputsValidationUnitTest extends TestBase {
 	// Test utility method(s)
 
 	private void assertValidation(String expectation) {
-		assertEquals(expectation, DiscordBotInputsValidation.buildValidationErrorMessage(inputs));
+		assertEquals(expectation, InputsValidation.buildValidationErrorMessage(inputs));
 	}
 
 }

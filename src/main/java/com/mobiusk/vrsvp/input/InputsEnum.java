@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public enum DiscordBotInputsEnum {
+public enum InputsEnum {
 
 	BLOCKS("blocks"),
 	DURATION("duration"),

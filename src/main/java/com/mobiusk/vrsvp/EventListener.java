@@ -1,8 +1,8 @@
 package com.mobiusk.vrsvp;
 
-import com.mobiusk.vrsvp.input.DiscordBotInputs;
-import com.mobiusk.vrsvp.input.DiscordBotInputsEnum;
-import com.mobiusk.vrsvp.input.DiscordBotInputsValidation;
+import com.mobiusk.vrsvp.input.Inputs;
+import com.mobiusk.vrsvp.input.InputsEnum;
+import com.mobiusk.vrsvp.input.InputsValidation;
 import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -10,7 +10,7 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import javax.annotation.Nonnull;
 import java.util.Collections;
 
-public class DiscordBotEventListener extends ListenerAdapter {
+public class EventListener extends ListenerAdapter {
 
 	/**
 	 * Supplies auto-complete options for our named inputs during RSVP creation.
@@ -20,7 +20,7 @@ public class DiscordBotEventListener extends ListenerAdapter {
 
 		var inputName = event.getFocusedOption().getName();
 
-		var autoCompleteOptions = DiscordBotCommands.INPUT_AUTOCOMPLETE_OPTIONS.getOrDefault(inputName, Collections.emptyList());
+		var autoCompleteOptions = Commands.INPUT_AUTOCOMPLETE_OPTIONS.getOrDefault(inputName, Collections.emptyList());
 
 		if ( ! autoCompleteOptions.isEmpty()) {
 			event.replyChoiceLongs(autoCompleteOptions).queue();
@@ -33,15 +33,15 @@ public class DiscordBotEventListener extends ListenerAdapter {
 	@Override
 	public void onSlashCommandInteraction(@Nonnull SlashCommandInteractionEvent event) {
 
-		if ( ! DiscordBotCommands.SLASH.equals(event.getName())) {
+		if ( ! Commands.SLASH.equals(event.getName())) {
 			return;
 		}
 
-		var inputs = new DiscordBotInputs();
-		inputs.setBlocks(getSlashCommandInput(event, DiscordBotInputsEnum.BLOCKS));
-		inputs.setSlots(getSlashCommandInput(event, DiscordBotInputsEnum.SLOTS));
-		inputs.setDurationInMinutes(getSlashCommandInput(event, DiscordBotInputsEnum.DURATION));
-		inputs.setStartTimestamp(getSlashCommandInput(event, DiscordBotInputsEnum.START));
+		var inputs = new Inputs();
+		inputs.setBlocks(getSlashCommandInput(event, InputsEnum.BLOCKS));
+		inputs.setSlots(getSlashCommandInput(event, InputsEnum.SLOTS));
+		inputs.setDurationInMinutes(getSlashCommandInput(event, InputsEnum.DURATION));
+		inputs.setStartTimestamp(getSlashCommandInput(event, InputsEnum.START));
 
 		var reply = buildSlashCommandReply(inputs);
 
@@ -50,9 +50,9 @@ public class DiscordBotEventListener extends ListenerAdapter {
 			.queue();
 	}
 
-	private String buildSlashCommandReply(DiscordBotInputs inputs) {
+	private String buildSlashCommandReply(Inputs inputs) {
 
-		var validationErrorMessage = DiscordBotInputsValidation.buildValidationErrorMessage(inputs);
+		var validationErrorMessage = InputsValidation.buildValidationErrorMessage(inputs);
 		if ( ! validationErrorMessage.isBlank()) {
 			return validationErrorMessage;
 		}
@@ -66,7 +66,7 @@ public class DiscordBotEventListener extends ListenerAdapter {
 		);
 	}
 
-	private int getSlashCommandInput(@Nonnull SlashCommandInteractionEvent event, DiscordBotInputsEnum inputsEnum) {
+	private int getSlashCommandInput(@Nonnull SlashCommandInteractionEvent event, InputsEnum inputsEnum) {
 
 		var option = event.getOption(inputsEnum.getInput());
 		if (option == null) {

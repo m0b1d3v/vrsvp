@@ -19,13 +19,13 @@ import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-class DiscordBotUnitTest extends TestBase {
+class BotUnitTest extends TestBase {
 
 	@InjectMocks
-	private DiscordBot discordBot;
+	private Bot bot;
 
 	@Spy
-	private JDABuilder jdaBuilder = DiscordBot.create("Testing");
+	private JDABuilder jdaBuilder = Bot.create("Testing");
 
 	@Mock
 	private JDA jda;
@@ -50,7 +50,7 @@ class DiscordBotUnitTest extends TestBase {
 		doCallRealMethod().when(jdaBuilder).build();
 
 		jdaBuilder.setToken(null);
-		var ex = assertThrows(IllegalArgumentException.class, () -> discordBot.start());
+		var ex = assertThrows(IllegalArgumentException.class, () -> bot.start());
 		assertEquals("Token may not be null", ex.getMessage());
 	}
 
@@ -68,7 +68,7 @@ class DiscordBotUnitTest extends TestBase {
 
 		startDiscordBot();
 
-		verify(jda).addEventListener(any(DiscordBotEventListener.class));
+		verify(jda).addEventListener(any(EventListener.class));
 	}
 
 	@Test
@@ -85,7 +85,7 @@ class DiscordBotUnitTest extends TestBase {
 
 	private void startDiscordBot() {
 		try {
-			discordBot.start();
+			bot.start();
 		} catch (InterruptedException e) {
 			fail("Discord bot should have started without interruption for this test case", e);
 		}

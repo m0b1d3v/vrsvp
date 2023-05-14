@@ -1,6 +1,6 @@
 package com.mobiusk.vrsvp;
 
-import com.mobiusk.vrsvp.input.DiscordBotInputsEnum;
+import com.mobiusk.vrsvp.input.InputsEnum;
 import net.dv8tion.jda.api.interactions.commands.Command;
 import net.dv8tion.jda.api.interactions.commands.DefaultMemberPermissions;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
@@ -11,19 +11,19 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class DiscordBotCommandsUnitTest extends TestBase {
+class CommandsUnitTest extends TestBase {
 
-	private final SlashCommandData command = DiscordBotCommands.create();
+	private final SlashCommandData command = Commands.create();
 
 	@Test
 	void utilityClass() throws NoSuchMethodException {
-		assertUtilityClass(DiscordBotCommands.class);
+		assertUtilityClass(Commands.class);
 	}
 
 	@Test
 	void formed() {
 		assertEquals(Command.Type.SLASH, command.getType());
-		assertEquals(DiscordBotCommands.SLASH, command.getName());
+		assertEquals(Commands.SLASH, command.getName());
 	}
 
 	@Test
@@ -45,15 +45,15 @@ class DiscordBotCommandsUnitTest extends TestBase {
 	void inputsUseLogicalOrderAndAutocompleteAppropriately() {
 		var options = command.getOptions();
 		assertEquals(4, options.size());
-		checkOptionNameAndAutocomplete(options.get(0), DiscordBotInputsEnum.START, false);
-		checkOptionNameAndAutocomplete(options.get(1), DiscordBotInputsEnum.BLOCKS, true);
-		checkOptionNameAndAutocomplete(options.get(2), DiscordBotInputsEnum.SLOTS, true);
-		checkOptionNameAndAutocomplete(options.get(3), DiscordBotInputsEnum.DURATION, true);
+		checkOptionNameAndAutocomplete(options.get(0), InputsEnum.START, false);
+		checkOptionNameAndAutocomplete(options.get(1), InputsEnum.BLOCKS, true);
+		checkOptionNameAndAutocomplete(options.get(2), InputsEnum.SLOTS, true);
+		checkOptionNameAndAutocomplete(options.get(3), InputsEnum.DURATION, true);
 	}
 
 	// Test utility method(s)
 
-	private void checkOptionNameAndAutocomplete(OptionData option, DiscordBotInputsEnum inputsEnum, boolean autoComplete) {
+	private void checkOptionNameAndAutocomplete(OptionData option, InputsEnum inputsEnum, boolean autoComplete) {
 		assertEquals(inputsEnum.getInput(), option.getName());
 		assertEquals(autoComplete, option.isAutoComplete());
 	}

@@ -3,7 +3,7 @@ package com.mobiusk.vrsvp.input;
 import lombok.Data;
 
 @Data
-public class DiscordBotInputs {
+public class Inputs {
 
     private int blocks;
     private int slots;
