@@ -1,9 +1,11 @@
 package com.mobiusk.vrsvp;
 
 import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.AutoCompleteQuery;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.requests.restaction.interactions.AutoCompleteCallbackAction;
+import net.dv8tion.jda.api.requests.restaction.interactions.ReplyCallbackAction;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -12,6 +14,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
 import java.util.List;
+import java.util.stream.IntStream;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyBoolean;
@@ -31,19 +35,34 @@ class DiscordBotEventListenerTest extends TestBase {
 	private CommandAutoCompleteInteractionEvent commandAutoCompleteEvent;
 
 	@Mock
+	private SlashCommandInteractionEvent slashCommandEvent;
+
+	@Mock
 	private AutoCompleteQuery autoCompleteQuery;
 
 	@Mock
 	private AutoCompleteCallbackAction autoCompleteCallbackAction;
 
+	@Mock
+	private ReplyCallbackAction replyCallbackAction;
+
 	@Captor
 	private ArgumentCaptor<List<Long>> listLongArgumentCaptor;
+
+	@Captor
+	private ArgumentCaptor<String> stringArgumentCaptor;
+
+	private final int SLASH_COMMAND_INPUT_COUNT = DiscordBotInputsEnum.values().length;
 
 	@BeforeEach
 	public void beforeEach() {
 
 		when(commandAutoCompleteEvent.getFocusedOption()).thenReturn(autoCompleteQuery);
 		when(commandAutoCompleteEvent.replyChoiceLongs(anyCollection())).thenReturn(autoCompleteCallbackAction);
+
+		when(replyCallbackAction.setEphemeral(anyBoolean())).thenReturn(replyCallbackAction);
+
+		when(slashCommandEvent.reply(any(String.class))).thenReturn(replyCallbackAction);
 	}
 
 	// Command autoComplete tests
@@ -77,11 +96,69 @@ class DiscordBotEventListenerTest extends TestBase {
 		assertCommandAutoCompleteOptions(DiscordBotInputsEnum.SLOTS);
 	}
 
+	// Slash command tests
+
+	@Test
+	void unexpectedSlashCommandsAreIgnored() {
+
+		when(slashCommandEvent.getName()).thenReturn("unknown-command");
+
+		eventListener.onSlashCommandInteraction(slashCommandEvent);
+
+		verify(slashCommandEvent).getName();
+		verify(slashCommandEvent, never()).reply(any(String.class));
+	}
+
+	@Test
+	void slashCommandReturnsEphemeralReply() {
+
+		runSlashCommand();
+
+		verify(slashCommandEvent).reply(any(String.class));
+		verify(replyCallbackAction).setEphemeral(true);
+		verify(replyCallbackAction).queue();
+	}
+
+	@Test
+	void slashCommandDefaultsInputsToZeroIfNotFound() {
+
+		IntStream.range(0, SLASH_COMMAND_INPUT_COUNT).forEach(ignored -> when(slashCommandEvent.getOption(any())).thenReturn(null));
+
+		runSlashCommand();
+
+		verify(slashCommandEvent).reply(stringArgumentCaptor.capture());
+
+		assertSlashCommandReplyExpectation(stringArgumentCaptor.getValue(), 0, 0, 0, 0);
+	}
+
+	@Test
+	void slashCommandUsesInputsToGenerateReply() {
+
+		// Mockito does not allow us to inline these mock creations inside .thenReturn()
+		var options = IntStream.range(1, SLASH_COMMAND_INPUT_COUNT + 1).mapToObj(this::mockOptionMapping).toList();
+
+		when(slashCommandEvent.getOption(DiscordBotInputsEnum.BLOCKS.getInput())).thenReturn(options.get(0));
+		when(slashCommandEvent.getOption(DiscordBotInputsEnum.SLOTS.getInput())).thenReturn(options.get(1));
+		when(slashCommandEvent.getOption(DiscordBotInputsEnum.DURATION.getInput())).thenReturn(options.get(2));
+		when(slashCommandEvent.getOption(DiscordBotInputsEnum.START.getInput())).thenReturn(options.get(3));
+
+		runSlashCommand();
+
+		verify(slashCommandEvent).reply(stringArgumentCaptor.capture());
+
+		assertSlashCommandReplyExpectation(stringArgumentCaptor.getValue(), 1, 2, 3, 4);
+	}
+
 	// Test utility method(s)
 
 	private void runCommandAutoComplete(String fieldName) {
 		when(autoCompleteQuery.getName()).thenReturn(fieldName);
 		eventListener.onCommandAutoCompleteInteraction(commandAutoCompleteEvent);
+	}
+
+	private void runSlashCommand() {
+		when(slashCommandEvent.getName()).thenReturn(DiscordBotCommands.SLASH);
+		eventListener.onSlashCommandInteraction(slashCommandEvent);
 	}
 
 	private OptionMapping mockOptionMapping(int value) {
@@ -101,6 +178,13 @@ class DiscordBotEventListenerTest extends TestBase {
 
 		var choices = listLongArgumentCaptor.getValue();
 		assertEquals(DiscordBotCommands.INPUT_AUTOCOMPLETE_OPTIONS.get(input), choices);
+	}
+
+	private void assertSlashCommandReplyExpectation(String reply, int blocks, int slots, int duration, int start) {
+		assertEquals(
+			String.format("Will build RSVP form with %d blocks, %d slots each, %d minutes per slot, starting at <t:%d:F>", blocks, slots, duration, start),
+			reply
+		);
 	}
 
 }

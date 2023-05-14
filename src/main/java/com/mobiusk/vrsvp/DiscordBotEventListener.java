@@ -29,7 +29,38 @@ public class DiscordBotEventListener extends ListenerAdapter {
 	 */
 	@Override
 	public void onSlashCommandInteraction(@Nonnull SlashCommandInteractionEvent event) {
-		// Empty
+
+		if ( ! DiscordBotCommands.SLASH.equals(event.getName())) {
+			return;
+		}
+
+		var blocks = getSlashCommandInput(event, DiscordBotInputsEnum.BLOCKS);
+		var slots = getSlashCommandInput(event, DiscordBotInputsEnum.SLOTS);
+		var duration = getSlashCommandInput(event, DiscordBotInputsEnum.DURATION);
+		var start = getSlashCommandInput(event, DiscordBotInputsEnum.START);
+
+		var reply = buildSlashCommandReply(blocks, slots, duration, start);
+
+		event.reply(reply)
+			.setEphemeral(true)
+			.queue();
+	}
+
+	private String buildSlashCommandReply(int blocks, int slots, int duration, int start) {
+		return String.format(
+			"Will build RSVP form with %d blocks, %d slots each, %d minutes per slot, starting at <t:%d:F>",
+			blocks, slots, duration, start
+		);
+	}
+
+	private int getSlashCommandInput(@Nonnull SlashCommandInteractionEvent event, DiscordBotInputsEnum inputsEnum) {
+
+		var option = event.getOption(inputsEnum.getInput());
+		if (option == null) {
+			return 0;
+		}
+
+		return option.getAsInt();
 	}
 
 }
