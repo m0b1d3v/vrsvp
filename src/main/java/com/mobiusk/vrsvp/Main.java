@@ -9,7 +9,6 @@ public class Main {
 		var javaDiscordApi = DiscordBot.create(DISCORD_BOT_SECRET_TOKEN);
 
 		var discordBot = new DiscordBot(javaDiscordApi);
-		discordBot.configure();
 		discordBot.start();
 	}
 
