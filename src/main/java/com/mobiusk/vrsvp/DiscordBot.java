@@ -3,6 +3,7 @@ package com.mobiusk.vrsvp;
 import lombok.RequiredArgsConstructor;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
+import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 
 import java.util.EnumSet;
@@ -31,6 +32,7 @@ public class DiscordBot {
 		jda = discordBotLogin();
 
 		waitForDiscordConnection();
+		updateBotSlashCommands();
 	}
 
 	private JDA discordBotLogin() {
@@ -41,6 +43,13 @@ public class DiscordBot {
 		jda.awaitReady();
 	}
 
+	private void updateBotSlashCommands() {
+
+		var slashCommand = Commands.slash("vrsvp", "Create virtual RSVP");
+
+		jda.updateCommands()
+			.addCommands(slashCommand)
+			.queue();
 	}
 
 }

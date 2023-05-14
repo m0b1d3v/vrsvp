@@ -2,8 +2,13 @@ package com.mobiusk.vrsvp;
 
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
+import net.dv8tion.jda.api.interactions.commands.Command;
+import net.dv8tion.jda.api.interactions.commands.build.CommandData;
+import net.dv8tion.jda.api.requests.restaction.CommandListUpdateAction;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
@@ -11,6 +16,7 @@ import org.mockito.Spy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.fail;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doCallRealMethod;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.verify;
@@ -27,11 +33,20 @@ class DiscordBotUnitTest extends TestBase {
 	@Mock
 	private JDA jda;
 
+	@Mock
+	private CommandListUpdateAction commandListUpdateAction;
+
+	@Captor
+	private ArgumentCaptor<CommandData> commandDataArgumentCaptor;
+
 	@BeforeEach
 	public void beforeEach() {
 
 		doReturn(jda).when(jdaBuilder).build();
 
+		when(jda.updateCommands()).thenReturn(commandListUpdateAction);
+
+		when(commandListUpdateAction.addCommands(any(CommandData.class))).thenReturn(commandListUpdateAction);
 	}
 
 	@Test
@@ -52,6 +67,29 @@ class DiscordBotUnitTest extends TestBase {
 
 		verify(jdaBuilder).build();
 		verify(jda).awaitReady();
+	}
+
+	@Test
+	void botSlashCommandsAreAdded() {
+
+		startDiscordBot();
+
+		verify(jda).updateCommands();
+		verify(commandListUpdateAction).addCommands(any(CommandData.class));
+		verify(commandListUpdateAction).queue();
+	}
+
+	@Test
+	void botSlashCommandIsWellFormed() {
+
+		startDiscordBot();
+
+		verify(commandListUpdateAction).addCommands(commandDataArgumentCaptor.capture());
+
+		var command = commandDataArgumentCaptor.getValue();
+
+		assertEquals(Command.Type.SLASH, command.getType());
+		assertEquals("vrsvp", command.getName());
 	}
 
 	// Test utility method(s)
