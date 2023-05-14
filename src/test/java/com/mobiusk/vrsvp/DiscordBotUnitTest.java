@@ -71,6 +71,14 @@ class DiscordBotUnitTest extends TestBase {
 	}
 
 	@Test
+	void eventListenersAreAdded() {
+
+		startDiscordBot();
+
+		verify(jda).addEventListener(any(DiscordBotEventListener.class));
+	}
+
+	@Test
 	void botSlashCommandsAreAdded() {
 
 		startDiscordBot();

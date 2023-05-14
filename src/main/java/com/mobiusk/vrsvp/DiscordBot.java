@@ -33,6 +33,7 @@ public class DiscordBot {
 		jda = discordBotLogin();
 
 		waitForDiscordConnection();
+		addEventListeners();
 		updateBotSlashCommands();
 	}
 
@@ -42,6 +43,13 @@ public class DiscordBot {
 
 	private void waitForDiscordConnection() throws InterruptedException {
 		jda.awaitReady();
+	}
+
+	private void addEventListeners() {
+
+		var eventListener = new DiscordBotEventListener();
+
+		jda.addEventListener(eventListener);
 	}
 
 	private void updateBotSlashCommands() {
