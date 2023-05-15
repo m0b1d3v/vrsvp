@@ -9,8 +9,8 @@ import java.util.List;
 @UtilityClass
 public class InputsValidation {
 
-	// 9 (The 10th is used for event information)
-	public static final int BLOCKS_MAXIMUM = Message.MAX_EMBED_COUNT - 1;
+	// 10
+	public static final int BLOCKS_MAXIMUM = Message.MAX_EMBED_COUNT;
 
 	public static final int BLOCKS_AND_SLOTS_PRODUCT_MAXIMUM = SelectMenu.OPTIONS_MAX_AMOUNT;
 
@@ -48,7 +48,7 @@ public class InputsValidation {
             return "";
         }
 
-        var message = "The maximum amount of blocks allowed in VRSVP is %d due to a Discord limitation, as 1 is reserved for event information."
+        var message = "The maximum amount of blocks allowed in VRSVP is %d due to a Discord limitation."
 			+ " Please retry this command with a smaller block count, or split your RSVP into more than one form.";
 
         return String.format(message, BLOCKS_MAXIMUM, BLOCKS_MAXIMUM);
