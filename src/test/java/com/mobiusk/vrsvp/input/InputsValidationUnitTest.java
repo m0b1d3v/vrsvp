@@ -28,7 +28,7 @@ class InputsValidationUnitTest extends TestBase {
 	@Test
 	void blocksMaximum() {
 		inputs.setBlocks(InputsValidation.BLOCKS_MAXIMUM + 1);
-		assertValidation("The maximum amount of blocks allowed in VRSVP is 9 due to a Discord limitation, as 1 is reserved for event information. Please retry this command with a smaller block count, or split your RSVP into more than one form.");
+		assertValidation("The maximum amount of blocks allowed in VRSVP is 10 due to a Discord limitation. Please retry this command with a smaller block count, or split your RSVP into more than one form.");
 	}
 
 	@Test
