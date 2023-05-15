@@ -1,5 +1,7 @@
 package com.mobiusk.vrsvp;
 
+import com.mobiusk.vrsvp.output.OutputsAutoComplete;
+import com.mobiusk.vrsvp.output.OutputsCommand;
 import lombok.RequiredArgsConstructor;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
@@ -45,7 +47,10 @@ public class Bot {
 
 	private void addEventListeners() {
 
-		var eventListener = new EventListener();
+		var eventListener = new EventListener(
+			new OutputsAutoComplete(),
+			new OutputsCommand()
+		);
 
 		jda.addEventListener(eventListener);
 	}

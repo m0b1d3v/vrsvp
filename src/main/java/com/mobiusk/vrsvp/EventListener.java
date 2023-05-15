@@ -2,29 +2,29 @@ package com.mobiusk.vrsvp;
 
 import com.mobiusk.vrsvp.input.Inputs;
 import com.mobiusk.vrsvp.input.InputsEnum;
-import com.mobiusk.vrsvp.input.InputsValidation;
+import com.mobiusk.vrsvp.output.OutputsAutoComplete;
+import com.mobiusk.vrsvp.output.OutputsCommand;
+import lombok.RequiredArgsConstructor;
 import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
 import javax.annotation.Nonnull;
-import java.util.Collections;
 
+@RequiredArgsConstructor
 public class EventListener extends ListenerAdapter {
+
+	// Class constructor field(s)
+	private final OutputsAutoComplete outputsAutoComplete;
+	private final OutputsCommand outputsCommand;
 
 	/**
 	 * Supplies auto-complete options for our named inputs during RSVP creation.
 	 */
 	@Override
 	public void onCommandAutoCompleteInteraction(@Nonnull CommandAutoCompleteInteractionEvent event) {
-
 		var inputName = event.getFocusedOption().getName();
-
-		var autoCompleteOptions = Commands.INPUT_AUTOCOMPLETE_OPTIONS.getOrDefault(inputName, Collections.emptyList());
-
-		if ( ! autoCompleteOptions.isEmpty()) {
-			event.replyChoiceLongs(autoCompleteOptions).queue();
-		}
+		outputsAutoComplete.reply(event, inputName);
 	}
 
 	/**
@@ -43,27 +43,7 @@ public class EventListener extends ListenerAdapter {
 		inputs.setDurationInMinutes(getSlashCommandInput(event, InputsEnum.DURATION));
 		inputs.setStartTimestamp(getSlashCommandInput(event, InputsEnum.START));
 
-		var reply = buildSlashCommandReply(inputs);
-
-		event.reply(reply)
-			.setEphemeral(true)
-			.queue();
-	}
-
-	private String buildSlashCommandReply(Inputs inputs) {
-
-		var validationErrorMessage = InputsValidation.buildValidationErrorMessage(inputs);
-		if ( ! validationErrorMessage.isBlank()) {
-			return validationErrorMessage;
-		}
-
-		return String.format(
-			"Will build RSVP form with %d blocks, %d slots each, %d minutes per slot, starting at <t:%d:F>",
-			inputs.getBlocks(),
-			inputs.getSlots(),
-			inputs.getDurationInMinutes(),
-			inputs.getStartTimestamp()
-		);
+		outputsCommand.reply(event, inputs);
 	}
 
 	private int getSlashCommandInput(@Nonnull SlashCommandInteractionEvent event, InputsEnum inputsEnum) {
