@@ -10,26 +10,39 @@ public class OutputsCommand {
 
 	public void reply(@Nonnull SlashCommandInteractionEvent event, @Nonnull Inputs inputs) {
 
-		var reply = buildReply(inputs);
+		var validationErrorMessage = InputsValidation.buildValidationErrorMessage(inputs);
 
-		event.reply(reply)
-			.setEphemeral(true)
+		if (validationErrorMessage.isBlank()) {
+			buildEventSignup(event, inputs);
+		} else {
+			event.reply(validationErrorMessage)
+				.setEphemeral(true)
+				.queue();
+		}
+	}
+
+	private void buildEventSignup(@Nonnull SlashCommandInteractionEvent event, @Nonnull Inputs inputs) {
+
+		var eventDescription = buildEventDescription(inputs);
+
+		event.reply(eventDescription)
 			.queue();
 	}
 
-	private String buildReply(@Nonnull Inputs inputs) {
+	private String buildEventDescription(@Nonnull Inputs inputs) {
 
-		var validationErrorMessage = InputsValidation.buildValidationErrorMessage(inputs);
-		if ( ! validationErrorMessage.isBlank()) {
-			return validationErrorMessage;
-		}
+		var description = """
+			---
+			**Signups are now available for a new event**
+
+			Slots start <t:%d:R> on <t:%d:F> and each is %d minute(s) long.
+			---""";
 
 		return String.format(
-			"Will build RSVP form with %d blocks, %d slots each, %d minutes per slot, starting at <t:%d:F>",
-			inputs.getBlocks(),
-			inputs.getSlots(),
-			inputs.getDurationInMinutes(),
-			inputs.getStartTimestamp()
+			description,
+			inputs.getStartTimestamp(),
+			inputs.getStartTimestamp(),
+			inputs.getDurationInMinutes()
 		);
 	}
 

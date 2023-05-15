@@ -12,7 +12,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.ArgumentMatchers.anyBoolean;
+import static org.mockito.ArgumentMatchers.anyCollection;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -46,36 +49,30 @@ class OutputsCommandUnitTest extends TestBase {
 	}
 
 	@Test
-	void slashCommandReturnsEphemeralReply() {
-
-		output.reply(event, inputs);
-
-		verify(event).reply(any(String.class));
-		verify(callback).setEphemeral(true);
-		verify(callback).queue();
-	}
-
-	@Test
-	void slashCommandReturnsValidationMessageIfApplicable() {
+	void slashCommandReturnsEphemeralValidationMessageIfValidationFails() {
 
 		inputs.setDurationInMinutes(-1);
 
 		output.reply(event, inputs);
 
 		verify(event).reply(stringArgumentCaptor.capture());
+		verify(callback).setEphemeral(true);
+		verify(callback).queue();
 
 		var expectation = "The minimum duration in minutes for each slot in VRSVP is one minute. Please retry this command with a larger duration.";
 		assertEquals(expectation, stringArgumentCaptor.getValue());
 	}
 
 	@Test
-	void slashCommandUsesInputsToGenerateReply() {
+	void slashCommandReturnsNonEphemeralFormReplyIfValidationPasses() {
 
 		output.reply(event, inputs);
 
 		verify(event).reply(stringArgumentCaptor.capture());
+		verify(callback, never()).setEphemeral(true);
+		verify(callback).queue();
 
-		var expectation = "Will build RSVP form with 1 blocks, 2 slots each, 3 minutes per slot, starting at <t:4:F>";
+		var expectation = "---\n**Signups are now available for a new event**\n\nSlots start <t:4:R> on <t:4:F> and each is 3 minute(s) long.\n---";
 		assertEquals(expectation, stringArgumentCaptor.getValue());
 	}
 
