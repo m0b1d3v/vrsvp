@@ -1,7 +1,9 @@
 package com.mobiusk.vrsvp;
 
 import com.mobiusk.vrsvp.output.OutputsAutoComplete;
-import com.mobiusk.vrsvp.output.OutputsCommand;
+import com.mobiusk.vrsvp.output.OutputsButtons;
+import com.mobiusk.vrsvp.output.OutputsReplies;
+import com.mobiusk.vrsvp.output.OutputsEmbeds;
 import lombok.RequiredArgsConstructor;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
@@ -45,12 +47,17 @@ public class Bot {
 		jda.awaitReady();
 	}
 
+	/**
+	 * We love dependency injection!
+	 */
 	private void addEventListeners() {
 
-		var eventListener = new EventListener(
-			new OutputsAutoComplete(),
-			new OutputsCommand()
-		);
+		var autoComplete = new OutputsAutoComplete();
+		var buttons = new OutputsButtons();
+		var embeds = new OutputsEmbeds();
+		var replies = new OutputsReplies(buttons, embeds);
+
+		var eventListener = new EventListener(autoComplete, replies);
 
 		jda.addEventListener(eventListener);
 	}

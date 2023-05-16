@@ -3,7 +3,8 @@ package com.mobiusk.vrsvp;
 import com.mobiusk.vrsvp.input.Inputs;
 import com.mobiusk.vrsvp.input.InputsEnum;
 import com.mobiusk.vrsvp.output.OutputsAutoComplete;
-import com.mobiusk.vrsvp.output.OutputsCommand;
+import com.mobiusk.vrsvp.output.OutputsButtons;
+import com.mobiusk.vrsvp.output.OutputsReplies;
 import lombok.RequiredArgsConstructor;
 import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -16,7 +17,7 @@ public class EventListener extends ListenerAdapter {
 
 	// Class constructor field(s)
 	private final OutputsAutoComplete outputsAutoComplete;
-	private final OutputsCommand outputsCommand;
+	private final OutputsReplies outputsReplies;
 
 	/**
 	 * Supplies auto-complete options for our named inputs during RSVP creation.
@@ -43,7 +44,7 @@ public class EventListener extends ListenerAdapter {
 		inputs.setDurationInMinutes(getSlashCommandInput(event, InputsEnum.DURATION));
 		inputs.setStartTimestamp(getSlashCommandInput(event, InputsEnum.START));
 
-		outputsCommand.reply(event, inputs);
+		outputsReplies.rsvpCreation(event, inputs);
 	}
 
 	private int getSlashCommandInput(@Nonnull SlashCommandInteractionEvent event, InputsEnum inputsEnum) {

@@ -3,7 +3,7 @@ package com.mobiusk.vrsvp;
 import com.mobiusk.vrsvp.input.Inputs;
 import com.mobiusk.vrsvp.input.InputsEnum;
 import com.mobiusk.vrsvp.output.OutputsAutoComplete;
-import com.mobiusk.vrsvp.output.OutputsCommand;
+import com.mobiusk.vrsvp.output.OutputsReplies;
 import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.AutoCompleteQuery;
@@ -33,7 +33,7 @@ class EventListenerTest extends TestBase {
 	private OutputsAutoComplete outputsAutoComplete;
 
 	@Mock
-	private OutputsCommand outputsCommand;
+	private OutputsReplies outputsReplies;
 
 	@Mock
 	private CommandAutoCompleteInteractionEvent commandAutoCompleteEvent;
@@ -66,7 +66,7 @@ class EventListenerTest extends TestBase {
 		eventListener.onSlashCommandInteraction(slashCommandEvent);
 
 		verify(slashCommandEvent).getName();
-		verify(outputsCommand, never()).reply(any(), any());
+		verify(outputsReplies, never()).rsvpCreation(any(), any());
 	}
 
 	@Test
@@ -78,7 +78,7 @@ class EventListenerTest extends TestBase {
 
 		eventListener.onSlashCommandInteraction(slashCommandEvent);
 
-		verify(outputsCommand).reply(eq(slashCommandEvent), inputsArgumentCaptor.capture());
+		verify(outputsReplies).rsvpCreation(eq(slashCommandEvent), inputsArgumentCaptor.capture());
 
 		var inputs = inputsArgumentCaptor.getValue();
 		assertInputValues(inputs, -1, -1, -1, -1);
@@ -106,7 +106,7 @@ class EventListenerTest extends TestBase {
 
 		eventListener.onSlashCommandInteraction(slashCommandEvent);
 
-		verify(outputsCommand).reply(eq(slashCommandEvent), inputsArgumentCaptor.capture());
+		verify(outputsReplies).rsvpCreation(eq(slashCommandEvent), inputsArgumentCaptor.capture());
 
 		var inputs = inputsArgumentCaptor.getValue();
 		assertInputValues(inputs, 1, 2, 3, 4);
