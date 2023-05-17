@@ -1,5 +1,6 @@
-package com.mobiusk.vrsvp;
+package com.mobiusk.vrsvp.command;
 
+import com.mobiusk.vrsvp.TestBase;
 import com.mobiusk.vrsvp.input.InputsEnum;
 import net.dv8tion.jda.api.interactions.commands.Command;
 import net.dv8tion.jda.api.interactions.commands.DefaultMemberPermissions;
@@ -11,19 +12,19 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class CommandsUnitTest extends TestBase {
+class SlashCommandUiUnitTest extends TestBase {
 
-	private final SlashCommandData command = Commands.create();
+	private final SlashCommandData command = SlashCommandUi.create();
 
 	@Test
 	void utilityClass() throws NoSuchMethodException {
-		assertUtilityClass(Commands.class);
+		assertUtilityClass(SlashCommandUi.class);
 	}
 
 	@Test
 	void formed() {
 		assertEquals(Command.Type.SLASH, command.getType());
-		assertEquals(Commands.SLASH, command.getName());
+		assertEquals(SlashCommandUi.INVOCATION, command.getName());
 	}
 
 	@Test

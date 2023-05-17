@@ -1,4 +1,4 @@
-package com.mobiusk.vrsvp.output;
+package com.mobiusk.vrsvp.button;
 
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import net.dv8tion.jda.api.interactions.components.buttons.ButtonStyle;
@@ -6,7 +6,7 @@ import net.dv8tion.jda.api.interactions.components.buttons.ButtonStyle;
 import java.util.LinkedList;
 import java.util.List;
 
-public class OutputsButtons {
+public class ButtonUi {
 
 	public static final String EDIT = "edit";
 	public static final String RSVP = "rsvp";

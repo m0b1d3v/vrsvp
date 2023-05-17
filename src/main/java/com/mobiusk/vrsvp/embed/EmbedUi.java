@@ -1,4 +1,4 @@
-package com.mobiusk.vrsvp.output;
+package com.mobiusk.vrsvp.embed;
 
 import com.mobiusk.vrsvp.input.Inputs;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -9,7 +9,7 @@ import javax.annotation.Nonnull;
 import java.util.LinkedList;
 import java.util.List;
 
-public class OutputsEmbeds {
+public class EmbedUi {
 
 	public static final String SLOT_TEXT_PREFIX = ">>> ";
 	public static final String EMPTY_SLOT_TEXT = SLOT_TEXT_PREFIX + "Open";

@@ -1,4 +1,4 @@
-package com.mobiusk.vrsvp.output;
+package com.mobiusk.vrsvp.embed;
 
 import com.mobiusk.vrsvp.TestBase;
 import com.mobiusk.vrsvp.input.Inputs;
@@ -9,10 +9,9 @@ import org.mockito.InjectMocks;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class OutputsEmbedsUnitTest extends TestBase {
+class EmbedUiUnitTest extends TestBase {
 
-	@InjectMocks
-	private OutputsEmbeds output;
+	@InjectMocks private EmbedUi output;
 
 	private final Inputs inputs = new Inputs();
 
@@ -54,7 +53,7 @@ class OutputsEmbedsUnitTest extends TestBase {
 			var expectedName = String.format("#%d - <t:%d:t>", fieldIndex + 1, slotTimestamp);
 
 			assertEquals(expectedName, field.getName());
-			assertEquals(OutputsEmbeds.EMPTY_SLOT_TEXT, field.getValue());
+			assertEquals(EmbedUi.EMPTY_SLOT_TEXT, field.getValue());
 			assertTrue(field.isInline());
 		}
 	}

@@ -1,4 +1,4 @@
-package com.mobiusk.vrsvp.output;
+package com.mobiusk.vrsvp.button;
 
 import com.mobiusk.vrsvp.TestBase;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
@@ -9,25 +9,24 @@ import org.mockito.InjectMocks;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
-class OutputsButtonsUnitTest extends TestBase {
+class ButtonUiUnitTest extends TestBase {
 
-	@InjectMocks
-	private OutputsButtons outputsButtons;
+	@InjectMocks private ButtonUi buttonUi;
 
 	@Test
 	void rsvpActionsPromptsBuilt() {
 
-		var buttons = outputsButtons.buildRsvpActionPrompts();
+		var buttons = buttonUi.buildRsvpActionPrompts();
 
 		assertEquals(2, buttons.size());
-		assertButtonInformation(buttons.get(0), ButtonStyle.PRIMARY, OutputsButtons.RSVP, "RSVP");
-		assertButtonInformation(buttons.get(1), ButtonStyle.SECONDARY, OutputsButtons.EDIT, "Edit");
+		assertButtonInformation(buttons.get(0), ButtonStyle.PRIMARY, ButtonUi.RSVP, "RSVP");
+		assertButtonInformation(buttons.get(1), ButtonStyle.SECONDARY, ButtonUi.EDIT, "Edit");
 	}
 
 	@Test
 	void slotSignupActionRowsBuiltWithFiveButtonsPerRow() {
 
-		var buttonRows = outputsButtons.buildSlotSignupActionRows(11);
+		var buttonRows = buttonUi.buildSlotSignupActionRows(11);
 
 		assertEquals(3, buttonRows.size());
 		assertEquals(5, buttonRows.get(0).size());
@@ -38,7 +37,7 @@ class OutputsButtonsUnitTest extends TestBase {
 	@Test
 	void slotSignupActionRowsButtonsFormedCorrectly() {
 
-		var buttonRows = outputsButtons.buildSlotSignupActionRows(2);
+		var buttonRows = buttonUi.buildSlotSignupActionRows(2);
 		var buttons = buttonRows.get(0);
 
 		assertButtonInformation(buttons.get(0), ButtonStyle.PRIMARY, "signup:0", "#1");

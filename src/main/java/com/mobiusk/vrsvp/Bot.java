@@ -1,9 +1,14 @@
 package com.mobiusk.vrsvp;
 
-import com.mobiusk.vrsvp.output.OutputsAutoComplete;
-import com.mobiusk.vrsvp.output.OutputsButtons;
-import com.mobiusk.vrsvp.output.OutputsReplies;
-import com.mobiusk.vrsvp.output.OutputsEmbeds;
+import com.mobiusk.vrsvp.command.SlashCommandReply;
+import com.mobiusk.vrsvp.command.SlashCommandUi;
+import com.mobiusk.vrsvp.button.ButtonListener;
+import com.mobiusk.vrsvp.autocomplete.AutoCompleteListener;
+import com.mobiusk.vrsvp.command.SlashCommandListener;
+import com.mobiusk.vrsvp.autocomplete.AutoCompleteReply;
+import com.mobiusk.vrsvp.button.ButtonUi;
+import com.mobiusk.vrsvp.button.ButtonReply;
+import com.mobiusk.vrsvp.embed.EmbedUi;
 import lombok.RequiredArgsConstructor;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
@@ -52,19 +57,21 @@ public class Bot {
 	 */
 	private void addEventListeners() {
 
-		var autoComplete = new OutputsAutoComplete();
-		var buttons = new OutputsButtons();
-		var embeds = new OutputsEmbeds();
-		var replies = new OutputsReplies(buttons, embeds);
+		var buttonUi = new ButtonUi();
+		var embedUi = new EmbedUi();
 
-		var eventListener = new EventListener(autoComplete, replies);
+		var autoCompleteReply = new AutoCompleteReply();
+		var buttonReply = new ButtonReply(buttonUi, embedUi);
+		var slashCommandReply = new SlashCommandReply(buttonUi, embedUi);
 
-		jda.addEventListener(eventListener);
+		jda.addEventListener(new ButtonListener(buttonReply));
+		jda.addEventListener(new AutoCompleteListener(autoCompleteReply));
+		jda.addEventListener(new SlashCommandListener(slashCommandReply));
 	}
 
 	private void updateBotSlashCommands() {
 
-		var slashCommand = Commands.create();
+		var slashCommand = SlashCommandUi.create();
 
 		jda.updateCommands()
 			.addCommands(slashCommand)
