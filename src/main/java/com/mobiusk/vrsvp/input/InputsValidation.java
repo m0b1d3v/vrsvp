@@ -12,6 +12,7 @@ public class InputsValidation {
 	// 10
 	public static final int BLOCKS_MAXIMUM = Message.MAX_EMBED_COUNT;
 
+	// 25
 	public static final int BLOCKS_AND_SLOTS_PRODUCT_MAXIMUM = SelectMenu.OPTIONS_MAX_AMOUNT;
 
 	// One week

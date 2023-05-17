@@ -1,5 +1,8 @@
 package com.mobiusk.vrsvp;
 
+import com.mobiusk.vrsvp.button.ButtonListener;
+import com.mobiusk.vrsvp.autocomplete.AutoCompleteListener;
+import com.mobiusk.vrsvp.command.SlashCommandListener;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
@@ -21,17 +24,12 @@ import static org.mockito.Mockito.when;
 
 class BotUnitTest extends TestBase {
 
-	@InjectMocks
-	private Bot bot;
+	@InjectMocks private Bot bot;
 
-	@Spy
-	private JDABuilder jdaBuilder = Bot.create("Testing");
+	@Spy private JDABuilder jdaBuilder = Bot.create("Testing");
 
-	@Mock
-	private JDA jda;
-
-	@Mock
-	private CommandListUpdateAction commandListUpdateAction;
+	@Mock private JDA jda;
+	@Mock private CommandListUpdateAction commandListUpdateAction;
 
 	@BeforeEach
 	public void beforeEach() {
@@ -68,7 +66,9 @@ class BotUnitTest extends TestBase {
 
 		startDiscordBot();
 
-		verify(jda).addEventListener(any(EventListener.class));
+		verify(jda).addEventListener(any(ButtonListener.class));
+		verify(jda).addEventListener(any(AutoCompleteListener.class));
+		verify(jda).addEventListener(any(SlashCommandListener.class));
 	}
 
 	@Test

@@ -1,17 +1,11 @@
-package com.mobiusk.vrsvp.output;
+package com.mobiusk.vrsvp.autocomplete;
 
-import com.mobiusk.vrsvp.Commands;
 import com.mobiusk.vrsvp.TestBase;
 import com.mobiusk.vrsvp.input.InputsEnum;
-import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;
-import net.dv8tion.jda.api.requests.restaction.interactions.AutoCompleteCallbackAction;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
 
 import java.util.List;
 
@@ -20,23 +14,13 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-class OutputsAutoCompleteUnitTest extends TestBase {
+class AutoCompleteReplyUnitTest extends TestBase {
 
-	@InjectMocks
-	private OutputsAutoComplete output;
-
-	@Mock
-	private CommandAutoCompleteInteractionEvent event;
-
-	@Mock
-	private AutoCompleteCallbackAction callback;
-
-	@Captor
-	private ArgumentCaptor<List<Long>> listLongArgumentCaptor;
+	@InjectMocks private AutoCompleteReply reply;
 
 	@BeforeEach
 	public void beforeEach() {
-		when(event.replyChoiceLongs(anyCollection())).thenReturn(callback);
+		when(commandAutoCompleteEvent.replyChoiceLongs(anyCollection())).thenReturn(autoCompleteCallbackAction);
 	}
 
 	@Test
@@ -45,11 +29,11 @@ class OutputsAutoCompleteUnitTest extends TestBase {
 		var fieldNames = List.of("unknown-field", InputsEnum.START.getInput());
 
 		for (var fieldName : fieldNames) {
-			output.reply(event, fieldName);
+			reply.run(commandAutoCompleteEvent, fieldName);
 		}
 
-		verify(event, never()).replyChoiceLongs(anyCollection());
-		verify(callback, never()).queue();
+		verify(commandAutoCompleteEvent, never()).replyChoiceLongs(anyCollection());
+		verify(autoCompleteCallbackAction, never()).queue();
 	}
 
 	@Test
@@ -73,13 +57,13 @@ class OutputsAutoCompleteUnitTest extends TestBase {
 
 		var input = inputsEnum.getInput();
 
-		output.reply(event, input);
+		reply.run(commandAutoCompleteEvent, input);
 
-		verify(event).replyChoiceLongs(listLongArgumentCaptor.capture());
-		verify(callback).queue();
+		verify(commandAutoCompleteEvent).replyChoiceLongs(listLongArgumentCaptor.capture());
+		verify(autoCompleteCallbackAction).queue();
 
 		var choices = listLongArgumentCaptor.getValue();
-		Assertions.assertEquals(Commands.INPUT_AUTOCOMPLETE_OPTIONS.get(input), choices);
+		Assertions.assertEquals(AutoCompleteReply.OPTIONS.get(input), choices);
 	}
 
 }
