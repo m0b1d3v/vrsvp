@@ -2,10 +2,10 @@ package com.mobiusk.vrsvp.embed;
 
 import com.mobiusk.vrsvp.input.Inputs;
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
 import javax.annotation.Nonnull;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -30,6 +30,44 @@ public class EmbedUi {
 		return embeds;
 	}
 
+	/**
+	 * Toggle (add or remove) a user's mention to the specified slot for the given message.
+	 * <p>
+	 * This is a particularly ugly function because we cannot edit embed fields in place, they are in unmodifiable lists.
+	 * I might be able to clean this up or break it apart later, but for now there's not a clear path.
+	 */
+	public List<MessageEmbed> toggleRsvp(
+		@Nonnull List<MessageEmbed> existingEmbeds,
+		@Nonnull String userMention,
+		int slotIndexDestination
+	) {
+
+		var editedEmbeds = new LinkedList<MessageEmbed>();
+
+		var slotIndex = -1;
+		for (var embed : existingEmbeds) {
+
+			var embedBuilder = new EmbedBuilder(embed).clearFields();
+
+			for (var field : embed.getFields()) {
+
+				var name = field.getName();
+				var value = field.getValue();
+
+				slotIndex++;
+				if (slotIndex == slotIndexDestination) {
+					value = editEmbedFieldValueForUserMention(value, userMention);
+				}
+
+				embedBuilder.addField(new MessageEmbed.Field(name, value, true));
+			}
+
+			editedEmbeds.add(embedBuilder.build());
+		}
+
+		return editedEmbeds;
+	}
+
 	private MessageEmbed buildEmbed(@Nonnull Inputs inputs, int embedIndex) {
 
 		var title = String.format("Block %d", embedIndex + 1);
@@ -49,8 +87,50 @@ public class EmbedUi {
 		var slotTimestamp = inputs.getStartTimestamp() + (inputs.getDurationInMinutes() * 60 * slotIndex);
 
 		var fieldName = String.format("#%d - <t:%d:t>", slotIndex + 1, slotTimestamp);
+		var fieldValue = addPrefixToFieldValue("");
 
-		return new MessageEmbed.Field(fieldName, EMPTY_SLOT_TEXT, true);
+		return new MessageEmbed.Field(fieldName, fieldValue, true);
+	}
+
+	private String editEmbedFieldValueForUserMention(String fieldValue, String userMention) {
+
+		if (fieldValue == null) {
+			fieldValue = "";
+		}
+
+		fieldValue = fieldValue.replace(EMPTY_SLOT_TEXT, "");
+		fieldValue = fieldValue.replace(SLOT_TEXT_PREFIX, "");
+		fieldValue = toggleUserMentionInFieldValue(fieldValue, userMention);
+
+		return addPrefixToFieldValue(fieldValue);
+	}
+
+	private String toggleUserMentionInFieldValue(String fieldValue, String userMention) {
+
+		var userMentions = new LinkedList<>(Arrays.stream(fieldValue.split("\n"))
+			.filter(mention -> !mention.isBlank())
+			.toList()
+		);
+
+		var userAlreadySignedUp = fieldValue.contains(userMention);
+		if (userAlreadySignedUp) {
+			userMentions.removeIf(existingMention -> existingMention.equals(userMention));
+		} else {
+			userMentions.add(userMention);
+		}
+
+		return String.join("\n", userMentions);
+	}
+
+	private String addPrefixToFieldValue(String fieldValue) {
+
+		if (fieldValue.isBlank()) {
+			fieldValue = EMPTY_SLOT_TEXT;
+		} else {
+			fieldValue = SLOT_TEXT_PREFIX + fieldValue;
+		}
+
+		return fieldValue;
 	}
 
 }

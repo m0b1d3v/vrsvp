@@ -39,6 +39,10 @@ public class ButtonReply {
 		int slotIndex
 	) {
 
+		var existingEmbeds = message.getEmbeds();
+		var editedEmbeds = embedUi.toggleRsvp(existingEmbeds, userMention, slotIndex);
+		message.editMessageEmbeds(editedEmbeds).queue();
+
 		var reply = MessageFormatter.output(String.format("RSVP state toggled for slot #%d", slotIndex + 1));
 		event.getInteraction().editMessage(reply).queue();
 	}

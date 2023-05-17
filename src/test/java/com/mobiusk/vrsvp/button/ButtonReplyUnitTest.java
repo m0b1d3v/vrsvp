@@ -13,8 +13,10 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.anyCollection;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -71,12 +73,15 @@ class ButtonReplyUnitTest extends TestBase {
 	@Test
 	void signupToggleAdjustsEmbedAndEditsEphemeralMessage() {
 
-		var userMention = "@Testing";
-		var slotIndex = 1;
+		when(embedUi.toggleRsvp(any(), any(), anyInt())).thenReturn(Collections.emptyList());
+		when(message.editMessageEmbeds(anyCollection())).thenReturn(messageEditAction);
 
-		reply.signup(buttonInteractionEvent, message, userMention, slotIndex);
+		reply.signup(buttonInteractionEvent, message, "@Testing", 1);
 
 		verify(buttonInteractionEvent).getInteraction();
+		verify(embedUi).toggleRsvp(any(), any(), anyInt());
+		verify(message).editMessageEmbeds(anyCollection());
+		verify(messageEditAction).queue();
 		verify(buttonInteraction).editMessage(stringArgumentCaptor.capture());
 		verify(messageEditCallbackAction).queue();
 

@@ -2,16 +2,22 @@ package com.mobiusk.vrsvp.embed;
 
 import com.mobiusk.vrsvp.TestBase;
 import com.mobiusk.vrsvp.input.Inputs;
+import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.MessageEmbed;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
+
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class EmbedUiUnitTest extends TestBase {
 
-	@InjectMocks private EmbedUi output;
+	private static final String USER_MENTION = "@Testing";
+
+	@InjectMocks private EmbedUi embedUi;
 
 	private final Inputs inputs = new Inputs();
 
@@ -26,7 +32,7 @@ class EmbedUiUnitTest extends TestBase {
 	@Test
 	void buildsEmbedsWithTitles() {
 
-		var embeds = output.build(inputs);
+		var embeds = embedUi.build(inputs);
 
 		assertEquals(inputs.getBlocks(), embeds.size());
 
@@ -40,7 +46,7 @@ class EmbedUiUnitTest extends TestBase {
 	@Test
 	void buildsEmbedFieldsInlineWithNamesAndValues() {
 
-		var embeds = output.build(inputs);
+		var embeds = embedUi.build(inputs);
 
 		var fields = embeds.stream().flatMap(e -> e.getFields().stream()).toList();
 
@@ -56,6 +62,67 @@ class EmbedUiUnitTest extends TestBase {
 			assertEquals(EmbedUi.EMPTY_SLOT_TEXT, field.getValue());
 			assertTrue(field.isInline());
 		}
+	}
+
+	@Test
+	void toggleRsvpForEmptyFieldAddsUserMention() {
+		var result = toggleRsvpOnOneEmbedWithOneField(EmbedUi.EMPTY_SLOT_TEXT);
+		assertEquals(EmbedUi.SLOT_TEXT_PREFIX + USER_MENTION, result.getValue());
+	}
+
+	@Test
+	void toggleRsvpForFieldWithExistingMentionRemovesIt() {
+		var result = toggleRsvpOnOneEmbedWithOneField(EmbedUi.SLOT_TEXT_PREFIX + USER_MENTION);
+		assertEquals(EmbedUi.EMPTY_SLOT_TEXT, result.getValue());
+	}
+
+	@Test
+	void toggleRsvpForFieldWithExistingMentionsAddsToBottom() {
+
+		var existing = "@Test1\n@Test2";
+		var expectation = String.format("%s%s\n%s", EmbedUi.SLOT_TEXT_PREFIX, existing, USER_MENTION);
+
+		var result = toggleRsvpOnOneEmbedWithOneField(EmbedUi.SLOT_TEXT_PREFIX + existing);
+		assertEquals(expectation, result.getValue());
+	}
+
+	@Test
+	void toggleRsvpForFieldWithWithExistingMentionBetweenOtherMentionsRemovesIt() {
+
+		var existing = String.format("@Test1\n%s\n@Test2", USER_MENTION);
+		var expectation = String.format("%s@Test1\n@Test2", EmbedUi.SLOT_TEXT_PREFIX);
+
+		var result = toggleRsvpOnOneEmbedWithOneField(EmbedUi.SLOT_TEXT_PREFIX + existing);
+		assertEquals(expectation, result.getValue());
+	}
+
+	@Test
+	void rsvpForMoreThanOneFieldIsAllowed() {
+
+		var embed = new EmbedBuilder()
+			.addField(new MessageEmbed.Field("field1", EmbedUi.SLOT_TEXT_PREFIX + USER_MENTION, true))
+			.addField(new MessageEmbed.Field("field2", EmbedUi.EMPTY_SLOT_TEXT, true))
+			.build();
+
+		var editedEmbeds = embedUi.toggleRsvp(List.of(embed), USER_MENTION, 1);
+		var fields = editedEmbeds.get(0).getFields();
+
+		assertEquals(EmbedUi.SLOT_TEXT_PREFIX + USER_MENTION, fields.get(0).getValue());
+		assertEquals(EmbedUi.SLOT_TEXT_PREFIX + USER_MENTION, fields.get(1).getValue());
+	}
+
+	// Test utility method(s)
+
+	private MessageEmbed.Field toggleRsvpOnOneEmbedWithOneField(String fieldValue) {
+
+		var field = new MessageEmbed.Field("test", fieldValue, true);
+		var embed = new EmbedBuilder().addField(field).build();
+
+		var editedEmbeds = embedUi.toggleRsvp(List.of(embed), USER_MENTION, 0);
+
+		assertEquals(1, editedEmbeds.size());
+		assertEquals(1, editedEmbeds.get(0).getFields().size());
+		return editedEmbeds.get(0).getFields().get(0);
 	}
 
 }

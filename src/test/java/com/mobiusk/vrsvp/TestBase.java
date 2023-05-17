@@ -12,6 +12,7 @@ import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.interactions.AutoCompleteQuery;
 import net.dv8tion.jda.api.interactions.components.buttons.ButtonInteraction;
 import net.dv8tion.jda.api.requests.RestAction;
+import net.dv8tion.jda.api.requests.restaction.MessageEditAction;
 import net.dv8tion.jda.api.requests.restaction.interactions.AutoCompleteCallbackAction;
 import net.dv8tion.jda.api.requests.restaction.interactions.MessageEditCallbackAction;
 import net.dv8tion.jda.api.requests.restaction.interactions.ReplyCallbackAction;
@@ -41,6 +42,7 @@ public abstract class TestBase {
 	@Mock protected CommandAutoCompleteInteractionEvent commandAutoCompleteEvent;
 	@Mock protected Message message;
 	@Mock protected MessageChannelUnion messageChannelUnion;
+	@Mock protected MessageEditAction messageEditAction;
 	@Mock protected MessageEditCallbackAction messageEditCallbackAction;
 	@Mock protected MessageEmbed messageEmbed;
 	@Mock protected MessageEmbed.Field messageEmbedField;
