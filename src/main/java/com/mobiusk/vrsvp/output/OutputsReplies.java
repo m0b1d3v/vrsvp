@@ -33,6 +33,43 @@ public class OutputsReplies {
 		buildEventSignup(event, inputs);
 	}
 
+	/**
+	 * Replies with an ephemeral list of buttons users can click to toggle RSVP state for slots.
+	 */
+	public void rsvpInterest(@Nonnull ButtonInteractionEvent event, int slotsAvailable) {
+
+		var buttonRows = outputsButtons.buildSlotSignupActionRows(slotsAvailable);
+
+		var message = formattedMessage("Use these buttons to toggle your RSVP for any slot.");
+
+		var reply = event.reply(message).setEphemeral(true);
+		buttonRows.forEach(reply::addActionRow);
+		reply.queue();
+	}
+
+	/**
+	 * Toggles RSVP state for given user and slot and then adjusts source ephemeral message to reflect the change.
+	 */
+	public void rsvpToggle(
+		@Nonnull ButtonInteractionEvent event,
+		@Nonnull Message message,
+		String userMention,
+		int slotIndex
+	) {
+
+		outputsEmbeds.toggleRsvp(message, userMention, slotIndex);
+
+		var reply = formattedMessage(String.format("RSVP state toggled for slot #%d", slotIndex + 1));
+		event.getInteraction().editMessage(reply).queue();
+	}
+
+	/**
+	 * Generic ephemeral reply in response to a button press, mostly for validation errors or development feedback.
+	 */
+	public void ephemeralReply(@Nonnull ButtonInteractionEvent event, String message) {
+		event.reply(message).setEphemeral(true).queue();
+	}
+
 	private void buildEventSignup(@Nonnull SlashCommandInteractionEvent event, @Nonnull Inputs inputs) {
 		event.reply(buildEventDescription(inputs))
 			.addEmbeds(outputsEmbeds.build(inputs))

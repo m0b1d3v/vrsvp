@@ -3,21 +3,33 @@ package com.mobiusk.vrsvp;
 import com.mobiusk.vrsvp.input.Inputs;
 import com.mobiusk.vrsvp.input.InputsEnum;
 import com.mobiusk.vrsvp.output.OutputsAutoComplete;
+import com.mobiusk.vrsvp.output.OutputsButtons;
 import com.mobiusk.vrsvp.output.OutputsReplies;
+import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.MessageEmbed;
+import net.dv8tion.jda.api.entities.MessageReference;
+import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.entities.channel.unions.MessageChannelUnion;
 import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.interactions.AutoCompleteQuery;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
+import net.dv8tion.jda.api.requests.RestAction;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
+import java.util.List;
 import java.util.stream.IntStream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
@@ -36,15 +48,133 @@ class EventListenerTest extends TestBase {
 	private OutputsReplies outputsReplies;
 
 	@Mock
+	private ButtonInteractionEvent buttonInteractionEvent;
+
+	@Mock
 	private CommandAutoCompleteInteractionEvent commandAutoCompleteEvent;
 
 	@Mock
 	private SlashCommandInteractionEvent slashCommandEvent;
 
+	@Mock
+	private User user;
+
+	@Mock
+	private Message message;
+
+	@Mock
+	private MessageEmbed.Field field;
+
+	@Mock
+	private MessageEmbed embed;
+
+	@Mock
+	private MessageReference messageReference;
+
+	@Mock
+	private MessageChannelUnion messageChannelUnion;
+
+	@Mock
+	private RestAction<Message> messageRestAction;
+
 	@Captor
 	private ArgumentCaptor<Inputs> inputsArgumentCaptor;
 
 	private final int SLASH_COMMAND_INPUT_COUNT = InputsEnum.values().length;
+
+	@BeforeEach
+	public void beforeEach() {
+
+		when(embed.getFields()).thenReturn(List.of(field, field, field));
+
+		when(message.getEmbeds()).thenReturn(List.of(embed, embed));
+		when(message.getMessageReference()).thenReturn(messageReference);
+
+		when(messageReference.getMessageIdLong()).thenReturn(1L);
+
+		when(messageChannelUnion.retrieveMessageById(anyLong())).thenReturn(messageRestAction);
+
+		when(messageRestAction.complete()).thenReturn(message);
+
+		when(buttonInteractionEvent.getUser()).thenReturn(user);
+		when(buttonInteractionEvent.getMessage()).thenReturn(message);
+		when(buttonInteractionEvent.getChannel()).thenReturn(messageChannelUnion);
+	}
+
+	@Test
+	void unexpectedButtonInteractionsReceiveErrorMessage() {
+
+		when(buttonInteractionEvent.getComponentId()).thenReturn("testing");
+
+		eventListener.onButtonInteraction(buttonInteractionEvent);
+
+		verify(outputsReplies).ephemeralReply(buttonInteractionEvent, "Input not recognized.");
+		verify(outputsReplies, never()).rsvpInterest(eq(buttonInteractionEvent), anyInt());
+		verify(outputsReplies, never()).rsvpToggle(eq(buttonInteractionEvent), any(), any(), anyInt());
+	}
+
+	@Test
+	void buttonInteractionEventHandledForRsvpInterest() {
+
+		when(buttonInteractionEvent.getComponentId()).thenReturn(OutputsButtons.RSVP);
+
+		eventListener.onButtonInteraction(buttonInteractionEvent);
+
+		verify(outputsReplies, never()).ephemeralReply(buttonInteractionEvent, "Input not recognized.");
+		verify(outputsReplies).rsvpInterest(buttonInteractionEvent, embed.getFields().size() * message.getEmbeds().size());
+		verify(outputsReplies, never()).rsvpToggle(eq(buttonInteractionEvent), any(), any(), anyInt());
+	}
+
+	@Test
+	void buttonInteractionEventForSignupButtonWithoutContextIdDoesNotGetButtonEventSourceOrToggleSlots() {
+
+		when(buttonInteractionEvent.getComponentId()).thenReturn(OutputsButtons.SIGNUP);
+
+		eventListener.onButtonInteraction(buttonInteractionEvent);
+
+		verify(outputsReplies, never()).ephemeralReply(buttonInteractionEvent, "Input not recognized.");
+		verify(outputsReplies, never()).rsvpInterest(eq(buttonInteractionEvent), anyInt());
+		verify(outputsReplies, never()).rsvpToggle(eq(buttonInteractionEvent), any(), any(), anyInt());
+
+		verify(message, never()).getMessageReference();
+		verify(buttonInteractionEvent, never()).getChannel();
+	}
+
+	@Test
+	void buttonInteractionEventForSignupButtonWithContextIdButNoMessageSourceDoesNotToggleSlots() {
+
+		when(buttonInteractionEvent.getComponentId()).thenReturn(OutputsButtons.SIGNUP + ":1");
+		when(message.getMessageReference()).thenReturn(null);
+
+		eventListener.onButtonInteraction(buttonInteractionEvent);
+
+		verify(outputsReplies, never()).ephemeralReply(buttonInteractionEvent, "Input not recognized.");
+		verify(outputsReplies, never()).rsvpInterest(eq(buttonInteractionEvent), anyInt());
+		verify(outputsReplies, never()).rsvpToggle(eq(buttonInteractionEvent), any(), any(), anyInt());
+
+		verify(message).getMessageReference();
+		verify(buttonInteractionEvent, never()).getChannel();
+	}
+
+	@Test
+	void buttonInteractionEventForSignupButtonWithContextIdAndMessageSourceTogglesSlots() {
+
+		when(buttonInteractionEvent.getComponentId()).thenReturn(OutputsButtons.SIGNUP + ":1");
+		when(user.getAsMention()).thenReturn("@Testing");
+
+		eventListener.onButtonInteraction(buttonInteractionEvent);
+
+		verify(outputsReplies, never()).ephemeralReply(buttonInteractionEvent, "Input not recognized.");
+		verify(outputsReplies, never()).rsvpInterest(eq(buttonInteractionEvent), anyInt());
+		verify(outputsReplies).rsvpToggle(buttonInteractionEvent, message, "@Testing", 1);
+
+		verify(message).getMessageReference();
+		verify(buttonInteractionEvent).getChannel();
+		verify(messageChannelUnion).retrieveMessageById(1L);
+		verify(messageRestAction).complete();
+		verify(buttonInteractionEvent).getUser();
+		verify(user).getAsMention();
+	}
 
 	@Test
 	void commandAutoCompleteEventsIntercepted() {
