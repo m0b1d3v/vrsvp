@@ -39,14 +39,15 @@ public class ButtonListener extends ListenerAdapter {
 		return buttonId[0];
 	}
 
-	private String getButtonInteractionContext(@Nonnull ButtonInteractionEvent event) {
+	private Integer getButtonInteractionContext(@Nonnull ButtonInteractionEvent event) {
 
 		var buttonId = getButtonInteractionId(event);
 		if (buttonId.length < 2) {
 			return null;
 		}
 
-		return buttonId[1];
+		var contextIndex = buttonId[1];
+		return Integer.parseInt(contextIndex);
 	}
 
 	private void handleRsvpButtonPress(@Nonnull ButtonInteractionEvent event) {
@@ -61,8 +62,8 @@ public class ButtonListener extends ListenerAdapter {
 
 	private void handleSignupButtonPress(@Nonnull ButtonInteractionEvent event) {
 
-		var buttonIndex = getButtonInteractionContext(event);
-		if (buttonIndex == null) {
+		var slotIndex = getButtonInteractionContext(event);
+		if (slotIndex == null) {
 			return;
 		}
 
@@ -72,7 +73,6 @@ public class ButtonListener extends ListenerAdapter {
 		}
 
 		var userMention = event.getUser().getAsMention();
-		var slotIndex = Integer.parseInt(buttonIndex);
 		reply.signup(event, rsvp, userMention, slotIndex);
 	}
 
