@@ -2,7 +2,6 @@ package com.mobiusk.vrsvp.button;
 
 import net.dv8tion.jda.api.interactions.components.ActionRow;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
-import net.dv8tion.jda.api.interactions.components.buttons.ButtonStyle;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -10,6 +9,10 @@ import java.util.List;
 public class ButtonUi {
 
 	public static final String EDIT = "edit";
+	public static final String EDIT_DESCRIPTION = "edit-description";
+	public static final String EDIT_EMBED = "edit-embed";
+	public static final String EDIT_FIELD_TITLE = "edit-field-title";
+	public static final String EDIT_FIELD_VALUE = "edit-field-value";
 	public static final String RSVP = "rsvp";
 	public static final String SIGNUP = "signup";
 
@@ -20,8 +23,20 @@ public class ButtonUi {
 	 */
 	public List<Button> buildRsvpActionPrompts() {
 		return List.of(
-			Button.of(ButtonStyle.PRIMARY, RSVP, "RSVP"),
-			Button.of(ButtonStyle.SECONDARY, EDIT, "Edit")
+			Button.primary(RSVP, "RSVP"),
+			Button.secondary(EDIT, "Edit")
+		);
+	}
+
+	/**
+	 * Builds a list of buttons that correspond to editing either signup message, embeds, or embed fields.
+	 */
+	public List<Button> buildEditTopLevelActionRow() {
+		return List.of(
+			Button.primary(EDIT_DESCRIPTION, "Description"),
+			Button.primary(EDIT_EMBED, "Blocks"),
+			Button.primary(EDIT_FIELD_TITLE, "Slot Titles"),
+			Button.primary(EDIT_FIELD_VALUE, "Slot Values")
 		);
 	}
 
@@ -38,7 +53,7 @@ public class ButtonUi {
 			var id = String.format("%s:%d", actionId, buttonIndex);
 			var label = String.format("#%d", buttonIndex + 1);
 
-			buttons.add(Button.of(ButtonStyle.PRIMARY, id, label));
+			buttons.add(Button.primary(id, label));
 		}
 
 		return ActionRow.partitionOf(buttons);

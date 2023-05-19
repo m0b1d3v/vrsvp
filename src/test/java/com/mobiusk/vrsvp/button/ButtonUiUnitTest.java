@@ -24,6 +24,18 @@ class ButtonUiUnitTest extends TestBase {
 	}
 
 	@Test
+	void editTopLevelPromptsBuilt() {
+
+		var buttons = buttonUi.buildEditTopLevelActionRow();
+
+		assertEquals(4, buttons.size());
+		assertButtonInformation(buttons.get(0), ButtonStyle.PRIMARY, ButtonUi.EDIT_DESCRIPTION, "Description");
+		assertButtonInformation(buttons.get(1), ButtonStyle.PRIMARY, ButtonUi.EDIT_EMBED, "Blocks");
+		assertButtonInformation(buttons.get(2), ButtonStyle.PRIMARY, ButtonUi.EDIT_FIELD_TITLE, "Slot Titles");
+		assertButtonInformation(buttons.get(3), ButtonStyle.PRIMARY, ButtonUi.EDIT_FIELD_VALUE, "Slot Values");
+	}
+
+	@Test
 	void slotSignupActionRowsBuiltWithFiveButtonsPerRow() {
 
 		var buttonRows = buttonUi.buildIndexedButtonActionRows(ButtonUi.SIGNUP, 11);
