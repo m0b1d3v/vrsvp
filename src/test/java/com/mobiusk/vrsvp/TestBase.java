@@ -5,7 +5,7 @@ import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.MessageReference;
 import net.dv8tion.jda.api.entities.User;
-import net.dv8tion.jda.api.entities.channel.unions.MessageChannelUnion;
+import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
 import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
@@ -41,7 +41,7 @@ public abstract class TestBase {
 	@Mock protected ButtonInteractionEvent buttonInteractionEvent;
 	@Mock protected CommandAutoCompleteInteractionEvent commandAutoCompleteEvent;
 	@Mock protected Message message;
-	@Mock protected MessageChannelUnion messageChannelUnion;
+	@Mock protected MessageChannel messageChannel;
 	@Mock protected MessageEditAction messageEditAction;
 	@Mock protected MessageEditCallbackAction messageEditCallbackAction;
 	@Mock protected MessageEmbed messageEmbed;

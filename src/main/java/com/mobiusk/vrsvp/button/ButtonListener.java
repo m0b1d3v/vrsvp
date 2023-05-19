@@ -21,13 +21,16 @@ public class ButtonListener extends ListenerAdapter {
 	@Override
 	public void onButtonInteraction(@Nonnull ButtonInteractionEvent event) {
 		switch (getButtonInteractionAction(event)) {
+			case ButtonUi.EDIT -> handleEditButtonPress(event);
+			case ButtonUi.EDIT_DESCRIPTION -> handleEditDescriptionButtonPress(event);
+			case ButtonUi.EDIT_EMBED -> handleEditEmbedButtonPress(event);
+			case ButtonUi.EDIT_FIELD_TITLE -> handleEditFieldTitleButtonPress(event);
+			case ButtonUi.EDIT_FIELD_VALUE -> handleEditFieldValueButtonPress(event);
 			case ButtonUi.RSVP -> handleRsvpButtonPress(event);
 			case ButtonUi.SIGNUP -> handleSignupButtonPress(event);
 			default -> reply.ephemeral(event, "Input not recognized.");
 		}
 	}
-
-	// Private button interaction logic
 
 	private String[] getButtonInteractionId(@Nonnull ButtonInteractionEvent event) {
 		var buttonId = event.getComponentId();
@@ -50,13 +53,71 @@ public class ButtonListener extends ListenerAdapter {
 		return Integer.parseInt(contextIndex);
 	}
 
-	private void handleRsvpButtonPress(@Nonnull ButtonInteractionEvent event) {
+	private void handleEditButtonPress(@Nonnull ButtonInteractionEvent event) {
 
-		var slots = 0;
-		for (var embed : event.getMessage().getEmbeds()) {
-			slots += embed.getFields().size();
+		reply.edit(event);
+	}
+
+	private void handleEditDescriptionButtonPress(@Nonnull ButtonInteractionEvent event) {
+
+		var rsvp = getEphemeralButtonEventSource(event);
+		if (rsvp == null) {
+			return;
 		}
 
+		reply.editDescription(event, rsvp);
+	}
+
+	private void handleEditEmbedButtonPress(@Nonnull ButtonInteractionEvent event) {
+
+		var rsvp = getEphemeralButtonEventSource(event);
+		if (rsvp == null) {
+			return;
+		}
+
+		var embedIndex = getButtonInteractionContext(event);
+		if (embedIndex != null) {
+			reply.editEmbed(event, rsvp, embedIndex);
+		} else {
+			var selectionCount = rsvp.getEmbeds().size();
+			reply.editIndexedSelectionGeneration(event, "block", ButtonUi.EDIT_EMBED, selectionCount);
+		}
+	}
+
+	private void handleEditFieldTitleButtonPress(@Nonnull ButtonInteractionEvent event) {
+
+		var rsvp = getEphemeralButtonEventSource(event);
+		if (rsvp == null) {
+			return;
+		}
+
+		var fieldIndex = getButtonInteractionContext(event);
+		if (fieldIndex != null) {
+			reply.editSlotTitle(event, rsvp, fieldIndex);
+		} else {
+			var selectionCount = countSlotsInMessageEmbeds(rsvp);
+			reply.editIndexedSelectionGeneration(event, "slot title", ButtonUi.EDIT_FIELD_TITLE, selectionCount);
+		}
+	}
+
+	private void handleEditFieldValueButtonPress(@Nonnull ButtonInteractionEvent event) {
+
+		var rsvp = getEphemeralButtonEventSource(event);
+		if (rsvp == null) {
+			return;
+		}
+
+		var fieldIndex = getButtonInteractionContext(event);
+		if (fieldIndex != null) {
+			reply.editSlotValue(event, rsvp, fieldIndex);
+		} else {
+			var selectionCount = countSlotsInMessageEmbeds(rsvp);
+			reply.editIndexedSelectionGeneration(event, "slot value", ButtonUi.EDIT_FIELD_VALUE, selectionCount);
+		}
+	}
+
+	private void handleRsvpButtonPress(@Nonnull ButtonInteractionEvent event) {
+		var slots = countSlotsInMessageEmbeds(event.getMessage());
 		reply.rsvp(event, slots);
 	}
 
@@ -76,6 +137,7 @@ public class ButtonListener extends ListenerAdapter {
 		reply.signup(event, rsvp, userMention, slotIndex);
 	}
 
+	// Any changes here should be propagated to the similar method in ModalListener (no common parent = copied code)
 	private Message getEphemeralButtonEventSource(ButtonInteractionEvent event) {
 
 		var eventMessageReference = event.getMessage().getMessageReference();
@@ -84,9 +146,19 @@ public class ButtonListener extends ListenerAdapter {
 		}
 
 		return event
-			.getChannel()
+			.getMessageChannel()
 			.retrieveMessageById(eventMessageReference.getMessageIdLong())
 			.complete();
+	}
+
+	private int countSlotsInMessageEmbeds(@Nonnull Message message) {
+
+		var slots = 0;
+		for (var embed : message.getEmbeds()) {
+			slots += embed.getFields().size();
+		}
+
+		return slots;
 	}
 
 }
