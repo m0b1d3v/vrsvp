@@ -22,7 +22,7 @@ public class ButtonReply {
 
 		var buttonRows = buttonUi.buildSlotSignupActionRows(slotsAvailable);
 
-		var message = MessageFormatter.output("Use these buttons to toggle your RSVP for any slot.");
+		var message = Formatter.replies("Use these buttons to toggle your RSVP for any slot.");
 
 		var reply = event.reply(message).setEphemeral(true);
 		buttonRows.forEach(reply::addActionRow);
@@ -43,8 +43,8 @@ public class ButtonReply {
 		var editedEmbeds = embedUi.toggleRsvp(existingEmbeds, userMention, slotIndex);
 		message.editMessageEmbeds(editedEmbeds).queue();
 
-		var reply = MessageFormatter.output(String.format("RSVP state toggled for slot #%d", slotIndex + 1));
 		event.getInteraction().editMessage(reply).queue();
+		var reply = Formatter.replies(String.format("RSVP state toggled for slot #%d", slotIndex + 1));
 	}
 
 	/**
