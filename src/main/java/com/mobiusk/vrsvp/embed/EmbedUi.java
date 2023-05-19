@@ -68,6 +68,93 @@ public class EmbedUi {
 		return editedEmbeds;
 	}
 
+	public List<MessageEmbed> editEmbed(
+		@Nonnull List<MessageEmbed> existingEmbeds,
+		String embedTitle,
+		int embedIndex
+	) {
+
+		var editedEmbeds = new LinkedList<MessageEmbed>();
+
+		for (var embedIndexCounter = 0; embedIndexCounter < existingEmbeds.size(); embedIndexCounter++) {
+
+			var embed = existingEmbeds.get(embedIndexCounter);
+			var embedBuilder = new EmbedBuilder(embed);
+
+			if (embedIndexCounter == embedIndex) {
+				embedBuilder.setTitle(embedTitle);
+			}
+
+			editedEmbeds.add(embedBuilder.build());
+		}
+
+		return editedEmbeds;
+	}
+
+	public List<MessageEmbed> editFieldTitle(
+		@Nonnull List<MessageEmbed> existingEmbeds,
+		String fieldTitle,
+		int fieldIndex
+	) {
+
+		var editedEmbeds = new LinkedList<MessageEmbed>();
+
+		var fieldIndexCount = 0;
+		for (var embed : existingEmbeds) {
+
+			var embedBuilder = new EmbedBuilder(embed).clearFields();
+
+			for (var field : embed.getFields()) {
+
+				var name = field.getName();
+				var value = field.getValue();
+
+				if (fieldIndexCount == fieldIndex) {
+					name = fieldTitle;
+				}
+
+				embedBuilder.addField(new MessageEmbed.Field(name, value, true));
+				fieldIndexCount++;
+			}
+
+			editedEmbeds.add(embedBuilder.build());
+		}
+
+		return editedEmbeds;
+	}
+
+	public List<MessageEmbed> editFieldValue(
+		@Nonnull List<MessageEmbed> existingEmbeds,
+		String fieldValue,
+		int fieldIndex
+	) {
+
+		var editedEmbeds = new LinkedList<MessageEmbed>();
+
+		var fieldIndexCount = 0;
+		for (var embed : existingEmbeds) {
+
+			var embedBuilder = new EmbedBuilder(embed).clearFields();
+
+			for (var field : embed.getFields()) {
+
+				var name = field.getName();
+				var value = field.getValue();
+
+				if (fieldIndexCount == fieldIndex) {
+					value = fieldValue;
+				}
+
+				embedBuilder.addField(new MessageEmbed.Field(name, value, true));
+				fieldIndexCount++;
+			}
+
+			editedEmbeds.add(embedBuilder.build());
+		}
+
+		return editedEmbeds;
+	}
+
 	private MessageEmbed buildEmbed(@Nonnull Inputs inputs, int embedIndex) {
 
 		var title = String.format("Block %d", embedIndex + 1);
