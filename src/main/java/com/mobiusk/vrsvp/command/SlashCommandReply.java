@@ -4,7 +4,7 @@ import com.mobiusk.vrsvp.input.Inputs;
 import com.mobiusk.vrsvp.input.InputsValidation;
 import com.mobiusk.vrsvp.button.ButtonUi;
 import com.mobiusk.vrsvp.embed.EmbedUi;
-import com.mobiusk.vrsvp.output.MessageFormatter;
+import com.mobiusk.vrsvp.util.Formatter;
 import lombok.RequiredArgsConstructor;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
@@ -40,7 +40,7 @@ public class SlashCommandReply {
 
 	private String buildEventDescription(@Nonnull Inputs inputs) {
 
-		var description = MessageFormatter.output("""
+		var description = Formatter.replies("""
 			**Signups are now available for a new event**
 
 			Slots start <t:%d:R> on <t:%d:F> and each is %d minute(s) long."""

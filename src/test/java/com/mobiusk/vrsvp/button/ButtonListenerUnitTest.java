@@ -32,13 +32,13 @@ class ButtonListenerUnitTest extends TestBase {
 
 		when(messageReference.getMessageIdLong()).thenReturn(1L);
 
-		when(messageChannelUnion.retrieveMessageById(anyLong())).thenReturn(messageRestAction);
+		when(messageChannel.retrieveMessageById(anyLong())).thenReturn(messageRestAction);
 
 		when(messageRestAction.complete()).thenReturn(message);
 
 		when(buttonInteractionEvent.getUser()).thenReturn(user);
 		when(buttonInteractionEvent.getMessage()).thenReturn(message);
-		when(buttonInteractionEvent.getChannel()).thenReturn(messageChannelUnion);
+		when(buttonInteractionEvent.getMessageChannel()).thenReturn(messageChannel);
 	}
 
 	@Test
@@ -51,6 +51,49 @@ class ButtonListenerUnitTest extends TestBase {
 		verify(reply).ephemeral(buttonInteractionEvent, "Input not recognized.");
 		verify(reply, never()).rsvp(eq(buttonInteractionEvent), anyInt());
 		verify(reply, never()).signup(eq(buttonInteractionEvent), any(), any(), anyInt());
+	}
+
+	@Test
+	void buttonInteractionEventHandledForEditInterest() {
+
+		when(buttonInteractionEvent.getComponentId()).thenReturn(ButtonUi.EDIT);
+
+		listener.onButtonInteraction(buttonInteractionEvent);
+
+		verify(reply).edit(buttonInteractionEvent);
+	}
+
+	@Test
+	void buttonInteractionEventWithoutMessageReferencesFailsForEditDescriptionInterest() {
+
+		when(buttonInteractionEvent.getComponentId()).thenReturn(ButtonUi.EDIT_DESCRIPTION);
+		when(message.getMessageReference()).thenReturn(null);
+
+		listener.onButtonInteraction(buttonInteractionEvent);
+
+		verify(reply, never()).editDescription(buttonInteractionEvent, message);
+		verify(buttonInteractionEvent, never()).getMessageChannel();
+	}
+
+	@Test
+	void buttonInteractionEventWithoutMessageSourceFailsForEditDescriptionInterest() {
+
+		when(buttonInteractionEvent.getComponentId()).thenReturn(ButtonUi.EDIT_DESCRIPTION);
+		when(messageRestAction.complete()).thenReturn(null);
+
+		listener.onButtonInteraction(buttonInteractionEvent);
+
+		verify(reply, never()).editDescription(buttonInteractionEvent, message);
+	}
+
+	@Test
+	void buttonInteractionEventHandledForEditDescriptionInterest() {
+
+		when(buttonInteractionEvent.getComponentId()).thenReturn(ButtonUi.EDIT_DESCRIPTION);
+
+		listener.onButtonInteraction(buttonInteractionEvent);
+
+		verify(reply).editDescription(buttonInteractionEvent, message);
 	}
 
 	@Test
@@ -109,8 +152,8 @@ class ButtonListenerUnitTest extends TestBase {
 		verify(reply).signup(buttonInteractionEvent, message, "@Testing", 1);
 
 		verify(message).getMessageReference();
-		verify(buttonInteractionEvent).getChannel();
-		verify(messageChannelUnion).retrieveMessageById(1L);
+		verify(buttonInteractionEvent).getMessageChannel();
+		verify(messageChannel).retrieveMessageById(1L);
 		verify(messageRestAction).complete();
 		verify(buttonInteractionEvent).getUser();
 		verify(user).getAsMention();
