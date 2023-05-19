@@ -46,10 +46,10 @@ class SlashCommandUiUnitTest extends TestBase {
 	void inputsUseLogicalOrder() {
 		var options = command.getOptions();
 		assertEquals(4, options.size());
-		assertEquals(InputsEnum.START.getInput(), options.get(0).getName());
-		assertEquals(InputsEnum.BLOCKS.getInput(), options.get(1).getName());
-		assertEquals(InputsEnum.SLOTS.getInput(), options.get(2).getName());
-		assertEquals(InputsEnum.DURATION.getInput(), options.get(3).getName());
+		assertEquals(InputsEnum.START.getId(), options.get(0).getName());
+		assertEquals(InputsEnum.BLOCKS.getId(), options.get(1).getName());
+		assertEquals(InputsEnum.SLOTS.getId(), options.get(2).getName());
+		assertEquals(InputsEnum.DURATION.getId(), options.get(3).getName());
 	}
 
 }

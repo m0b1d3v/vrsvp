@@ -1,7 +1,6 @@
 package com.mobiusk.vrsvp.command;
 
 import com.mobiusk.vrsvp.input.Inputs;
-import com.mobiusk.vrsvp.input.InputsValidation;
 import com.mobiusk.vrsvp.button.ButtonUi;
 import com.mobiusk.vrsvp.embed.EmbedUi;
 import com.mobiusk.vrsvp.util.Formatter;
@@ -21,17 +20,6 @@ public class SlashCommandReply {
 	 * Replies with an ephemeral validation error or an RSVP form everyone can use.
 	 */
 	public void rsvpCreation(@Nonnull SlashCommandInteractionEvent event, @Nonnull Inputs inputs) {
-
-		var validationErrorMessage = InputsValidation.buildValidationErrorMessage(inputs);
-		if ( ! validationErrorMessage.isBlank()) {
-			event.reply(validationErrorMessage).setEphemeral(true).queue();
-			return;
-		}
-
-		buildEventSignup(event, inputs);
-	}
-
-	private void buildEventSignup(@Nonnull SlashCommandInteractionEvent event, @Nonnull Inputs inputs) {
 		event.reply(buildEventDescription(inputs))
 			.addEmbeds(embedUi.build(inputs))
 			.addActionRow(buttonUi.buildRsvpActionPrompts())

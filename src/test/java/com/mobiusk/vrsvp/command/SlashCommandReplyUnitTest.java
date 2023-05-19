@@ -49,21 +49,7 @@ class SlashCommandReplyUnitTest extends TestBase {
 	}
 
 	@Test
-	void rsvpCreationReturnsEphemeralValidationMessageIfValidationFails() {
-
-		inputs.setDurationInMinutes(-1);
-
-		reply.rsvpCreation(slashCommandInteractionEvent, inputs);
-
-		verify(slashCommandInteractionEvent).reply(stringArgumentCaptor.capture());
-		verifyRsvpCreationActions(times(1), never());
-
-		var expectation = "The minimum duration in minutes for each slot in VRSVP is one minute. Please retry this command with a larger duration.";
-		assertEquals(expectation, stringArgumentCaptor.getValue());
-	}
-
-	@Test
-	void rsvpCreationReturnsNonEphemeralFormReplyIfValidationPasses() {
+	void rsvpCreationReturnsNonEphemeralFormReply() {
 
 		reply.rsvpCreation(slashCommandInteractionEvent, inputs);
 

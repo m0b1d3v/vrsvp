@@ -65,10 +65,10 @@ class SlashCommandListenerUnitTest extends TestBase {
 			})
 			.toList();
 
-		when(slashCommandInteractionEvent.getOption(InputsEnum.BLOCKS.getInput())).thenReturn(options.get(0));
-		when(slashCommandInteractionEvent.getOption(InputsEnum.SLOTS.getInput())).thenReturn(options.get(1));
-		when(slashCommandInteractionEvent.getOption(InputsEnum.DURATION.getInput())).thenReturn(options.get(2));
-		when(slashCommandInteractionEvent.getOption(InputsEnum.START.getInput())).thenReturn(options.get(3));
+		when(slashCommandInteractionEvent.getOption(InputsEnum.BLOCKS.getId())).thenReturn(options.get(0));
+		when(slashCommandInteractionEvent.getOption(InputsEnum.SLOTS.getId())).thenReturn(options.get(1));
+		when(slashCommandInteractionEvent.getOption(InputsEnum.DURATION.getId())).thenReturn(options.get(2));
+		when(slashCommandInteractionEvent.getOption(InputsEnum.START.getId())).thenReturn(options.get(3));
 
 		when(slashCommandInteractionEvent.getName()).thenReturn(SlashCommandUi.INVOCATION);
 

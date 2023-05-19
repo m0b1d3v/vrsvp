@@ -29,7 +29,7 @@ public class SlashCommandListener extends ListenerAdapter {
 
 	private int getSlashCommandInput(@Nonnull SlashCommandInteractionEvent event, InputsEnum inputsEnum) {
 
-		var option = event.getOption(inputsEnum.getInput());
+		var option = event.getOption(inputsEnum.getId());
 		if (option == null) {
 			return -1;
 		}
