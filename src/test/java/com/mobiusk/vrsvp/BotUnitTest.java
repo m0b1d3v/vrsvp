@@ -1,7 +1,6 @@
 package com.mobiusk.vrsvp;
 
 import com.mobiusk.vrsvp.button.ButtonListener;
-import com.mobiusk.vrsvp.autocomplete.AutoCompleteListener;
 import com.mobiusk.vrsvp.command.SlashCommandListener;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
@@ -67,7 +66,6 @@ class BotUnitTest extends TestBase {
 		startDiscordBot();
 
 		verify(jda).addEventListener(any(ButtonListener.class));
-		verify(jda).addEventListener(any(AutoCompleteListener.class));
 		verify(jda).addEventListener(any(SlashCommandListener.class));
 	}
 

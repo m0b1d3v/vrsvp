@@ -6,14 +6,11 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.MessageReference;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
-import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
-import net.dv8tion.jda.api.interactions.AutoCompleteQuery;
 import net.dv8tion.jda.api.interactions.components.buttons.ButtonInteraction;
 import net.dv8tion.jda.api.requests.RestAction;
 import net.dv8tion.jda.api.requests.restaction.MessageEditAction;
-import net.dv8tion.jda.api.requests.restaction.interactions.AutoCompleteCallbackAction;
 import net.dv8tion.jda.api.requests.restaction.interactions.MessageEditCallbackAction;
 import net.dv8tion.jda.api.requests.restaction.interactions.ReplyCallbackAction;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -35,11 +32,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 public abstract class TestBase {
 
 	// All JDA mocks
-	@Mock protected AutoCompleteCallbackAction autoCompleteCallbackAction;
-	@Mock protected AutoCompleteQuery autoCompleteQuery;
 	@Mock protected ButtonInteraction buttonInteraction;
 	@Mock protected ButtonInteractionEvent buttonInteractionEvent;
-	@Mock protected CommandAutoCompleteInteractionEvent commandAutoCompleteEvent;
 	@Mock protected Message message;
 	@Mock protected MessageChannel messageChannel;
 	@Mock protected MessageEditAction messageEditAction;

@@ -3,9 +3,7 @@ package com.mobiusk.vrsvp;
 import com.mobiusk.vrsvp.command.SlashCommandReply;
 import com.mobiusk.vrsvp.command.SlashCommandUi;
 import com.mobiusk.vrsvp.button.ButtonListener;
-import com.mobiusk.vrsvp.autocomplete.AutoCompleteListener;
 import com.mobiusk.vrsvp.command.SlashCommandListener;
-import com.mobiusk.vrsvp.autocomplete.AutoCompleteReply;
 import com.mobiusk.vrsvp.button.ButtonUi;
 import com.mobiusk.vrsvp.button.ButtonReply;
 import com.mobiusk.vrsvp.embed.EmbedUi;
@@ -64,13 +62,11 @@ public class Bot {
 		var embedUi = new EmbedUi();
 		var modalUi = new ModalUi();
 
-		var autoCompleteReply = new AutoCompleteReply();
 		var buttonReply = new ButtonReply(buttonUi, embedUi, modalUi);
 		var slashCommandReply = new SlashCommandReply(buttonUi, embedUi);
 		var modalReply = new ModalReply(embedUi);
 
 		jda.addEventListener(new ButtonListener(buttonReply));
-		jda.addEventListener(new AutoCompleteListener(autoCompleteReply));
 		jda.addEventListener(new SlashCommandListener(slashCommandReply));
 		jda.addEventListener(new ModalListener(modalReply));
 	}

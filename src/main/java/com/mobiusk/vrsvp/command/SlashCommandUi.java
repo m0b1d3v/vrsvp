@@ -21,16 +21,16 @@ public class SlashCommandUi {
 			.setDefaultPermissions(DefaultMemberPermissions.DISABLED);
 
 		// Order matters here, this was chosen for the most logical flow
-		addOption(data, InputsEnum.START, "Timestamp from https://hammertime.cyou/ like '1684043839'", false);
-		addOption(data, InputsEnum.BLOCKS, "One each for separate set of slots, like for each DJ at a rave", true);
-		addOption(data, InputsEnum.SLOTS, "How many slots to have for each block", true);
-		addOption(data, InputsEnum.DURATION, "How long each slot will last in minutes", true);
+		addOption(data, InputsEnum.START, "Timestamp from https://hammertime.cyou/ like '1684043839'");
+		addOption(data, InputsEnum.BLOCKS, "One each for separate set of slots, like for each DJ at a rave");
+		addOption(data, InputsEnum.SLOTS, "How many slots to have for each block");
+		addOption(data, InputsEnum.DURATION, "How long each slot will last in minutes");
 
 		return data;
 	}
 
-	private static void addOption(SlashCommandData data, InputsEnum input, String description, boolean autoComplete) {
-		data.addOption(OptionType.INTEGER, input.getInput(), description, true, autoComplete);
+	private static void addOption(SlashCommandData data, InputsEnum input, String description) {
+		data.addOption(OptionType.INTEGER, input.getInput(), description, true, false);
 	}
 
 }

@@ -43,20 +43,13 @@ class SlashCommandUiUnitTest extends TestBase {
 	}
 
 	@Test
-	void inputsUseLogicalOrderAndAutocompleteAppropriately() {
+	void inputsUseLogicalOrder() {
 		var options = command.getOptions();
 		assertEquals(4, options.size());
-		checkOptionNameAndAutocomplete(options.get(0), InputsEnum.START, false);
-		checkOptionNameAndAutocomplete(options.get(1), InputsEnum.BLOCKS, true);
-		checkOptionNameAndAutocomplete(options.get(2), InputsEnum.SLOTS, true);
-		checkOptionNameAndAutocomplete(options.get(3), InputsEnum.DURATION, true);
-	}
-
-	// Test utility method(s)
-
-	private void checkOptionNameAndAutocomplete(OptionData option, InputsEnum inputsEnum, boolean autoComplete) {
-		assertEquals(inputsEnum.getInput(), option.getName());
-		assertEquals(autoComplete, option.isAutoComplete());
+		assertEquals(InputsEnum.START.getInput(), options.get(0).getName());
+		assertEquals(InputsEnum.BLOCKS.getInput(), options.get(1).getName());
+		assertEquals(InputsEnum.SLOTS.getInput(), options.get(2).getName());
+		assertEquals(InputsEnum.DURATION.getInput(), options.get(3).getName());
 	}
 
 }
