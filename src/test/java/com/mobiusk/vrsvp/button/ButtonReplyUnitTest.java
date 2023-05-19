@@ -3,7 +3,7 @@ package com.mobiusk.vrsvp.button;
 import com.mobiusk.vrsvp.TestBase;
 import com.mobiusk.vrsvp.embed.EmbedUi;
 import com.mobiusk.vrsvp.input.Inputs;
-import net.dv8tion.jda.api.interactions.components.buttons.Button;
+import net.dv8tion.jda.api.interactions.components.ActionRow;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -55,13 +55,13 @@ class ButtonReplyUnitTest extends TestBase {
 	void rsvpBuildsEphemeralListOfButtons() {
 
 		var totalSlots = inputs.getBlocks() * inputs.getSlots();
-		List<List<Button>> buttonRows = List.of(Collections.emptyList(), Collections.emptyList());
-		when(buttonUi.buildSlotSignupActionRows(totalSlots)).thenReturn(buttonRows);
+		List<ActionRow> buttonRows = List.of(ActionRow.of(), ActionRow.of());
+		when(buttonUi.buildIndexedButtonActionRows(ButtonUi.SIGNUP, totalSlots)).thenReturn(buttonRows);
 
 		reply.rsvp(buttonInteractionEvent, totalSlots);
 
 		verify(buttonInteractionEvent).reply(stringArgumentCaptor.capture());
-		verify(buttonUi).buildSlotSignupActionRows(totalSlots);
+		verify(buttonUi).buildIndexedButtonActionRows(ButtonUi.SIGNUP, totalSlots);
 		verify(replyCallbackAction).setEphemeral(true);
 		verify(replyCallbackAction, times(buttonRows.size())).addActionRow(anyCollection());
 		verify(replyCallbackAction).queue();

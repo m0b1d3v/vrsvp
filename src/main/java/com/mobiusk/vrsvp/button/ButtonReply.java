@@ -20,13 +20,14 @@ public class ButtonReply {
 	 */
 	public void rsvp(@Nonnull ButtonInteractionEvent event, int slotsAvailable) {
 
-		var buttonRows = buttonUi.buildSlotSignupActionRows(slotsAvailable);
+		var buttonRows = buttonUi.buildIndexedButtonActionRows(ButtonUi.SIGNUP, slotsAvailable);
 
 		var message = Formatter.replies("Use these buttons to toggle your RSVP for any slot.");
 
-		var reply = event.reply(message).setEphemeral(true);
-		buttonRows.forEach(reply::addActionRow);
-		reply.queue();
+		event.reply(message)
+			.setEphemeral(true)
+			.setComponents(buttonRows)
+			.queue();
 	}
 
 	/**

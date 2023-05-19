@@ -26,22 +26,22 @@ class ButtonUiUnitTest extends TestBase {
 	@Test
 	void slotSignupActionRowsBuiltWithFiveButtonsPerRow() {
 
-		var buttonRows = buttonUi.buildSlotSignupActionRows(11);
+		var buttonRows = buttonUi.buildIndexedButtonActionRows(ButtonUi.SIGNUP, 11);
 
 		assertEquals(3, buttonRows.size());
-		assertEquals(5, buttonRows.get(0).size());
-		assertEquals(5, buttonRows.get(1).size());
-		assertEquals(1, buttonRows.get(2).size());
+		assertEquals(5, buttonRows.get(0).getButtons().size());
+		assertEquals(5, buttonRows.get(1).getButtons().size());
+		assertEquals(1, buttonRows.get(2).getButtons().size());
 	}
 
 	@Test
 	void slotSignupActionRowsButtonsFormedCorrectly() {
 
-		var buttonRows = buttonUi.buildSlotSignupActionRows(2);
+		var buttonRows = buttonUi.buildIndexedButtonActionRows(ButtonUi.SIGNUP, 2);
 		var buttons = buttonRows.get(0);
 
-		assertButtonInformation(buttons.get(0), ButtonStyle.PRIMARY, "signup:0", "#1");
-		assertButtonInformation(buttons.get(1), ButtonStyle.PRIMARY, "signup:1", "#2");
+		assertButtonInformation(buttons.getButtons().get(0), ButtonStyle.PRIMARY, "signup:0", "#1");
+		assertButtonInformation(buttons.getButtons().get(1), ButtonStyle.PRIMARY, "signup:1", "#2");
 	}
 
 	// Test utility method(s)
