@@ -44,7 +44,7 @@ public class EmbedUi {
 
 		var editedEmbeds = new LinkedList<MessageEmbed>();
 
-		var slotIndex = -1;
+		var slotIndex = 0;
 		for (var embed : existingEmbeds) {
 
 			var embedBuilder = new EmbedBuilder(embed).clearFields();
@@ -54,12 +54,12 @@ public class EmbedUi {
 				var name = field.getName();
 				var value = field.getValue();
 
-				slotIndex++;
 				if (slotIndex == slotIndexDestination) {
 					value = editEmbedFieldValueForUserMention(value, userMention);
 				}
 
 				embedBuilder.addField(new MessageEmbed.Field(name, value, true));
+				slotIndex++;
 			}
 
 			editedEmbeds.add(embedBuilder.build());
