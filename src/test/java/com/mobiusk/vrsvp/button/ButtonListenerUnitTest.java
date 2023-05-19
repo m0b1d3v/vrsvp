@@ -56,7 +56,7 @@ class ButtonListenerUnitTest extends TestBase {
 	@Test
 	void buttonInteractionEventHandledForEditInterest() {
 
-		when(buttonInteractionEvent.getComponentId()).thenReturn(ButtonUi.EDIT);
+		when(buttonInteractionEvent.getComponentId()).thenReturn(ButtonEnum.EDIT.getId());
 
 		listener.onButtonInteraction(buttonInteractionEvent);
 
@@ -66,7 +66,7 @@ class ButtonListenerUnitTest extends TestBase {
 	@Test
 	void buttonInteractionEventWithoutMessageReferencesFailsForEditDescriptionInterest() {
 
-		when(buttonInteractionEvent.getComponentId()).thenReturn(ButtonUi.EDIT_DESCRIPTION);
+		when(buttonInteractionEvent.getComponentId()).thenReturn(ButtonEnum.EDIT_DESCRIPTION.getId());
 		when(message.getMessageReference()).thenReturn(null);
 
 		listener.onButtonInteraction(buttonInteractionEvent);
@@ -78,7 +78,7 @@ class ButtonListenerUnitTest extends TestBase {
 	@Test
 	void buttonInteractionEventWithoutMessageSourceFailsForEditDescriptionInterest() {
 
-		when(buttonInteractionEvent.getComponentId()).thenReturn(ButtonUi.EDIT_DESCRIPTION);
+		when(buttonInteractionEvent.getComponentId()).thenReturn(ButtonEnum.EDIT_DESCRIPTION.getId());
 		when(messageRestAction.complete()).thenReturn(null);
 
 		listener.onButtonInteraction(buttonInteractionEvent);
@@ -89,7 +89,7 @@ class ButtonListenerUnitTest extends TestBase {
 	@Test
 	void buttonInteractionEventHandledForEditDescriptionInterest() {
 
-		when(buttonInteractionEvent.getComponentId()).thenReturn(ButtonUi.EDIT_DESCRIPTION);
+		when(buttonInteractionEvent.getComponentId()).thenReturn(ButtonEnum.EDIT_DESCRIPTION.getId());
 
 		listener.onButtonInteraction(buttonInteractionEvent);
 
@@ -99,7 +99,7 @@ class ButtonListenerUnitTest extends TestBase {
 	@Test
 	void buttonInteractionEventHandledForRsvpInterest() {
 
-		when(buttonInteractionEvent.getComponentId()).thenReturn(ButtonUi.RSVP);
+		when(buttonInteractionEvent.getComponentId()).thenReturn(ButtonEnum.RSVP.getId());
 
 		listener.onButtonInteraction(buttonInteractionEvent);
 
@@ -111,7 +111,7 @@ class ButtonListenerUnitTest extends TestBase {
 	@Test
 	void buttonInteractionEventForSignupButtonWithoutContextIdDoesNotGetButtonEventSourceOrToggleSlots() {
 
-		when(buttonInteractionEvent.getComponentId()).thenReturn(ButtonUi.SIGNUP);
+		when(buttonInteractionEvent.getComponentId()).thenReturn(ButtonEnum.SIGNUP.getId());
 
 		listener.onButtonInteraction(buttonInteractionEvent);
 
@@ -126,7 +126,7 @@ class ButtonListenerUnitTest extends TestBase {
 	@Test
 	void buttonInteractionEventForSignupButtonWithContextIdButNoMessageSourceDoesNotToggleSlots() {
 
-		when(buttonInteractionEvent.getComponentId()).thenReturn(ButtonUi.SIGNUP + ":1");
+		when(buttonInteractionEvent.getComponentId()).thenReturn(ButtonEnum.SIGNUP.getId() + ":1");
 		when(message.getMessageReference()).thenReturn(null);
 
 		listener.onButtonInteraction(buttonInteractionEvent);
@@ -142,7 +142,7 @@ class ButtonListenerUnitTest extends TestBase {
 	@Test
 	void buttonInteractionEventForSignupButtonWithContextIdAndMessageSourceTogglesSlots() {
 
-		when(buttonInteractionEvent.getComponentId()).thenReturn(ButtonUi.SIGNUP + ":1");
+		when(buttonInteractionEvent.getComponentId()).thenReturn(ButtonEnum.SIGNUP.getId() + ":1");
 		when(user.getAsMention()).thenReturn("@Testing");
 
 		listener.onButtonInteraction(buttonInteractionEvent);

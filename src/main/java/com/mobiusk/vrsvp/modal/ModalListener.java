@@ -34,11 +34,12 @@ public class ModalListener extends ListenerAdapter {
 			return;
 		}
 
-		switch(actionId) {
-			case ModalUi.DESCRIPTION -> handleDescriptionModalSubmission(event, rsvp, textInput);
-			case ModalUi.EMBED -> handleEmbedModalSubmission(event, rsvp, textInput);
-			case ModalUi.FIELD_TITLE -> handleFieldTitleModalSubmission(event, rsvp, textInput);
-			case ModalUi.FIELD_VALUE -> handleFieldValueModalSubmission(event, rsvp, textInput);
+		var modalEnum = ModalEnum.getById(actionId);
+		switch (modalEnum) {
+			case DESCRIPTION -> handleDescriptionModalSubmission(event, rsvp, textInput);
+			case EMBED -> handleEmbedModalSubmission(event, rsvp, textInput);
+			case FIELD_TITLE -> handleFieldTitleModalSubmission(event, rsvp, textInput);
+			case FIELD_VALUE -> handleFieldValueModalSubmission(event, rsvp, textInput);
 			default -> reply.ephemeral(event, "Input not recognized");
 		}
 	}

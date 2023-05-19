@@ -21,14 +21,18 @@ public class ButtonListener extends ListenerAdapter {
 	 */
 	@Override
 	public void onButtonInteraction(@Nonnull ButtonInteractionEvent event) {
-		switch (getButtonInteractionAction(event)) {
-			case ButtonUi.EDIT -> handleEditButtonPress(event);
-			case ButtonUi.EDIT_DESCRIPTION -> handleEditDescriptionButtonPress(event);
-			case ButtonUi.EDIT_EMBED -> handleEditEmbedButtonPress(event);
-			case ButtonUi.EDIT_FIELD_TITLE -> handleEditFieldTitleButtonPress(event);
-			case ButtonUi.EDIT_FIELD_VALUE -> handleEditFieldValueButtonPress(event);
-			case ButtonUi.RSVP -> handleRsvpButtonPress(event);
-			case ButtonUi.SIGNUP -> handleSignupButtonPress(event);
+
+		var buttonInteractionAction = getButtonInteractionAction(event);
+
+		var buttonEnum = ButtonEnum.getById(buttonInteractionAction);
+		switch (buttonEnum) {
+			case EDIT -> handleEditButtonPress(event);
+			case EDIT_DESCRIPTION -> handleEditDescriptionButtonPress(event);
+			case EDIT_EMBED -> handleEditEmbedButtonPress(event);
+			case EDIT_FIELD_TITLE -> handleEditFieldTitleButtonPress(event);
+			case EDIT_FIELD_VALUE -> handleEditFieldValueButtonPress(event);
+			case RSVP -> handleRsvpButtonPress(event);
+			case SIGNUP -> handleSignupButtonPress(event);
 			default -> reply.ephemeral(event, "Input not recognized.");
 		}
 	}
@@ -93,7 +97,7 @@ public class ButtonListener extends ListenerAdapter {
 			reply.editEmbed(event, rsvp, embedIndex);
 		} else {
 			var selectionCount = rsvp.getEmbeds().size();
-			reply.editIndexedSelectionGeneration(event, "block", ButtonUi.EDIT_EMBED, selectionCount);
+			reply.editIndexedSelectionGeneration(event, "block", ButtonEnum.EDIT_EMBED.getId(), selectionCount);
 		}
 	}
 
@@ -113,7 +117,7 @@ public class ButtonListener extends ListenerAdapter {
 			reply.editSlotTitle(event, rsvp, fieldIndex);
 		} else {
 			var selectionCount = countSlotsInMessageEmbeds(rsvp);
-			reply.editIndexedSelectionGeneration(event, "slot title", ButtonUi.EDIT_FIELD_TITLE, selectionCount);
+			reply.editIndexedSelectionGeneration(event, "slot title", ButtonEnum.EDIT_FIELD_TITLE.getId(), selectionCount);
 		}
 	}
 
@@ -133,7 +137,7 @@ public class ButtonListener extends ListenerAdapter {
 			reply.editSlotValue(event, rsvp, fieldIndex);
 		} else {
 			var selectionCount = countSlotsInMessageEmbeds(rsvp);
-			reply.editIndexedSelectionGeneration(event, "slot value", ButtonUi.EDIT_FIELD_VALUE, selectionCount);
+			reply.editIndexedSelectionGeneration(event, "slot value", ButtonEnum.EDIT_FIELD_VALUE.getId(), selectionCount);
 		}
 	}
 

@@ -57,12 +57,12 @@ class ButtonReplyUnitTest extends TestBase {
 		var button = Button.primary("test", "Test");
 		var totalSlots = inputs.getBlocks() * inputs.getSlots();
 		List<ActionRow> buttonRows = List.of(ActionRow.of(button), ActionRow.of(button));
-		when(buttonUi.buildIndexedButtonActionRows(ButtonUi.SIGNUP, totalSlots)).thenReturn(buttonRows);
+		when(buttonUi.buildIndexedButtonActionRows(ButtonEnum.SIGNUP.getId(), totalSlots)).thenReturn(buttonRows);
 
 		reply.rsvp(buttonInteractionEvent, totalSlots);
 
 		verify(buttonInteractionEvent).reply(stringArgumentCaptor.capture());
-		verify(buttonUi).buildIndexedButtonActionRows(ButtonUi.SIGNUP, totalSlots);
+		verify(buttonUi).buildIndexedButtonActionRows(ButtonEnum.SIGNUP.getId(), totalSlots);
 		verify(replyCallbackAction).setEphemeral(true);
 		verify(replyCallbackAction).setComponents(anyCollection());
 		verify(replyCallbackAction).queue();

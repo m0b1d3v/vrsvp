@@ -19,8 +19,8 @@ class ButtonUiUnitTest extends TestBase {
 		var buttons = buttonUi.buildRsvpActionPrompts();
 
 		assertEquals(2, buttons.size());
-		assertButtonInformation(buttons.get(0), ButtonStyle.PRIMARY, ButtonUi.RSVP, "RSVP");
-		assertButtonInformation(buttons.get(1), ButtonStyle.SECONDARY, ButtonUi.EDIT, "Edit");
+		assertButtonInformation(buttons.get(0), ButtonStyle.PRIMARY, ButtonEnum.RSVP.getId(), ButtonEnum.RSVP.getLabel());
+		assertButtonInformation(buttons.get(1), ButtonStyle.SECONDARY, ButtonEnum.EDIT.getId(), ButtonEnum.EDIT.getLabel());
 	}
 
 	@Test
@@ -29,16 +29,16 @@ class ButtonUiUnitTest extends TestBase {
 		var buttons = buttonUi.buildEditTopLevelActionRow();
 
 		assertEquals(4, buttons.size());
-		assertButtonInformation(buttons.get(0), ButtonStyle.PRIMARY, ButtonUi.EDIT_DESCRIPTION, "Description");
-		assertButtonInformation(buttons.get(1), ButtonStyle.PRIMARY, ButtonUi.EDIT_EMBED, "Blocks");
-		assertButtonInformation(buttons.get(2), ButtonStyle.PRIMARY, ButtonUi.EDIT_FIELD_TITLE, "Slot Titles");
-		assertButtonInformation(buttons.get(3), ButtonStyle.PRIMARY, ButtonUi.EDIT_FIELD_VALUE, "Slot Values");
+		assertButtonInformation(buttons.get(0), ButtonStyle.PRIMARY, ButtonEnum.EDIT_DESCRIPTION.getId(), ButtonEnum.EDIT_DESCRIPTION.getLabel());
+		assertButtonInformation(buttons.get(1), ButtonStyle.PRIMARY, ButtonEnum.EDIT_EMBED.getId(), ButtonEnum.EDIT_EMBED.getLabel());
+		assertButtonInformation(buttons.get(2), ButtonStyle.PRIMARY, ButtonEnum.EDIT_FIELD_TITLE.getId(), ButtonEnum.EDIT_FIELD_TITLE.getLabel());
+		assertButtonInformation(buttons.get(3), ButtonStyle.PRIMARY, ButtonEnum.EDIT_FIELD_VALUE.getId(), ButtonEnum.EDIT_FIELD_VALUE.getLabel());
 	}
 
 	@Test
 	void slotSignupActionRowsBuiltWithFiveButtonsPerRow() {
 
-		var buttonRows = buttonUi.buildIndexedButtonActionRows(ButtonUi.SIGNUP, 11);
+		var buttonRows = buttonUi.buildIndexedButtonActionRows(ButtonEnum.SIGNUP.getId(), 11);
 
 		assertEquals(3, buttonRows.size());
 		assertEquals(5, buttonRows.get(0).getButtons().size());
@@ -49,7 +49,7 @@ class ButtonUiUnitTest extends TestBase {
 	@Test
 	void slotSignupActionRowsButtonsFormedCorrectly() {
 
-		var buttonRows = buttonUi.buildIndexedButtonActionRows(ButtonUi.SIGNUP, 2);
+		var buttonRows = buttonUi.buildIndexedButtonActionRows(ButtonEnum.SIGNUP.getId(), 2);
 		var buttons = buttonRows.get(0);
 
 		assertButtonInformation(buttons.getButtons().get(0), ButtonStyle.PRIMARY, "signup:0", "#1");

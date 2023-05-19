@@ -8,14 +8,6 @@ import java.util.List;
 
 public class ButtonUi {
 
-	public static final String EDIT = "edit";
-	public static final String EDIT_DESCRIPTION = "edit-description";
-	public static final String EDIT_EMBED = "edit-embed";
-	public static final String EDIT_FIELD_TITLE = "edit-field-title";
-	public static final String EDIT_FIELD_VALUE = "edit-field-value";
-	public static final String RSVP = "rsvp";
-	public static final String SIGNUP = "signup";
-
 	/**
 	 * Builds a list of buttons shown at the bottom of an RSVP form for anyone to use.
 	 * <p>
@@ -23,8 +15,8 @@ public class ButtonUi {
 	 */
 	public List<Button> buildRsvpActionPrompts() {
 		return List.of(
-			Button.primary(RSVP, "RSVP"),
-			Button.secondary(EDIT, "Edit")
+			Button.primary(ButtonEnum.RSVP.getId(), ButtonEnum.RSVP.getLabel()),
+			Button.secondary(ButtonEnum.EDIT.getId(), ButtonEnum.EDIT.getLabel())
 		);
 	}
 
@@ -33,10 +25,10 @@ public class ButtonUi {
 	 */
 	public List<Button> buildEditTopLevelActionRow() {
 		return List.of(
-			Button.primary(EDIT_DESCRIPTION, "Description"),
-			Button.primary(EDIT_EMBED, "Blocks"),
-			Button.primary(EDIT_FIELD_TITLE, "Slot Titles"),
-			Button.primary(EDIT_FIELD_VALUE, "Slot Values")
+			Button.primary(ButtonEnum.EDIT_DESCRIPTION.getId(), ButtonEnum.EDIT_DESCRIPTION.getLabel()),
+			Button.primary(ButtonEnum.EDIT_EMBED.getId(), ButtonEnum.EDIT_EMBED.getLabel()),
+			Button.primary(ButtonEnum.EDIT_FIELD_TITLE.getId(), ButtonEnum.EDIT_FIELD_TITLE.getLabel()),
+			Button.primary(ButtonEnum.EDIT_FIELD_VALUE.getId(), ButtonEnum.EDIT_FIELD_VALUE.getLabel())
 		);
 	}
 
