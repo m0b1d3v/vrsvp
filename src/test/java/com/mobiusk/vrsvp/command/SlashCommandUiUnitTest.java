@@ -1,7 +1,6 @@
 package com.mobiusk.vrsvp.command;
 
 import com.mobiusk.vrsvp.TestBase;
-import com.mobiusk.vrsvp.input.InputsEnum;
 import net.dv8tion.jda.api.interactions.commands.Command;
 import net.dv8tion.jda.api.interactions.commands.DefaultMemberPermissions;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
@@ -46,10 +45,10 @@ class SlashCommandUiUnitTest extends TestBase {
 	void inputsUseLogicalOrder() {
 		var options = command.getOptions();
 		assertEquals(4, options.size());
-		assertEquals(InputsEnum.START.getId(), options.get(0).getName());
-		assertEquals(InputsEnum.BLOCKS.getId(), options.get(1).getName());
-		assertEquals(InputsEnum.SLOTS.getId(), options.get(2).getName());
-		assertEquals(InputsEnum.DURATION.getId(), options.get(3).getName());
+		assertEquals(SlashCommandEnum.START.getId(), options.get(0).getName());
+		assertEquals(SlashCommandEnum.BLOCKS.getId(), options.get(1).getName());
+		assertEquals(SlashCommandEnum.SLOTS.getId(), options.get(2).getName());
+		assertEquals(SlashCommandEnum.DURATION.getId(), options.get(3).getName());
 	}
 
 }

@@ -2,7 +2,7 @@ package com.mobiusk.vrsvp.button;
 
 import com.mobiusk.vrsvp.TestBase;
 import com.mobiusk.vrsvp.embed.EmbedUi;
-import com.mobiusk.vrsvp.input.Inputs;
+import com.mobiusk.vrsvp.command.SlashCommandInputs;
 import net.dv8tion.jda.api.interactions.components.ActionRow;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import org.junit.jupiter.api.BeforeEach;
@@ -29,7 +29,7 @@ class ButtonReplyUnitTest extends TestBase {
 	@Mock private ButtonUi buttonUi;
 	@Mock private EmbedUi embedUi;
 
-	private final Inputs inputs = new Inputs();
+	private final SlashCommandInputs inputs = new SlashCommandInputs();
 
 	@BeforeEach
 	public void beforeEach() {

@@ -1,7 +1,7 @@
 package com.mobiusk.vrsvp.embed;
 
 import com.mobiusk.vrsvp.TestBase;
-import com.mobiusk.vrsvp.input.Inputs;
+import com.mobiusk.vrsvp.command.SlashCommandInputs;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,7 +19,7 @@ class EmbedUiUnitTest extends TestBase {
 
 	@InjectMocks private EmbedUi embedUi;
 
-	private final Inputs inputs = new Inputs();
+	private final SlashCommandInputs inputs = new SlashCommandInputs();
 
 	@BeforeEach
 	public void beforeEach() {

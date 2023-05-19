@@ -1,6 +1,5 @@
 package com.mobiusk.vrsvp.command;
 
-import com.mobiusk.vrsvp.input.InputsEnum;
 import lombok.experimental.UtilityClass;
 import net.dv8tion.jda.api.interactions.commands.DefaultMemberPermissions;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
@@ -22,17 +21,17 @@ public class SlashCommandUi {
 			.setDefaultPermissions(DefaultMemberPermissions.DISABLED);
 
 		// Order matters here, this was chosen for the most logical flow
-		addOption(data, InputsEnum.START);
-		addOption(data, InputsEnum.BLOCKS);
-		addOption(data, InputsEnum.SLOTS);
-		addOption(data, InputsEnum.DURATION);
+		addOption(data, SlashCommandEnum.START);
+		addOption(data, SlashCommandEnum.BLOCKS);
+		addOption(data, SlashCommandEnum.SLOTS);
+		addOption(data, SlashCommandEnum.DURATION);
 
 		return data;
 	}
 
 	private static void addOption(
 		SlashCommandData data,
-		InputsEnum input
+		SlashCommandEnum input
 	) {
 
 		var optionData = new OptionData(OptionType.INTEGER, input.getId(), input.getDescription());

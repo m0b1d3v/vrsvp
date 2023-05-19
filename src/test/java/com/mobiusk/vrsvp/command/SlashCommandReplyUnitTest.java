@@ -1,7 +1,6 @@
 package com.mobiusk.vrsvp.command;
 
 import com.mobiusk.vrsvp.TestBase;
-import com.mobiusk.vrsvp.input.Inputs;
 import com.mobiusk.vrsvp.button.ButtonUi;
 import com.mobiusk.vrsvp.embed.EmbedUi;
 import org.junit.jupiter.api.BeforeEach;
@@ -26,7 +25,7 @@ class SlashCommandReplyUnitTest extends TestBase {
 	@Mock private ButtonUi buttonUi;
 	@Mock private EmbedUi embedUi;
 
-	private final Inputs inputs = new Inputs();
+	private final SlashCommandInputs inputs = new SlashCommandInputs();
 
 	@BeforeEach
 	public void beforeEach() {

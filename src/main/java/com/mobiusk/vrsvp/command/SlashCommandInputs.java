@@ -1,4 +1,4 @@
-package com.mobiusk.vrsvp.input;
+package com.mobiusk.vrsvp.command;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -7,7 +7,7 @@ import lombok.Setter;
 @Getter
 @NoArgsConstructor
 @Setter
-public class Inputs {
+public class SlashCommandInputs {
 
     private int blocks;
     private int slots;

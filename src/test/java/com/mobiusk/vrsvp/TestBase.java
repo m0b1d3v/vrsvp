@@ -1,6 +1,6 @@
 package com.mobiusk.vrsvp;
 
-import com.mobiusk.vrsvp.input.Inputs;
+import com.mobiusk.vrsvp.command.SlashCommandInputs;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.MessageReference;
@@ -46,7 +46,7 @@ public abstract class TestBase {
 	@Mock protected SlashCommandInteractionEvent slashCommandInteractionEvent;
 	@Mock protected User user;
 
-	@Captor protected ArgumentCaptor<Inputs> inputsArgumentCaptor;
+	@Captor protected ArgumentCaptor<SlashCommandInputs> inputsArgumentCaptor;
 	@Captor protected ArgumentCaptor<List<Long>> listLongArgumentCaptor;
 	@Captor protected ArgumentCaptor<String> stringArgumentCaptor;
 

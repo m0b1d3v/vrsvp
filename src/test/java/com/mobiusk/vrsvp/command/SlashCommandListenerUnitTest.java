@@ -1,8 +1,6 @@
 package com.mobiusk.vrsvp.command;
 
 import com.mobiusk.vrsvp.TestBase;
-import com.mobiusk.vrsvp.input.Inputs;
-import com.mobiusk.vrsvp.input.InputsEnum;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -24,7 +22,7 @@ class SlashCommandListenerUnitTest extends TestBase {
 
 	@Mock private SlashCommandReply reply;
 
-	private final int SLASH_COMMAND_INPUT_COUNT = InputsEnum.values().length;
+	private final int SLASH_COMMAND_INPUT_COUNT = SlashCommandEnum.values().length;
 
 	@Test
 	void unexpectedSlashCommandsAreIgnored() {
@@ -65,10 +63,10 @@ class SlashCommandListenerUnitTest extends TestBase {
 			})
 			.toList();
 
-		when(slashCommandInteractionEvent.getOption(InputsEnum.BLOCKS.getId())).thenReturn(options.get(0));
-		when(slashCommandInteractionEvent.getOption(InputsEnum.SLOTS.getId())).thenReturn(options.get(1));
-		when(slashCommandInteractionEvent.getOption(InputsEnum.DURATION.getId())).thenReturn(options.get(2));
-		when(slashCommandInteractionEvent.getOption(InputsEnum.START.getId())).thenReturn(options.get(3));
+		when(slashCommandInteractionEvent.getOption(SlashCommandEnum.BLOCKS.getId())).thenReturn(options.get(0));
+		when(slashCommandInteractionEvent.getOption(SlashCommandEnum.SLOTS.getId())).thenReturn(options.get(1));
+		when(slashCommandInteractionEvent.getOption(SlashCommandEnum.DURATION.getId())).thenReturn(options.get(2));
+		when(slashCommandInteractionEvent.getOption(SlashCommandEnum.START.getId())).thenReturn(options.get(3));
 
 		when(slashCommandInteractionEvent.getName()).thenReturn(SlashCommandUi.INVOCATION);
 
@@ -82,7 +80,7 @@ class SlashCommandListenerUnitTest extends TestBase {
 
 	// Test utility method(s)
 
-	private void assertInputValues(Inputs inputs, int blocks, int slots, int durationInMinutes, int startTimestamp) {
+	private void assertInputValues(SlashCommandInputs inputs, int blocks, int slots, int durationInMinutes, int startTimestamp) {
 		assertEquals(blocks, inputs.getBlocks());
 		assertEquals(slots, inputs.getSlots());
 		assertEquals(durationInMinutes, inputs.getDurationInMinutes());

@@ -1,7 +1,5 @@
 package com.mobiusk.vrsvp.command;
 
-import com.mobiusk.vrsvp.input.Inputs;
-import com.mobiusk.vrsvp.input.InputsEnum;
 import lombok.RequiredArgsConstructor;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -27,9 +25,9 @@ public class SlashCommandListener extends ListenerAdapter {
 		handleSlashCommandInteraction(event);
 	}
 
-	private int getSlashCommandInput(@Nonnull SlashCommandInteractionEvent event, InputsEnum inputsEnum) {
+	private int getSlashCommandInput(@Nonnull SlashCommandInteractionEvent event, SlashCommandEnum slashCommandEnum) {
 
-		var option = event.getOption(inputsEnum.getId());
+		var option = event.getOption(slashCommandEnum.getId());
 		if (option == null) {
 			return -1;
 		}
@@ -39,11 +37,11 @@ public class SlashCommandListener extends ListenerAdapter {
 
 	private void handleSlashCommandInteraction(@Nonnull SlashCommandInteractionEvent event) {
 
-		var inputs = new Inputs();
-		inputs.setBlocks(getSlashCommandInput(event, InputsEnum.BLOCKS));
-		inputs.setSlots(getSlashCommandInput(event, InputsEnum.SLOTS));
-		inputs.setDurationInMinutes(getSlashCommandInput(event, InputsEnum.DURATION));
-		inputs.setStartTimestamp(getSlashCommandInput(event, InputsEnum.START));
+		var inputs = new SlashCommandInputs();
+		inputs.setBlocks(getSlashCommandInput(event, SlashCommandEnum.BLOCKS));
+		inputs.setSlots(getSlashCommandInput(event, SlashCommandEnum.SLOTS));
+		inputs.setDurationInMinutes(getSlashCommandInput(event, SlashCommandEnum.DURATION));
+		inputs.setStartTimestamp(getSlashCommandInput(event, SlashCommandEnum.START));
 
 		reply.rsvpCreation(event, inputs);
 	}

@@ -1,6 +1,6 @@
 package com.mobiusk.vrsvp.embed;
 
-import com.mobiusk.vrsvp.input.Inputs;
+import com.mobiusk.vrsvp.command.SlashCommandInputs;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
@@ -20,7 +20,7 @@ public class EmbedUi {
 	 * Each embed block has a generic indexed title.
 	 * Each field slot has an index and incremented timestamp title, and a starting description.
 	 */
-	public List<MessageEmbed> build(@Nonnull Inputs inputs) {
+	public List<MessageEmbed> build(@Nonnull SlashCommandInputs inputs) {
 
 		var embeds = new LinkedList<MessageEmbed>();
 		for (var embedIndex = 0; embedIndex < inputs.getBlocks(); embedIndex++) {
@@ -155,7 +155,7 @@ public class EmbedUi {
 		return editedEmbeds;
 	}
 
-	private MessageEmbed buildEmbed(@Nonnull Inputs inputs, int embedIndex) {
+	private MessageEmbed buildEmbed(@Nonnull SlashCommandInputs inputs, int embedIndex) {
 
 		var title = String.format("Block %d", embedIndex + 1);
 
@@ -167,7 +167,7 @@ public class EmbedUi {
 		return embedBuilder.build();
 	}
 
-	private MessageEmbed.Field buildEmbedField(@Nonnull Inputs inputs, int embedIndex, int fieldIndex) {
+	private MessageEmbed.Field buildEmbedField(@Nonnull SlashCommandInputs inputs, int embedIndex, int fieldIndex) {
 
 		var slotsPerBlock = inputs.getSlots();
 		var slotIndex = (embedIndex * slotsPerBlock) + fieldIndex;

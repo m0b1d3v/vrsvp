@@ -1,4 +1,4 @@
-package com.mobiusk.vrsvp.input;
+package com.mobiusk.vrsvp.command;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -7,7 +7,7 @@ import net.dv8tion.jda.api.interactions.components.selections.SelectMenu;
 
 @Getter
 @RequiredArgsConstructor
-public enum InputsEnum {
+public enum SlashCommandEnum {
 
 	// 10
 	BLOCKS("blocks", Message.MAX_EMBED_COUNT, 1, "One each for separate set of slots, like for each DJ at a rave"),
