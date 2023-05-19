@@ -4,6 +4,7 @@ import com.mobiusk.vrsvp.TestBase;
 import com.mobiusk.vrsvp.embed.EmbedUi;
 import com.mobiusk.vrsvp.input.Inputs;
 import net.dv8tion.jda.api.interactions.components.ActionRow;
+import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -18,7 +19,6 @@ import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.anyCollection;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -37,13 +37,13 @@ class ButtonReplyUnitTest extends TestBase {
 		when(replyCallbackAction.setEphemeral(anyBoolean())).thenReturn(replyCallbackAction);
 		when(replyCallbackAction.addEmbeds(anyCollection())).thenReturn(replyCallbackAction);
 		when(replyCallbackAction.addActionRow(anyCollection())).thenReturn(replyCallbackAction);
+		when(replyCallbackAction.setComponents(anyCollection())).thenReturn(replyCallbackAction);
 
 		when(buttonInteraction.editMessage(anyString())).thenReturn(messageEditCallbackAction);
+		when(buttonInteractionEvent.editMessage(anyString())).thenReturn(messageEditCallbackAction);
 
 		when(buttonInteractionEvent.getInteraction()).thenReturn(buttonInteraction);
 		when(buttonInteractionEvent.reply(anyString())).thenReturn(replyCallbackAction);
-
-		when(slashCommandInteractionEvent.reply(anyString())).thenReturn(replyCallbackAction);
 
 		inputs.setBlocks(2);
 		inputs.setSlots(3);
@@ -54,8 +54,9 @@ class ButtonReplyUnitTest extends TestBase {
 	@Test
 	void rsvpBuildsEphemeralListOfButtons() {
 
+		var button = Button.primary("test", "Test");
 		var totalSlots = inputs.getBlocks() * inputs.getSlots();
-		List<ActionRow> buttonRows = List.of(ActionRow.of(), ActionRow.of());
+		List<ActionRow> buttonRows = List.of(ActionRow.of(button), ActionRow.of(button));
 		when(buttonUi.buildIndexedButtonActionRows(ButtonUi.SIGNUP, totalSlots)).thenReturn(buttonRows);
 
 		reply.rsvp(buttonInteractionEvent, totalSlots);
@@ -63,7 +64,7 @@ class ButtonReplyUnitTest extends TestBase {
 		verify(buttonInteractionEvent).reply(stringArgumentCaptor.capture());
 		verify(buttonUi).buildIndexedButtonActionRows(ButtonUi.SIGNUP, totalSlots);
 		verify(replyCallbackAction).setEphemeral(true);
-		verify(replyCallbackAction, times(buttonRows.size())).addActionRow(anyCollection());
+		verify(replyCallbackAction).setComponents(anyCollection());
 		verify(replyCallbackAction).queue();
 
 		var expectation = "---\nUse these buttons to toggle your RSVP for any slot.\n---";
@@ -78,11 +79,10 @@ class ButtonReplyUnitTest extends TestBase {
 
 		reply.signup(buttonInteractionEvent, message, "@Testing", 1);
 
-		verify(buttonInteractionEvent).getInteraction();
 		verify(embedUi).toggleRsvp(any(), any(), anyInt());
 		verify(message).editMessageEmbeds(anyCollection());
 		verify(messageEditAction).queue();
-		verify(buttonInteraction).editMessage(stringArgumentCaptor.capture());
+		verify(buttonInteractionEvent).editMessage(stringArgumentCaptor.capture());
 		verify(messageEditCallbackAction).queue();
 
 		var expectation = "---\nRSVP state toggled for slot #2\n---";

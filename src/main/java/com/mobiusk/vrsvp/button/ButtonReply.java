@@ -1,9 +1,11 @@
 package com.mobiusk.vrsvp.button;
 
 import com.mobiusk.vrsvp.embed.EmbedUi;
-import com.mobiusk.vrsvp.output.MessageFormatter;
+import com.mobiusk.vrsvp.modal.ModalUi;
+import com.mobiusk.vrsvp.util.Formatter;
 import lombok.RequiredArgsConstructor;
 import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 
 import javax.annotation.Nonnull;
@@ -11,9 +13,113 @@ import javax.annotation.Nonnull;
 @RequiredArgsConstructor
 public class ButtonReply {
 
+	private static final String MODAL_ID_PATTERN = "%s:%d";
+
 	// Class constructor field(s)
 	private final ButtonUi buttonUi;
 	private final EmbedUi embedUi;
+	private final ModalUi modalUi;
+
+	/**
+	 * Replies with an ephemeral list of buttons admins can click to start editing part of an RSVP form.
+	 */
+	public void edit(@Nonnull ButtonInteractionEvent event) {
+
+		var buttonRow = buttonUi.buildEditTopLevelActionRow();
+
+		var message = Formatter.replies("Use these buttons to start editing the signup.");
+
+		event.reply(message)
+			.setEphemeral(true)
+			.addActionRow(buttonRow)
+			.queue();
+	}
+
+	/**
+	 * Replies with an ephemeral list of buttons admins can click to start editing part of an RSVP form.
+	 */
+	public void editDescription(@Nonnull ButtonInteractionEvent event, @Nonnull Message message) {
+
+		var currentText = message.getContentDisplay();
+		var placeholder = "Event title and important timestamps from https://hammertime.cyou/ are good to have here.";
+
+		var modal = modalUi.editText(ModalUi.DESCRIPTION, placeholder, currentText);
+
+		event.replyModal(modal).queue();
+	}
+
+	/**
+	 * Launch a modal with one text input to prompt an admin for an embed title.
+	 */
+	public void editEmbed(@Nonnull ButtonInteractionEvent event, @Nonnull Message message, int embedIndex) {
+
+		var currentText = message.getEmbeds().get(embedIndex).getTitle();
+		var placeholder = "What makes this block unique?";
+
+		var modalId = String.format(MODAL_ID_PATTERN, ModalUi.EMBED, embedIndex);
+		var modal = modalUi.editText(modalId, placeholder, currentText);
+
+		event.replyModal(modal).queue();
+	}
+
+	/**
+	 * Launch a modal with one text input to prompt an admin for a slot title.
+	 */
+	public void editSlotTitle(@Nonnull ButtonInteractionEvent event, @Nonnull Message message, int slotIndex) {
+
+		var field = getFieldForSlotIndex(message, slotIndex);
+
+		var currentText = "";
+		if (field != null) {
+			currentText = field.getName();
+		}
+
+		var placeholder = "Number and timestamp for this slot.";
+
+		var modalId = String.format(MODAL_ID_PATTERN, ModalUi.FIELD_TITLE, slotIndex);
+		var modal = modalUi.editText(modalId, placeholder, currentText);
+
+		event.replyModal(modal).queue();
+	}
+
+	/**
+	 * Launch a modal with one text input to prompt an admin for a slot value.
+	 */
+	public void editSlotValue(@Nonnull ButtonInteractionEvent event, @Nonnull Message message, int slotIndex) {
+
+		var field = getFieldForSlotIndex(message, slotIndex);
+
+		var currentText = "";
+		if (field != null) {
+			currentText = field.getValue();
+		}
+
+		var placeholder = "Signups for this slot";
+
+		var modalId = String.format(MODAL_ID_PATTERN, ModalUi.FIELD_VALUE, slotIndex);
+		var modal = modalUi.editText(modalId, placeholder, currentText);
+
+		event.replyModal(modal).queue();
+	}
+
+	/**
+	 * Edits original ephemeral message with a list of indexed buttons for generic edit flow usage.
+	 */
+	public void editIndexedSelectionGeneration(
+		@Nonnull ButtonInteractionEvent event,
+		String label,
+		String actionId,
+		int buttonCount
+	) {
+
+		var buttonRows = buttonUi.buildIndexedButtonActionRows(actionId, buttonCount);
+
+		var reply = Formatter.replies(String.format("Select the %s number you wish to edit.", label));
+
+		event.editMessage(reply)
+			.setComponents(buttonRows)
+			.queue();
+	}
 
 	/**
 	 * Replies with an ephemeral list of buttons users can click to toggle RSVP state for slots.
@@ -44,8 +150,10 @@ public class ButtonReply {
 		var editedEmbeds = embedUi.toggleRsvp(existingEmbeds, userMention, slotIndex);
 		message.editMessageEmbeds(editedEmbeds).queue();
 
-		event.getInteraction().editMessage(reply).queue();
 		var reply = Formatter.replies(String.format("RSVP state toggled for slot #%d", slotIndex + 1));
+
+		event.editMessage(reply)
+			.queue();
 	}
 
 	/**
@@ -53,6 +161,21 @@ public class ButtonReply {
 	 */
 	public void ephemeral(@Nonnull ButtonInteractionEvent event, String message) {
 		event.reply(message).setEphemeral(true).queue();
+	}
+
+	private MessageEmbed.Field getFieldForSlotIndex(@Nonnull Message message, int slotIndex) {
+
+		var slotIndexCounter = 0;
+		for (var embed : message.getEmbeds()) {
+			for (var field : embed.getFields()) {
+				if (slotIndexCounter == slotIndex) {
+					return field;
+				}
+				slotIndexCounter++;
+			}
+		}
+
+		return null;
 	}
 
 }
