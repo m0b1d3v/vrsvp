@@ -1,6 +1,7 @@
 package com.mobiusk.vrsvp.button;
 
 import lombok.RequiredArgsConstructor;
+import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -55,10 +56,18 @@ public class ButtonListener extends ListenerAdapter {
 
 	private void handleEditButtonPress(@Nonnull ButtonInteractionEvent event) {
 
+		if (accessDenied(event)) {
+			return;
+		}
+
 		reply.edit(event);
 	}
 
 	private void handleEditDescriptionButtonPress(@Nonnull ButtonInteractionEvent event) {
+
+		if (accessDenied(event)) {
+			return;
+		}
 
 		var rsvp = getEphemeralButtonEventSource(event);
 		if (rsvp == null) {
@@ -69,6 +78,10 @@ public class ButtonListener extends ListenerAdapter {
 	}
 
 	private void handleEditEmbedButtonPress(@Nonnull ButtonInteractionEvent event) {
+
+		if (accessDenied(event)) {
+			return;
+		}
 
 		var rsvp = getEphemeralButtonEventSource(event);
 		if (rsvp == null) {
@@ -86,6 +99,10 @@ public class ButtonListener extends ListenerAdapter {
 
 	private void handleEditFieldTitleButtonPress(@Nonnull ButtonInteractionEvent event) {
 
+		if (accessDenied(event)) {
+			return;
+		}
+
 		var rsvp = getEphemeralButtonEventSource(event);
 		if (rsvp == null) {
 			return;
@@ -101,6 +118,10 @@ public class ButtonListener extends ListenerAdapter {
 	}
 
 	private void handleEditFieldValueButtonPress(@Nonnull ButtonInteractionEvent event) {
+
+		if (accessDenied(event)) {
+			return;
+		}
 
 		var rsvp = getEphemeralButtonEventSource(event);
 		if (rsvp == null) {
@@ -159,6 +180,18 @@ public class ButtonListener extends ListenerAdapter {
 		}
 
 		return slots;
+	}
+
+	private boolean accessDenied(@Nonnull ButtonInteractionEvent event) {
+
+		var member = event.getMember();
+
+		var accessDenied = member != null && ! member.hasPermission(Permission.ADMINISTRATOR);
+		if (accessDenied) {
+			reply.ephemeral(event, "Access denied.");
+		}
+
+		return accessDenied;
 	}
 
 }
