@@ -25,8 +25,6 @@ class ButtonListenerUnitTest extends TestBase {
 	@BeforeEach
 	public void beforeEach() {
 
-		when(messageEmbed.getFields()).thenReturn(List.of(messageEmbedField, messageEmbedField, messageEmbedField));
-
 		when(message.getEmbeds()).thenReturn(List.of(messageEmbed, messageEmbed));
 		when(message.getMessageReference()).thenReturn(messageReference);
 
@@ -71,7 +69,7 @@ class ButtonListenerUnitTest extends TestBase {
 
 		listener.onButtonInteraction(buttonInteractionEvent);
 
-		verify(reply, never()).editDescription(buttonInteractionEvent, message);
+		verify(reply, never()).editEventDescription(buttonInteractionEvent, message);
 		verify(buttonInteractionEvent, never()).getMessageChannel();
 	}
 
@@ -83,7 +81,7 @@ class ButtonListenerUnitTest extends TestBase {
 
 		listener.onButtonInteraction(buttonInteractionEvent);
 
-		verify(reply, never()).editDescription(buttonInteractionEvent, message);
+		verify(reply, never()).editEventDescription(buttonInteractionEvent, message);
 	}
 
 	@Test
@@ -93,7 +91,7 @@ class ButtonListenerUnitTest extends TestBase {
 
 		listener.onButtonInteraction(buttonInteractionEvent);
 
-		verify(reply).editDescription(buttonInteractionEvent, message);
+		verify(reply).editEventDescription(buttonInteractionEvent, message);
 	}
 
 	@Test

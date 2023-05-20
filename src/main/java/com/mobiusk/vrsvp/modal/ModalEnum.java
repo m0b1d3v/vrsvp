@@ -7,10 +7,9 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum ModalEnum {
 
-	DESCRIPTION("description", "Description", "Event title and important timestamps from https://hammertime.cyou/ are good to have here."),
-	EMBED("block", "Block", "What makes this block unique?"),
-	FIELD_TITLE("slot-title", "Slot Title", "Number and timestamp for this slot."),
-	FIELD_VALUE("slot-value", "Slot Value", "Signups for this slot"),
+	EVENT_DESCRIPTION("description", "Description", "Event title and important timestamps from https://hammertime.cyou/ are good to have here."),
+	EMBED_TITLE("block", "Block", "What makes this block unique?"),
+	EMBED_DESCRIPTION("slots", "Slots", "Signups for this block."),
 	UNKNOWN("unknown", "Unknown", "Unknown");
 
 	private final String id;

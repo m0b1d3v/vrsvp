@@ -74,12 +74,12 @@ class ButtonReplyUnitTest extends TestBase {
 	@Test
 	void signupToggleAdjustsEmbedAndEditsEphemeralMessage() {
 
-		when(embedUi.toggleRsvp(any(), any(), anyInt())).thenReturn(Collections.emptyList());
+		when(embedUi.editEmbedDescriptionFromRSVP(any(), any(), anyInt())).thenReturn(Collections.emptyList());
 		when(message.editMessageEmbeds(anyCollection())).thenReturn(messageEditAction);
 
 		reply.signup(buttonInteractionEvent, message, "@Testing", 1);
 
-		verify(embedUi).toggleRsvp(any(), any(), anyInt());
+		verify(embedUi).editEmbedDescriptionFromRSVP(any(), any(), anyInt());
 		verify(message).editMessageEmbeds(anyCollection());
 		verify(messageEditAction).queue();
 		verify(buttonInteractionEvent).editMessage(stringArgumentCaptor.capture());

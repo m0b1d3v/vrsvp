@@ -9,9 +9,8 @@ public enum ButtonEnum {
 
 	EDIT("edit", "Edit"),
 	EDIT_DESCRIPTION("edit-description", "Description"),
-	EDIT_EMBED("edit-embed", "Block"),
-	EDIT_FIELD_TITLE("edit-field-title", "Slot Titles"),
-	EDIT_FIELD_VALUE("edit-field-value", "Slot Values"),
+	EDIT_EMBED_TITLE("edit-embed-title", "Block"),
+	EDIT_EMBED_DESCRIPTION("edit-embed-description", "Slots"),
 	RSVP("rsvp", "RSVP"),
 	SIGNUP("signup", "Signup"),
 	UNKNOWN("unknown", "UNKNOWN");

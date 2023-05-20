@@ -1,6 +1,7 @@
 package com.mobiusk.vrsvp.embed;
 
 import com.mobiusk.vrsvp.command.SlashCommandInputs;
+import com.mobiusk.vrsvp.util.Parser;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
@@ -8,11 +9,12 @@ import javax.annotation.Nonnull;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 
 public class EmbedUi {
 
-	public static final String SLOT_TEXT_PREFIX = ">>> ";
-	public static final String EMPTY_SLOT_TEXT = SLOT_TEXT_PREFIX + "Open";
+	private static final String SIGNUP_DELIMITER = ", ";
+	private static final String SLOT_DELIMITER = "\n";
 
 	/**
 	 * Build a list of embeds (blocks) with an identical number of fields (slots).
@@ -30,45 +32,7 @@ public class EmbedUi {
 		return embeds;
 	}
 
-	/**
-	 * Toggle (add or remove) a user's mention to the specified slot for the given message.
-	 * <p>
-	 * This is a particularly ugly function because we cannot edit embed fields in place, they are in unmodifiable lists.
-	 * I might be able to clean this up or break it apart later, but for now there's not a clear path.
-	 */
-	public List<MessageEmbed> toggleRsvp(
-		@Nonnull List<MessageEmbed> existingEmbeds,
-		@Nonnull String userMention,
-		int slotIndexDestination
-	) {
-
-		var editedEmbeds = new LinkedList<MessageEmbed>();
-
-		var slotIndex = 0;
-		for (var embed : existingEmbeds) {
-
-			var embedBuilder = new EmbedBuilder(embed).clearFields();
-
-			for (var field : embed.getFields()) {
-
-				var name = field.getName();
-				var value = field.getValue();
-
-				if (slotIndex == slotIndexDestination) {
-					value = editEmbedFieldValueForUserMention(value, userMention);
-				}
-
-				embedBuilder.addField(new MessageEmbed.Field(name, value, true));
-				slotIndex++;
-			}
-
-			editedEmbeds.add(embedBuilder.build());
-		}
-
-		return editedEmbeds;
-	}
-
-	public List<MessageEmbed> editEmbed(
+	public List<MessageEmbed> editEmbedTitle(
 		@Nonnull List<MessageEmbed> existingEmbeds,
 		String embedTitle,
 		int embedIndex
@@ -91,30 +55,21 @@ public class EmbedUi {
 		return editedEmbeds;
 	}
 
-	public List<MessageEmbed> editFieldTitle(
+	public List<MessageEmbed> editEmbedDescriptionFromAdmin(
 		@Nonnull List<MessageEmbed> existingEmbeds,
-		String fieldTitle,
-		int fieldIndex
+		String description,
+		int embedIndex
 	) {
 
 		var editedEmbeds = new LinkedList<MessageEmbed>();
 
-		var fieldIndexCount = 0;
-		for (var embed : existingEmbeds) {
+		for (var embedIndexCounter = 0; embedIndexCounter < existingEmbeds.size(); embedIndexCounter++) {
 
-			var embedBuilder = new EmbedBuilder(embed).clearFields();
+			var embed = existingEmbeds.get(embedIndexCounter);
+			var embedBuilder = new EmbedBuilder(embed);
 
-			for (var field : embed.getFields()) {
-
-				var name = field.getName();
-				var value = field.getValue();
-
-				if (fieldIndexCount == fieldIndex) {
-					name = fieldTitle;
-				}
-
-				embedBuilder.addField(new MessageEmbed.Field(name, value, true));
-				fieldIndexCount++;
+			if (embedIndexCounter == embedIndex) {
+				embedBuilder.setDescription(description);
 			}
 
 			editedEmbeds.add(embedBuilder.build());
@@ -123,101 +78,99 @@ public class EmbedUi {
 		return editedEmbeds;
 	}
 
-	public List<MessageEmbed> editFieldValue(
+	/**
+	 * Toggle (add or remove) a user's mention to the specified slot for the given message.
+	 */
+	public List<MessageEmbed> editEmbedDescriptionFromRSVP(
 		@Nonnull List<MessageEmbed> existingEmbeds,
-		String fieldValue,
-		int fieldIndex
+		@Nonnull String userMention,
+		int slotIndexDestination
 	) {
 
 		var editedEmbeds = new LinkedList<MessageEmbed>();
 
-		var fieldIndexCount = 0;
+		var slotIndex = 0;
 		for (var embed : existingEmbeds) {
 
-			var embedBuilder = new EmbedBuilder(embed).clearFields();
+			var embedBuilder = new EmbedBuilder(embed);
 
-			for (var field : embed.getFields()) {
+			var slotsInEmbed = Parser.countSlotsInMessageEmbed(embed);
+			if ((slotIndex + slotsInEmbed) >= slotIndexDestination) {
 
-				var name = field.getName();
-				var value = field.getValue();
+				slotIndexDestination -= slotIndex;
 
-				if (fieldIndexCount == fieldIndex) {
-					value = fieldValue;
-				}
+				var embedDescription = Objects.requireNonNullElse(embed.getDescription(), "");
+				embedDescription = toggleUserMentionInSlot(embedDescription, userMention, slotIndexDestination);
 
-				embedBuilder.addField(new MessageEmbed.Field(name, value, true));
-				fieldIndexCount++;
+				embedBuilder.setDescription(embedDescription);
+				slotIndexDestination = 999; // Never hit this logic again, but still go through the other embeds
 			}
 
 			editedEmbeds.add(embedBuilder.build());
+			slotIndex += slotsInEmbed;
 		}
 
 		return editedEmbeds;
 	}
 
 	private MessageEmbed buildEmbed(@Nonnull SlashCommandInputs inputs, int embedIndex) {
+		return new EmbedBuilder()
+			.setTitle(buildEmbedTitle(embedIndex))
+			.setDescription(buildEmbedDescription(inputs, embedIndex))
+			.build();
+	}
 
-		var title = String.format("Block %d", embedIndex + 1);
+	private String buildEmbedTitle(int embedIndex) {
+		return String.format("Block %d", embedIndex + 1);
+	}
 
-		var embedBuilder = new EmbedBuilder().setTitle(title);
-		for (var fieldIndex = 0; fieldIndex < inputs.getSlots(); fieldIndex++) {
-			embedBuilder.addField(buildEmbedField(inputs, embedIndex, fieldIndex));
+	private String buildEmbedDescription(@Nonnull SlashCommandInputs inputs, int embedIndex) {
+
+		var slotsPerEmbed = inputs.getSlots();
+		var slotDurationInSeconds = inputs.getDurationInMinutes() * 60;
+		var embedDurationInSeconds = slotsPerEmbed * slotDurationInSeconds;
+		var embedStartTimestamp = inputs.getStartTimestamp() + (embedIndex * embedDurationInSeconds);
+
+		var description = new LinkedList<String>();
+		for (var slotIndex = 0; slotIndex < slotsPerEmbed; slotIndex++) {
+			var slotTimestamp = embedStartTimestamp + (slotDurationInSeconds * slotIndex);
+			var line = String.format("> #%d%s<t:%d:t>", slotIndex + 1, SIGNUP_DELIMITER, slotTimestamp);
+			description.add(line);
 		}
 
-		return embedBuilder.build();
+		return String.join(SLOT_DELIMITER, description);
 	}
 
-	private MessageEmbed.Field buildEmbedField(@Nonnull SlashCommandInputs inputs, int embedIndex, int fieldIndex) {
+	private String toggleUserMentionInSlot(String description, String userMention, int slotIndex) {
 
-		var slotsPerBlock = inputs.getSlots();
-		var slotIndex = (embedIndex * slotsPerBlock) + fieldIndex;
-		var slotTimestamp = inputs.getStartTimestamp() + (inputs.getDurationInMinutes() * 60 * slotIndex);
+		var embedLines = description.split("\n");
 
-		var fieldName = String.format("#%d - <t:%d:t>", slotIndex + 1, slotTimestamp);
-		var fieldValue = addPrefixToFieldValue("");
-
-		return new MessageEmbed.Field(fieldName, fieldValue, true);
-	}
-
-	private String editEmbedFieldValueForUserMention(String fieldValue, String userMention) {
-
-		if (fieldValue == null) {
-			fieldValue = "";
+		var slotsFoundIndexCounter = 0;
+		for (var embedLinesCounter = 0; embedLinesCounter < embedLines.length; embedLinesCounter++) {
+			if (Parser.inputIsASlot(embedLines[embedLinesCounter])) {
+				if (slotIndex == slotsFoundIndexCounter) {
+					slotIndex = embedLinesCounter;
+					break;
+				}
+				slotsFoundIndexCounter++;
+			}
 		}
 
-		fieldValue = fieldValue.replace(EMPTY_SLOT_TEXT, "");
-		fieldValue = fieldValue.replace(SLOT_TEXT_PREFIX, "");
-		fieldValue = toggleUserMentionInFieldValue(fieldValue, userMention);
-
-		return addPrefixToFieldValue(fieldValue);
-	}
-
-	private String toggleUserMentionInFieldValue(String fieldValue, String userMention) {
-
-		var userMentions = new LinkedList<>(Arrays.stream(fieldValue.split("\n"))
+		var userMentions = new LinkedList<>(Arrays.stream(embedLines[slotIndex].split(SIGNUP_DELIMITER))
 			.filter(mention -> !mention.isBlank())
 			.toList()
 		);
 
-		var userAlreadySignedUp = fieldValue.contains(userMention);
+		var userAlreadySignedUp = userMentions.contains(userMention);
 		if (userAlreadySignedUp) {
 			userMentions.removeIf(existingMention -> existingMention.equals(userMention));
 		} else {
 			userMentions.add(userMention);
 		}
 
-		return String.join("\n", userMentions);
-	}
+		embedLines[slotIndex] = String.join(SIGNUP_DELIMITER, userMentions);
 
-	private String addPrefixToFieldValue(String fieldValue) {
-
-		if (fieldValue.isBlank()) {
-			fieldValue = EMPTY_SLOT_TEXT;
-		} else {
-			fieldValue = SLOT_TEXT_PREFIX + fieldValue;
-		}
-
-		return fieldValue;
+		return String.join(SLOT_DELIMITER, embedLines);
 	}
 
 }

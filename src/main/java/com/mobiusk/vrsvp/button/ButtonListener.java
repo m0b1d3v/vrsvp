@@ -1,5 +1,6 @@
 package com.mobiusk.vrsvp.button;
 
+import com.mobiusk.vrsvp.util.Parser;
 import lombok.RequiredArgsConstructor;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Message;
@@ -26,11 +27,10 @@ public class ButtonListener extends ListenerAdapter {
 
 		var buttonEnum = ButtonEnum.getById(buttonInteractionAction);
 		switch (buttonEnum) {
-			case EDIT -> handleEditButtonPress(event);
-			case EDIT_DESCRIPTION -> handleEditDescriptionButtonPress(event);
-			case EDIT_EMBED -> handleEditEmbedButtonPress(event);
-			case EDIT_FIELD_TITLE -> handleEditFieldTitleButtonPress(event);
-			case EDIT_FIELD_VALUE -> handleEditFieldValueButtonPress(event);
+			case EDIT -> handleAdminEditButtonPress(event);
+			case EDIT_DESCRIPTION -> handleEditEventDescriptionButtonPress(event);
+			case EDIT_EMBED_TITLE -> handleEditEmbedTitleButtonPress(event);
+			case EDIT_EMBED_DESCRIPTION -> handleEditEmbedDescriptionButtonPress(event);
 			case RSVP -> handleRsvpButtonPress(event);
 			case SIGNUP -> handleSignupButtonPress(event);
 			default -> reply.ephemeral(event, "Input not recognized.");
@@ -58,7 +58,7 @@ public class ButtonListener extends ListenerAdapter {
 		return Integer.parseInt(contextIndex);
 	}
 
-	private void handleEditButtonPress(@Nonnull ButtonInteractionEvent event) {
+	private void handleAdminEditButtonPress(@Nonnull ButtonInteractionEvent event) {
 
 		if (accessDenied(event)) {
 			return;
@@ -67,7 +67,7 @@ public class ButtonListener extends ListenerAdapter {
 		reply.edit(event);
 	}
 
-	private void handleEditDescriptionButtonPress(@Nonnull ButtonInteractionEvent event) {
+	private void handleEditEventDescriptionButtonPress(@Nonnull ButtonInteractionEvent event) {
 
 		if (accessDenied(event)) {
 			return;
@@ -78,10 +78,10 @@ public class ButtonListener extends ListenerAdapter {
 			return;
 		}
 
-		reply.editDescription(event, rsvp);
+		reply.editEventDescription(event, rsvp);
 	}
 
-	private void handleEditEmbedButtonPress(@Nonnull ButtonInteractionEvent event) {
+	private void handleEditEmbedTitleButtonPress(@Nonnull ButtonInteractionEvent event) {
 
 		if (accessDenied(event)) {
 			return;
@@ -94,14 +94,14 @@ public class ButtonListener extends ListenerAdapter {
 
 		var embedIndex = getButtonInteractionContext(event);
 		if (embedIndex != null) {
-			reply.editEmbed(event, rsvp, embedIndex);
+			reply.editEmbedTitle(event, rsvp, embedIndex);
 		} else {
 			var selectionCount = rsvp.getEmbeds().size();
-			reply.editIndexedSelectionGeneration(event, "block", ButtonEnum.EDIT_EMBED.getId(), selectionCount);
+			reply.editIndexedBlockSelection(event, ButtonEnum.EDIT_EMBED_TITLE.getId(), selectionCount);
 		}
 	}
 
-	private void handleEditFieldTitleButtonPress(@Nonnull ButtonInteractionEvent event) {
+	private void handleEditEmbedDescriptionButtonPress(@Nonnull ButtonInteractionEvent event) {
 
 		if (accessDenied(event)) {
 			return;
@@ -112,37 +112,17 @@ public class ButtonListener extends ListenerAdapter {
 			return;
 		}
 
-		var fieldIndex = getButtonInteractionContext(event);
-		if (fieldIndex != null) {
-			reply.editSlotTitle(event, rsvp, fieldIndex);
+		var embedIndex = getButtonInteractionContext(event);
+		if (embedIndex != null) {
+			reply.editEmbedDescription(event, rsvp, embedIndex);
 		} else {
-			var selectionCount = countSlotsInMessageEmbeds(rsvp);
-			reply.editIndexedSelectionGeneration(event, "slot title", ButtonEnum.EDIT_FIELD_TITLE.getId(), selectionCount);
-		}
-	}
-
-	private void handleEditFieldValueButtonPress(@Nonnull ButtonInteractionEvent event) {
-
-		if (accessDenied(event)) {
-			return;
-		}
-
-		var rsvp = getEphemeralButtonEventSource(event);
-		if (rsvp == null) {
-			return;
-		}
-
-		var fieldIndex = getButtonInteractionContext(event);
-		if (fieldIndex != null) {
-			reply.editSlotValue(event, rsvp, fieldIndex);
-		} else {
-			var selectionCount = countSlotsInMessageEmbeds(rsvp);
-			reply.editIndexedSelectionGeneration(event, "slot value", ButtonEnum.EDIT_FIELD_VALUE.getId(), selectionCount);
+			var selectionCount = rsvp.getEmbeds().size();
+			reply.editIndexedBlockSelection(event, ButtonEnum.EDIT_EMBED_DESCRIPTION.getId(), selectionCount);
 		}
 	}
 
 	private void handleRsvpButtonPress(@Nonnull ButtonInteractionEvent event) {
-		var slots = countSlotsInMessageEmbeds(event.getMessage());
+		var slots = Parser.countSlotsInMessageEmbeds(event.getMessage());
 		reply.rsvp(event, slots);
 	}
 
@@ -174,16 +154,6 @@ public class ButtonListener extends ListenerAdapter {
 			.getMessageChannel()
 			.retrieveMessageById(eventMessageReference.getMessageIdLong())
 			.complete();
-	}
-
-	private int countSlotsInMessageEmbeds(@Nonnull Message message) {
-
-		var slots = 0;
-		for (var embed : message.getEmbeds()) {
-			slots += embed.getFields().size();
-		}
-
-		return slots;
 	}
 
 	private boolean accessDenied(@Nonnull ButtonInteractionEvent event) {

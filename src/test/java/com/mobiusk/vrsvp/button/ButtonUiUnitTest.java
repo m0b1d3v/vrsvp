@@ -28,11 +28,10 @@ class ButtonUiUnitTest extends TestBase {
 
 		var buttons = buttonUi.buildEditTopLevelActionRow();
 
-		assertEquals(4, buttons.size());
+		assertEquals(3, buttons.size());
 		assertButtonInformation(buttons.get(0), ButtonStyle.PRIMARY, ButtonEnum.EDIT_DESCRIPTION.getId(), ButtonEnum.EDIT_DESCRIPTION.getLabel());
-		assertButtonInformation(buttons.get(1), ButtonStyle.PRIMARY, ButtonEnum.EDIT_EMBED.getId(), ButtonEnum.EDIT_EMBED.getLabel());
-		assertButtonInformation(buttons.get(2), ButtonStyle.PRIMARY, ButtonEnum.EDIT_FIELD_TITLE.getId(), ButtonEnum.EDIT_FIELD_TITLE.getLabel());
-		assertButtonInformation(buttons.get(3), ButtonStyle.PRIMARY, ButtonEnum.EDIT_FIELD_VALUE.getId(), ButtonEnum.EDIT_FIELD_VALUE.getLabel());
+		assertButtonInformation(buttons.get(1), ButtonStyle.PRIMARY, ButtonEnum.EDIT_EMBED_TITLE.getId(), ButtonEnum.EDIT_EMBED_TITLE.getLabel());
+		assertButtonInformation(buttons.get(2), ButtonStyle.PRIMARY, ButtonEnum.EDIT_EMBED_DESCRIPTION.getId(), ButtonEnum.EDIT_EMBED_DESCRIPTION.getLabel());
 	}
 
 	@Test

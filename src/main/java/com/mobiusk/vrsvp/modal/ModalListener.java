@@ -34,12 +34,15 @@ public class ModalListener extends ListenerAdapter {
 			return;
 		}
 
+		if (accessDenied(event)) {
+			return;
+		}
+
 		var modalEnum = ModalEnum.getById(actionId);
 		switch (modalEnum) {
-			case DESCRIPTION -> handleDescriptionModalSubmission(event, rsvp, textInput);
-			case EMBED -> handleEmbedModalSubmission(event, rsvp, textInput);
-			case FIELD_TITLE -> handleFieldTitleModalSubmission(event, rsvp, textInput);
-			case FIELD_VALUE -> handleFieldValueModalSubmission(event, rsvp, textInput);
+			case EVENT_DESCRIPTION -> handleEventDescriptionModalSubmission(event, rsvp, textInput);
+			case EMBED_TITLE -> handleEmbedTitleModalSubmission(event, rsvp, textInput);
+			case EMBED_DESCRIPTION -> handleEmbedDescriptionModalSubmission(event, rsvp, textInput);
 			default -> reply.ephemeral(event, "Input not recognized");
 		}
 	}
@@ -65,65 +68,37 @@ public class ModalListener extends ListenerAdapter {
 		return Integer.parseInt(contextIndex);
 	}
 
-	private void handleDescriptionModalSubmission(
+	private void handleEventDescriptionModalSubmission(
 		@Nonnull ModalInteractionEvent event,
 		@Nonnull Message message,
 		String textInput
 	) {
-		reply.editDescription(event, message, textInput);
+		reply.editEventDescription(event, message, textInput);
 	}
 
-	private void handleEmbedModalSubmission(
+	private void handleEmbedTitleModalSubmission(
 		@Nonnull ModalInteractionEvent event,
 		@Nonnull Message message,
 		String textInput
 	) {
-
-		if (accessDenied(event)) {
-			return;
-		}
-
 		var embedIndex = getModalInteractionContext(event);
 		if (embedIndex == null) {
 			reply.ephemeral(event, "Input not recognized.");
 		} else {
-			reply.editEmbed(event, message, textInput, embedIndex);
+			reply.editEmbedTitle(event, message, textInput, embedIndex);
 		}
 	}
 
-	private void handleFieldTitleModalSubmission(
+	private void handleEmbedDescriptionModalSubmission(
 		@Nonnull ModalInteractionEvent event,
 		@Nonnull Message message,
 		String textInput
 	) {
-
-		if (accessDenied(event)) {
-			return;
-		}
-
-		var fieldIndex = getModalInteractionContext(event);
-		if (fieldIndex == null) {
+		var embedIndex = getModalInteractionContext(event);
+		if (embedIndex == null) {
 			reply.ephemeral(event, "Input not recognized.");
 		} else {
-			reply.editFieldTitle(event, message, textInput, fieldIndex);
-		}
-	}
-
-	private void handleFieldValueModalSubmission(
-		@Nonnull ModalInteractionEvent event,
-		@Nonnull Message message,
-		String textInput
-	) {
-
-		if (accessDenied(event)) {
-			return;
-		}
-
-		var fieldIndex = getModalInteractionContext(event);
-		if (fieldIndex == null) {
-			reply.ephemeral(event, "Input not recognized.");
-		} else {
-			reply.editFieldValue(event, message, textInput, fieldIndex);
+			reply.editEmbedDescription(event, message, textInput, embedIndex);
 		}
 	}
 

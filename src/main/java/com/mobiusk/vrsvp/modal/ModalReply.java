@@ -17,7 +17,7 @@ public class ModalReply {
 	/**
 	 * Edit a message by changing the main text, and then edit the original ephemeral message to confirm the action.
 	 */
-	public void editDescription(
+	public void editEventDescription(
 		@Nonnull ModalInteractionEvent event,
 		@Nonnull Message message,
 		String description
@@ -32,7 +32,7 @@ public class ModalReply {
 	/**
 	 * Edit an embed by changing the main description, and then edit the original ephemeral message to confirm the action.
 	 */
-	public void editEmbed(
+	public void editEmbedTitle(
 		@Nonnull ModalInteractionEvent event,
 		@Nonnull Message message,
 		String textInput,
@@ -40,17 +40,17 @@ public class ModalReply {
 	) {
 
 		var existingEmbeds = message.getEmbeds();
-		var editedEmbeds = embedUi.editEmbed(existingEmbeds, textInput, embedIndex);
+		var editedEmbeds = embedUi.editEmbedTitle(existingEmbeds, textInput, embedIndex);
 		message.editMessageEmbeds(editedEmbeds).queue();
 
-		var reply = Formatter.replies(String.format("Block #%d has been updated.", embedIndex + 1));
+		var reply = Formatter.replies(String.format("Block #%d title has been updated.", embedIndex + 1));
 		event.getHook().editOriginal(reply).queue();
 	}
 
 	/**
 	 * Edit a field by changing the title, and then edit the original ephemeral message to confirm the action.
 	 */
-	public void editFieldTitle(
+	public void editEmbedDescription(
 		@Nonnull ModalInteractionEvent event,
 		@Nonnull Message message,
 		String textInput,
@@ -58,28 +58,10 @@ public class ModalReply {
 	) {
 
 		var existingEmbeds = message.getEmbeds();
-		var editedEmbeds = embedUi.editFieldTitle(existingEmbeds, textInput, fieldIndex);
+		var editedEmbeds = embedUi.editEmbedDescriptionFromAdmin(existingEmbeds, textInput, fieldIndex);
 		message.editMessageEmbeds(editedEmbeds).queue();
 
-		var reply = Formatter.replies(String.format("Slot #%d title has been updated.", fieldIndex + 1));
-		event.getHook().editOriginal(reply).queue();
-	}
-
-	/**
-	 * Edit a field by changing the value, and then edit the original ephemeral message to confirm the action.
-	 */
-	public void editFieldValue(
-		@Nonnull ModalInteractionEvent event,
-		@Nonnull Message message,
-		String textInput,
-		int fieldIndex
-	) {
-
-		var existingEmbeds = message.getEmbeds();
-		var editedEmbeds = embedUi.editFieldValue(existingEmbeds, textInput, fieldIndex);
-		message.editMessageEmbeds(editedEmbeds).queue();
-
-		var reply = Formatter.replies(String.format("Slot #%d value has been updated.", fieldIndex + 1));
+		var reply = Formatter.replies(String.format("Block #%d description has been updated.", fieldIndex + 1));
 		event.getHook().editOriginal(reply).queue();
 	}
 
