@@ -9,6 +9,7 @@ import org.mockito.Mock;
 import java.util.stream.IntStream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
@@ -47,7 +48,12 @@ class SlashCommandListenerUnitTest extends TestBase {
 		verify(reply).rsvpCreation(eq(slashCommandInteractionEvent), inputsArgumentCaptor.capture());
 
 		var inputs = inputsArgumentCaptor.getValue();
-		assertInputValues(inputs, -1, -1, -1, -1);
+		assertNull(inputs.getBlocks());
+		assertNull(inputs.getSlots());
+		assertNull(inputs.getDurationInMinutes());
+		assertNull(inputs.getStartTimestamp());
+		assertNull(inputs.getRsvpLimitPerPerson());
+		assertNull(inputs.getRsvpLimitPerSlot());
 	}
 
 	@Test
@@ -75,16 +81,12 @@ class SlashCommandListenerUnitTest extends TestBase {
 		verify(reply).rsvpCreation(eq(slashCommandInteractionEvent), inputsArgumentCaptor.capture());
 
 		var inputs = inputsArgumentCaptor.getValue();
-		assertInputValues(inputs, 1, 2, 3, 4);
-	}
-
-	// Test utility method(s)
-
-	private void assertInputValues(SlashCommandInputs inputs, int blocks, int slots, int durationInMinutes, int startTimestamp) {
-		assertEquals(blocks, inputs.getBlocks());
-		assertEquals(slots, inputs.getSlots());
-		assertEquals(durationInMinutes, inputs.getDurationInMinutes());
-		assertEquals(startTimestamp, inputs.getStartTimestamp());
+		assertEquals(1, inputs.getBlocks());
+		assertEquals(2, inputs.getSlots());
+		assertEquals(3, inputs.getDurationInMinutes());
+		assertEquals(4, inputs.getStartTimestamp());
+		assertNull(inputs.getRsvpLimitPerPerson());
+		assertNull(inputs.getRsvpLimitPerSlot());
 	}
 
 }

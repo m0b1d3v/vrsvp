@@ -102,8 +102,7 @@ public class ButtonListener extends ListenerAdapter {
 				return;
 			}
 
-			var userMention = event.getUser().getAsMention();
-			reply.rsvpToggle(event, rsvp, userMention, slotIndex);
+			reply.rsvpToggle(event, rsvp, slotIndex);
 
 		} else {
 			var slots = Parser.countSlotsInMessageEmbeds(event.getMessage());

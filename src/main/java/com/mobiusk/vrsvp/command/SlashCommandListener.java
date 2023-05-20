@@ -25,25 +25,27 @@ public class SlashCommandListener extends ListenerAdapter {
 		handleSlashCommandInteraction(event);
 	}
 
-	private int getSlashCommandInput(@Nonnull SlashCommandInteractionEvent event, SlashCommandEnum slashCommandEnum) {
-
-		var option = event.getOption(slashCommandEnum.getId());
-		if (option == null) {
-			return -1;
-		}
-
-		return option.getAsInt();
-	}
-
 	private void handleSlashCommandInteraction(@Nonnull SlashCommandInteractionEvent event) {
 
 		var inputs = new SlashCommandInputs();
 		inputs.setBlocks(getSlashCommandInput(event, SlashCommandEnum.BLOCKS));
-		inputs.setSlots(getSlashCommandInput(event, SlashCommandEnum.SLOTS));
 		inputs.setDurationInMinutes(getSlashCommandInput(event, SlashCommandEnum.DURATION));
+		inputs.setSlots(getSlashCommandInput(event, SlashCommandEnum.SLOTS));
 		inputs.setStartTimestamp(getSlashCommandInput(event, SlashCommandEnum.START));
+		inputs.setRsvpLimitPerSlot(getSlashCommandInput(event, SlashCommandEnum.RSVP_LIMIT_PER_SLOT));
+		inputs.setRsvpLimitPerPerson(getSlashCommandInput(event, SlashCommandEnum.RSVP_LIMIT_PER_PERSON));
 
 		reply.rsvpCreation(event, inputs);
+	}
+
+	private Integer getSlashCommandInput(@Nonnull SlashCommandInteractionEvent event, SlashCommandEnum slashCommandEnum) {
+
+		var option = event.getOption(slashCommandEnum.getId());
+		if (option == null) {
+			return null;
+		}
+
+		return option.getAsInt();
 	}
 
 }

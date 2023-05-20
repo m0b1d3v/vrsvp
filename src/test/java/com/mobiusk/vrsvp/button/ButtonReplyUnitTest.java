@@ -1,6 +1,7 @@
 package com.mobiusk.vrsvp.button;
 
 import com.mobiusk.vrsvp.TestBase;
+import com.mobiusk.vrsvp.embed.EmbedRsvpToggleResult;
 import com.mobiusk.vrsvp.embed.EmbedUi;
 import com.mobiusk.vrsvp.command.SlashCommandInputs;
 import net.dv8tion.jda.api.interactions.components.ActionRow;
@@ -10,7 +11,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
-import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -34,14 +34,17 @@ class ButtonReplyUnitTest extends TestBase {
 	@BeforeEach
 	public void beforeEach() {
 
+		when(user.getAsMention()).thenReturn("@Testing");
+
 		when(replyCallbackAction.setEphemeral(anyBoolean())).thenReturn(replyCallbackAction);
 		when(replyCallbackAction.addEmbeds(anyCollection())).thenReturn(replyCallbackAction);
 		when(replyCallbackAction.addActionRow(anyCollection())).thenReturn(replyCallbackAction);
 		when(replyCallbackAction.setComponents(anyCollection())).thenReturn(replyCallbackAction);
 
 		when(buttonInteraction.editMessage(anyString())).thenReturn(messageEditCallbackAction);
-		when(buttonInteractionEvent.editMessage(anyString())).thenReturn(messageEditCallbackAction);
 
+		when(buttonInteractionEvent.getUser()).thenReturn(user);
+		when(buttonInteractionEvent.editMessage(anyString())).thenReturn(messageEditCallbackAction);
 		when(buttonInteractionEvent.getInteraction()).thenReturn(buttonInteraction);
 		when(buttonInteractionEvent.reply(anyString())).thenReturn(replyCallbackAction);
 
@@ -74,10 +77,11 @@ class ButtonReplyUnitTest extends TestBase {
 	@Test
 	void signupToggleAdjustsEmbedAndEditsEphemeralMessage() {
 
-		when(embedUi.editEmbedDescriptionFromRSVP(any(), any(), anyInt())).thenReturn(Collections.emptyList());
+		when(embedUi.editEmbedDescriptionFromRSVP(any(), any(), anyInt())).thenReturn(new EmbedRsvpToggleResult());
 		when(message.editMessageEmbeds(anyCollection())).thenReturn(messageEditAction);
+		when(user.getAsMention()).thenReturn("@Testing");
 
-		reply.rsvpToggle(buttonInteractionEvent, message, "@Testing", 1);
+		reply.rsvpToggle(buttonInteractionEvent, message, 1);
 
 		verify(embedUi).editEmbedDescriptionFromRSVP(any(), any(), anyInt());
 		verify(message).editMessageEmbeds(anyCollection());

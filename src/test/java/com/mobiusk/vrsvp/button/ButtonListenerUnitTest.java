@@ -50,7 +50,7 @@ class ButtonListenerUnitTest extends TestBase {
 
 		verify(reply).ephemeral(buttonInteractionEvent, "Input not recognized.");
 		verify(reply, never()).rsvpInterest(eq(buttonInteractionEvent), anyInt());
-		verify(reply, never()).rsvpToggle(eq(buttonInteractionEvent), any(), any(), anyInt());
+		verify(reply, never()).rsvpToggle(eq(buttonInteractionEvent), any(), anyInt());
 	}
 
 	@Test
@@ -105,7 +105,7 @@ class ButtonListenerUnitTest extends TestBase {
 
 		verify(reply, never()).ephemeral(buttonInteractionEvent, "Input not recognized.");
 		verify(reply).rsvpInterest(buttonInteractionEvent, messageEmbed.getFields().size() * message.getEmbeds().size());
-		verify(reply, never()).rsvpToggle(eq(buttonInteractionEvent), any(), any(), anyInt());
+		verify(reply, never()).rsvpToggle(eq(buttonInteractionEvent), any(), anyInt());
 	}
 
 	@Test
@@ -118,7 +118,7 @@ class ButtonListenerUnitTest extends TestBase {
 
 		verify(reply, never()).ephemeral(buttonInteractionEvent, "Input not recognized.");
 		verify(reply, never()).rsvpInterest(eq(buttonInteractionEvent), anyInt());
-		verify(reply, never()).rsvpToggle(eq(buttonInteractionEvent), any(), any(), anyInt());
+		verify(reply, never()).rsvpToggle(eq(buttonInteractionEvent), any(), anyInt());
 
 		verify(message).getMessageReference();
 		verify(buttonInteractionEvent, never()).getChannel();
@@ -134,14 +134,12 @@ class ButtonListenerUnitTest extends TestBase {
 
 		verify(reply, never()).ephemeral(buttonInteractionEvent, "Input not recognized.");
 		verify(reply, never()).rsvpInterest(eq(buttonInteractionEvent), anyInt());
-		verify(reply).rsvpToggle(buttonInteractionEvent, message, "@Testing", 1);
+		verify(reply).rsvpToggle(buttonInteractionEvent, message, 1);
 
 		verify(message).getMessageReference();
 		verify(buttonInteractionEvent).getMessageChannel();
 		verify(messageChannel).retrieveMessageById(1L);
 		verify(messageRestAction).complete();
-		verify(buttonInteractionEvent).getUser();
-		verify(user).getAsMention();
 	}
 
 }

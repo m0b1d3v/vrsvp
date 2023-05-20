@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.when;
 
 class EmbedUiUnitTest extends TestBase {
 
@@ -96,8 +97,10 @@ class EmbedUiUnitTest extends TestBase {
 	void rsvpForMoreThanOneFieldIsAllowed() {
 
 		var embed = new EmbedBuilder().setDescription("> #1, <t:0:F>, @Testing\n> #2, <t:1:F>").build();
-		var editedEmbeds = embedUi.editEmbedDescriptionFromRSVP(List.of(embed), USER_MENTION, 1);
-		var slots = Objects.requireNonNull(editedEmbeds.get(0).getDescription()).split("\n");
+		when(message.getEmbeds()).thenReturn(List.of(embed));
+
+		var result = embedUi.editEmbedDescriptionFromRSVP(message, USER_MENTION, 1);
+		var slots = Objects.requireNonNull(result.getMessageEmbeds().get(0).getDescription()).split("\n");
 
 		assertEquals("> #1, <t:0:F>, @Testing", slots[0]);
 		assertEquals("> #2, <t:1:F>, @Testing", slots[1]);
@@ -108,11 +111,12 @@ class EmbedUiUnitTest extends TestBase {
 	private String toggleRsvpOnOneEmbedWithOneSlot(String slotValue) {
 
 		var embed = new EmbedBuilder().setDescription(slotValue).build();
+		when(message.getEmbeds()).thenReturn(List.of(embed));
 
-		var editedEmbeds = embedUi.editEmbedDescriptionFromRSVP(List.of(embed), USER_MENTION, 0);
+		var result = embedUi.editEmbedDescriptionFromRSVP(message, USER_MENTION, 0);
 
-		assertEquals(1, editedEmbeds.size());
-		return editedEmbeds.get(0).getDescription();
+		assertEquals(1, result.getMessageEmbeds().size());
+		return result.getMessageEmbeds().get(0).getDescription();
 	}
 
 }

@@ -9,21 +9,58 @@ import net.dv8tion.jda.api.interactions.components.selections.SelectMenu;
 @RequiredArgsConstructor
 public enum SlashCommandEnum {
 
-	// 10
-	BLOCKS("blocks", Message.MAX_EMBED_COUNT, 1, "One each for separate set of slots, like for each DJ at a rave"),
+	BLOCKS(
+		"blocks",
+		Message.MAX_EMBED_COUNT, // 10
+		1,
+		"One each for separate set of slots, like for each DJ at a rave",
+		true
+	),
 
-	// One week in seconds
-	DURATION("duration", 60*24*7, 1, "How long each slot will last in minutes"),
+	DURATION(
+		"duration",
+		60 * 24 * 7, // One week in seconds
+		1,
+		"How long each slot will last in minutes",
+		true
+	),
 
-	// 25 (extra validation on blocks * slots occurs)
-	SLOTS("slots", SelectMenu.OPTIONS_MAX_AMOUNT, 1, "How many slots to have for each block"),
+	RSVP_LIMIT_PER_SLOT(
+		"rsvp-limit-per-slot",
+		null,
+		0,
+		"Maximum number of people that can RSVP for a single slot",
+		false
+	),
 
-	// 2035-01-01
-	START("start", 2_051_244_000, 0, "Timestamp from https://hammertime.cyou/ like '1684043839'");
+	RSVP_LIMIT_PER_PERSON(
+		"rsvp-limit-per-person",
+		null,
+		0,
+		"Maximum number of slots a person can RSVP for",
+		false
+	),
+
+	SLOTS(
+		"slots",
+		SelectMenu.OPTIONS_MAX_AMOUNT, // 25 (extra validation on blocks * slots occurs)
+		1,
+		"How many slots to have for each block",
+		true
+	),
+
+	START(
+		"start",
+		2_051_244_000, // 2035-01-01
+		0,
+		"Timestamp from https://hammertime.cyou/ like '1684043839'",
+		true
+	);
 
 	private final String id;
-	private final int maximum;
-	private final int minimum;
+	private final Integer maximum;
+	private final Integer minimum;
 	private final String description;
+	private final boolean required;
 
 }
