@@ -76,13 +76,13 @@ public class ButtonReply {
 	public void rsvpToggle(
 		@Nonnull ButtonInteractionEvent event,
 		@Nonnull Message message,
-		String userMention,
 		int slotIndex
 	) {
 
 		var existingEmbeds = message.getEmbeds();
 		var editedEmbeds = embedUi.editEmbedDescriptionFromRSVP(existingEmbeds, userMention, slotIndex);
 		message.editMessageEmbeds(editedEmbeds).queue();
+		var userMention = event.getUser().getAsMention();
 
 		var reply = Formatter.replies(String.format("RSVP state toggled for slot #%d", slotIndex + 1));
 

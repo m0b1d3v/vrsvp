@@ -76,8 +76,9 @@ class ButtonReplyUnitTest extends TestBase {
 
 		when(embedUi.editEmbedDescriptionFromRSVP(any(), any(), anyInt())).thenReturn(Collections.emptyList());
 		when(message.editMessageEmbeds(anyCollection())).thenReturn(messageEditAction);
+		when(user.getAsMention()).thenReturn("@Testing");
 
-		reply.rsvpToggle(buttonInteractionEvent, message, "@Testing", 1);
+		reply.rsvpToggle(buttonInteractionEvent, message, 1);
 
 		verify(embedUi).editEmbedDescriptionFromRSVP(any(), any(), anyInt());
 		verify(message).editMessageEmbeds(anyCollection());
