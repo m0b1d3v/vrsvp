@@ -2,6 +2,7 @@ package com.mobiusk.vrsvp.button;
 
 import com.mobiusk.vrsvp.util.Parser;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
@@ -10,6 +11,7 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import javax.annotation.Nonnull;
 
 @RequiredArgsConstructor
+@Slf4j
 public class ButtonListener extends ListenerAdapter {
 
 	// Class constructor field(s)
@@ -157,9 +159,12 @@ public class ButtonListener extends ListenerAdapter {
 			return null;
 		}
 
-		return event
-			.getMessageChannel()
+		return event.getMessageChannel()
 			.retrieveMessageById(eventMessageReference.getMessageIdLong())
+			.onErrorMap(ex -> {
+				log.warn("Message retrieval attempted on deleted message", ex);
+				return null;
+			})
 			.complete();
 	}
 

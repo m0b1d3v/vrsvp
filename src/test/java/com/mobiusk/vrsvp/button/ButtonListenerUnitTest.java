@@ -1,12 +1,14 @@
 package com.mobiusk.vrsvp.button;
 
 import com.mobiusk.vrsvp.TestBase;
+import net.dv8tion.jda.api.requests.RestAction;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
 import java.util.List;
+import java.util.function.Function;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
@@ -32,6 +34,7 @@ class ButtonListenerUnitTest extends TestBase {
 
 		when(messageChannel.retrieveMessageById(anyLong())).thenReturn(messageRestAction);
 
+		when(messageRestAction.onErrorMap(any(Function.class))).thenReturn(messageRestAction);
 		when(messageRestAction.complete()).thenReturn(message);
 
 		when(buttonInteractionEvent.getUser()).thenReturn(user);
