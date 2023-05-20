@@ -35,7 +35,7 @@ public class SlashCommandReply {
 	private String buildEventDescription(@Nonnull SlashCommandInputs inputs) {
 
 		var description = Formatter.replies("""
-			**Signups are now available for a new event**
+			**New Event**
 
 			Slots start <t:%d:R> on <t:%d:F> and each is %d minute(s) long.%s%s"""
 		);

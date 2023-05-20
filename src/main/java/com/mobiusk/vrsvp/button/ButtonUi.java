@@ -25,7 +25,11 @@ public class ButtonUi {
 	 */
 	public List<ActionRow> buildEditActionPrompts(int embedCount) {
 
-		var firstRow = ActionRow.of(Button.primary(ButtonEnum.EDIT_EVENT_DESCRIPTION.getId(), ButtonEnum.EDIT_EVENT_DESCRIPTION.getLabel()));
+		var firstRow = ActionRow.of(
+			Button.primary(ButtonEnum.EDIT_EVENT_DESCRIPTION.getId(), ButtonEnum.EDIT_EVENT_DESCRIPTION.getLabel()),
+			Button.danger(ButtonEnum.EDIT_EVENT_ACTIVE.getId(), ButtonEnum.EDIT_EVENT_ACTIVE.getLabel())
+		);
+
 		var embedButtons = buildIndexedButtonActionRows(ButtonEnum.EDIT_EMBED_DESCRIPTION.getId(), embedCount);
 
 		var actions = new LinkedList<ActionRow>();

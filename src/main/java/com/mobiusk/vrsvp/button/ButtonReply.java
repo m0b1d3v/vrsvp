@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
+import net.dv8tion.jda.api.interactions.components.ActionRow;
 
 import javax.annotation.Nonnull;
 import java.util.LinkedList;
@@ -37,6 +38,29 @@ public class ButtonReply {
 			.setEphemeral(true)
 			.setComponents(editActions)
 			.queue();
+	}
+
+	/**
+	 * Toggle the disabled state of the RSVP button on a message.
+	 */
+	public void editToggleRsvpActive(@Nonnull ButtonInteractionEvent event, @Nonnull Message message) {
+
+		var rsvpButton = message.getButtonById(ButtonEnum.RSVP.getId());
+		if (rsvpButton == null) {
+			var reply = Formatter.replies("Could not toggle RSVP button");
+			event.editMessage(reply).queue();
+			return;
+		}
+
+		rsvpButton = rsvpButton.withDisabled( ! rsvpButton.isDisabled());
+
+		var buttons = new LinkedList<>(message.getButtons());
+		buttons.set(0, rsvpButton);
+
+		message.editMessageComponents(ActionRow.of(buttons)).queue();
+
+		var reply = Formatter.replies("RSVP button toggled");
+		event.editMessage(reply).queue();
 	}
 
 	/**

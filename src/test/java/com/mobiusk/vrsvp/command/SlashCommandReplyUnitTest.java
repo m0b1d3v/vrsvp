@@ -70,7 +70,7 @@ class SlashCommandReplyUnitTest extends TestBase {
 		verify(slashCommandInteractionEvent).reply(stringArgumentCaptor.capture());
 		verifyRsvpCreationActions(never(), times(1));
 
-		var expectation = "---\n**Signups are now available for a new event**\n\nSlots start <t:5:R> on <t:5:F> and each is 4 minute(s) long.\n---";
+		var expectation = "---\n**New Event**\n\nSlots start <t:5:R> on <t:5:F> and each is 4 minute(s) long.\n---";
 		assertEquals(expectation, stringArgumentCaptor.getValue());
 	}
 

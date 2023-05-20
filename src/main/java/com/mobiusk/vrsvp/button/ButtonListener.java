@@ -34,6 +34,7 @@ public class ButtonListener extends ListenerAdapter {
 		var buttonEnum = ButtonEnum.getById(buttonInteractionAction);
 		switch (buttonEnum) {
 			case EDIT -> handleAdminEditButtonPress(event);
+			case EDIT_EVENT_ACTIVE -> handleEditEventActiveToggleButtonPress(event);
 			case EDIT_EVENT_DESCRIPTION -> handleEditEventDescriptionButtonPress(event);
 			case EDIT_EMBED_DESCRIPTION -> handleEditEmbedDescriptionButtonPress(event);
 			case RSVP -> handleRsvpButtonPress(event);
@@ -65,6 +66,16 @@ public class ButtonListener extends ListenerAdapter {
 	private void handleAdminEditButtonPress(@Nonnull ButtonInteractionEvent event) {
 		var embedCount = event.getMessage().getEmbeds().size();
 		reply.edit(event, embedCount);
+	}
+
+	private void handleEditEventActiveToggleButtonPress(@Nonnull ButtonInteractionEvent event) {
+
+		var rsvp = getEphemeralButtonEventSource(event);
+		if (rsvp == null) {
+			return;
+		}
+
+		reply.editToggleRsvpActive(event, rsvp);
 	}
 
 	private void handleEditEventDescriptionButtonPress(@Nonnull ButtonInteractionEvent event) {
