@@ -34,14 +34,17 @@ class ButtonReplyUnitTest extends TestBase {
 	@BeforeEach
 	public void beforeEach() {
 
+		when(user.getAsMention()).thenReturn("@Testing");
+
 		when(replyCallbackAction.setEphemeral(anyBoolean())).thenReturn(replyCallbackAction);
 		when(replyCallbackAction.addEmbeds(anyCollection())).thenReturn(replyCallbackAction);
 		when(replyCallbackAction.addActionRow(anyCollection())).thenReturn(replyCallbackAction);
 		when(replyCallbackAction.setComponents(anyCollection())).thenReturn(replyCallbackAction);
 
 		when(buttonInteraction.editMessage(anyString())).thenReturn(messageEditCallbackAction);
-		when(buttonInteractionEvent.editMessage(anyString())).thenReturn(messageEditCallbackAction);
 
+		when(buttonInteractionEvent.getUser()).thenReturn(user);
+		when(buttonInteractionEvent.editMessage(anyString())).thenReturn(messageEditCallbackAction);
 		when(buttonInteractionEvent.getInteraction()).thenReturn(buttonInteraction);
 		when(buttonInteractionEvent.reply(anyString())).thenReturn(replyCallbackAction);
 

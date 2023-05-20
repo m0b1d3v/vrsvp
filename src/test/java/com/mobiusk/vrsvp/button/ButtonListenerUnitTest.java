@@ -140,8 +140,6 @@ class ButtonListenerUnitTest extends TestBase {
 		verify(buttonInteractionEvent).getMessageChannel();
 		verify(messageChannel).retrieveMessageById(1L);
 		verify(messageRestAction).complete();
-		verify(buttonInteractionEvent).getUser();
-		verify(user).getAsMention();
 	}
 
 }
