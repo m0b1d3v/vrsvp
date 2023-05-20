@@ -4,11 +4,14 @@ import com.mobiusk.vrsvp.modal.ModalEnum;
 import com.mobiusk.vrsvp.embed.EmbedUi;
 import com.mobiusk.vrsvp.modal.ModalUi;
 import com.mobiusk.vrsvp.util.Formatter;
+import com.mobiusk.vrsvp.util.Parser;
 import lombok.RequiredArgsConstructor;
 import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 
 import javax.annotation.Nonnull;
+import java.util.LinkedList;
 import java.util.Objects;
 
 @RequiredArgsConstructor
@@ -82,6 +85,13 @@ public class ButtonReply {
 		var userMention = event.getUser().getAsMention();
 		var result = embedUi.editEmbedDescriptionFromRSVP(message, userMention, slotIndex);
 
+		if (result.isUserAddedToSlot()
+			&& (rsvpLimitPerPersonExceeded(message, userMention) || rsvpLimitPerSlotExceeded(message, slotIndex))
+		) {
+			var errorMessage = Formatter.replies(String.format("Signup limit exceeded, cannot RSVP for slot #%d", slotIndex + 1));
+			event.editMessage(errorMessage).queue();
+			return;
+		}
 
 		message.editMessageEmbeds(result.getMessageEmbeds()).queue();
 
@@ -94,6 +104,51 @@ public class ButtonReply {
 	 */
 	public void ephemeral(@Nonnull ButtonInteractionEvent event, String message) {
 		event.reply(message).setEphemeral(true).queue();
+	}
+
+	private boolean rsvpLimitPerPersonExceeded(@Nonnull Message message, String userMention) {
+		var description = message.getContentDisplay();
+		var limit = Parser.findRsvpLimitPerPersonInText(description);
+		return limit != null && currentRsvpCountForUser(message, userMention) >= limit;
+	}
+
+	private boolean rsvpLimitPerSlotExceeded(@Nonnull Message message, int slotIndex) {
+		var description = message.getContentDisplay();
+		var limit = Parser.findRsvpLimitPerSlotInText(description);
+		return limit != null && currentRsvpCountForSlot(message, slotIndex) >= limit;
+	}
+
+	private long currentRsvpCountForUser(@Nonnull Message message, String userMention) {
+		return message.getEmbeds().stream()
+			.map(MessageEmbed::getDescription)
+			.filter(Objects::nonNull)
+			.flatMap(String::lines)
+			.filter(Parser::inputIsASlot)
+			.filter(line -> line.contains(userMention))
+			.count();
+	}
+
+	private long currentRsvpCountForSlot(@Nonnull Message message, int slotIndexDestination) {
+
+		var slotIndex = 0;
+		for (var embed : message.getEmbeds()) {
+
+			var description = Objects.requireNonNullElse(embed.getDescription(), "");
+			var descriptionLines = new LinkedList<>(description.lines().toList());
+
+			for (String line : descriptionLines) {
+				if (Parser.inputIsASlot(line)) {
+
+					if (slotIndex == slotIndexDestination) {
+						return Parser.readDataInSlot(line).stream().filter(data -> data.contains("@")).count();
+					}
+
+					slotIndex++;
+				}
+			}
+		}
+
+		return 0;
 	}
 
 }
