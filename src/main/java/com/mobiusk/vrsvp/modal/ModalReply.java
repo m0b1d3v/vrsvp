@@ -26,7 +26,7 @@ public class ModalReply {
 		message.editMessage(description).queue();
 
 		var reply = Formatter.replies("Description has been updated.");
-		event.editMessage(reply).queue();
+		event.getHook().editOriginal(reply).queue();
 	}
 
 	/**
