@@ -12,7 +12,6 @@ public enum ButtonEnum {
 	EDIT_EMBED_TITLE("edit-embed-title", "Block"),
 	EDIT_EMBED_DESCRIPTION("edit-embed-description", "Slots"),
 	RSVP("rsvp", "RSVP"),
-	SIGNUP("signup", "Signup"),
 	UNKNOWN("unknown", "UNKNOWN");
 
 	private final String id;

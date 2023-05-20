@@ -32,7 +32,6 @@ public class ButtonListener extends ListenerAdapter {
 			case EDIT_EMBED_TITLE -> handleEditEmbedTitleButtonPress(event);
 			case EDIT_EMBED_DESCRIPTION -> handleEditEmbedDescriptionButtonPress(event);
 			case RSVP -> handleRsvpButtonPress(event);
-			case SIGNUP -> handleSignupButtonPress(event);
 			default -> reply.ephemeral(event, "Input not recognized.");
 		}
 	}
@@ -122,24 +121,22 @@ public class ButtonListener extends ListenerAdapter {
 	}
 
 	private void handleRsvpButtonPress(@Nonnull ButtonInteractionEvent event) {
-		var slots = Parser.countSlotsInMessageEmbeds(event.getMessage());
-		reply.rsvp(event, slots);
-	}
-
-	private void handleSignupButtonPress(@Nonnull ButtonInteractionEvent event) {
 
 		var slotIndex = getButtonInteractionContext(event);
-		if (slotIndex == null) {
-			return;
-		}
+		if (slotIndex != null) {
 
-		var rsvp = getEphemeralButtonEventSource(event);
-		if (rsvp == null) {
-			return;
-		}
+			var rsvp = getEphemeralButtonEventSource(event);
+			if (rsvp == null) {
+				return;
+			}
 
-		var userMention = event.getUser().getAsMention();
-		reply.signup(event, rsvp, userMention, slotIndex);
+			var userMention = event.getUser().getAsMention();
+			reply.rsvpToggle(event, rsvp, userMention, slotIndex);
+
+		} else {
+			var slots = Parser.countSlotsInMessageEmbeds(event.getMessage());
+			reply.rsvpInterest(event, slots);
+		}
 	}
 
 	// Any changes here should be propagated to the similar method in ModalListener (no common parent = copied code)

@@ -57,12 +57,12 @@ class ButtonReplyUnitTest extends TestBase {
 		var button = Button.primary("test", "Test");
 		var totalSlots = inputs.getBlocks() * inputs.getSlots();
 		List<ActionRow> buttonRows = List.of(ActionRow.of(button), ActionRow.of(button));
-		when(buttonUi.buildIndexedButtonActionRows(ButtonEnum.SIGNUP.getId(), totalSlots)).thenReturn(buttonRows);
+		when(buttonUi.buildIndexedButtonActionRows(ButtonEnum.RSVP.getId(), totalSlots)).thenReturn(buttonRows);
 
-		reply.rsvp(buttonInteractionEvent, totalSlots);
+		reply.rsvpInterest(buttonInteractionEvent, totalSlots);
 
 		verify(buttonInteractionEvent).reply(stringArgumentCaptor.capture());
-		verify(buttonUi).buildIndexedButtonActionRows(ButtonEnum.SIGNUP.getId(), totalSlots);
+		verify(buttonUi).buildIndexedButtonActionRows(ButtonEnum.RSVP.getId(), totalSlots);
 		verify(replyCallbackAction).setEphemeral(true);
 		verify(replyCallbackAction).setComponents(anyCollection());
 		verify(replyCallbackAction).queue();
@@ -77,7 +77,7 @@ class ButtonReplyUnitTest extends TestBase {
 		when(embedUi.editEmbedDescriptionFromRSVP(any(), any(), anyInt())).thenReturn(Collections.emptyList());
 		when(message.editMessageEmbeds(anyCollection())).thenReturn(messageEditAction);
 
-		reply.signup(buttonInteractionEvent, message, "@Testing", 1);
+		reply.rsvpToggle(buttonInteractionEvent, message, "@Testing", 1);
 
 		verify(embedUi).editEmbedDescriptionFromRSVP(any(), any(), anyInt());
 		verify(message).editMessageEmbeds(anyCollection());

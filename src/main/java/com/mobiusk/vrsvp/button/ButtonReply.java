@@ -82,9 +82,9 @@ public class ButtonReply {
 	/**
 	 * Replies with an ephemeral list of buttons users can click to toggle RSVP state for slots.
 	 */
-	public void rsvp(@Nonnull ButtonInteractionEvent event, int slotsAvailable) {
+	public void rsvpInterest(@Nonnull ButtonInteractionEvent event, int slotsAvailable) {
 
-		var buttonRows = buttonUi.buildIndexedButtonActionRows(ButtonEnum.SIGNUP.getId(), slotsAvailable);
+		var buttonRows = buttonUi.buildIndexedButtonActionRows(ButtonEnum.RSVP.getId(), slotsAvailable);
 
 		var message = Formatter.replies("Use these buttons to toggle your RSVP for any slot.");
 
@@ -97,7 +97,7 @@ public class ButtonReply {
 	/**
 	 * Toggles RSVP state for given user and slot and then adjusts source ephemeral message to reflect the change.
 	 */
-	public void signup(
+	public void rsvpToggle(
 		@Nonnull ButtonInteractionEvent event,
 		@Nonnull Message message,
 		String userMention,

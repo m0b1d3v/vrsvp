@@ -47,8 +47,8 @@ class ButtonListenerUnitTest extends TestBase {
 		listener.onButtonInteraction(buttonInteractionEvent);
 
 		verify(reply).ephemeral(buttonInteractionEvent, "Input not recognized.");
-		verify(reply, never()).rsvp(eq(buttonInteractionEvent), anyInt());
-		verify(reply, never()).signup(eq(buttonInteractionEvent), any(), any(), anyInt());
+		verify(reply, never()).rsvpInterest(eq(buttonInteractionEvent), anyInt());
+		verify(reply, never()).rsvpToggle(eq(buttonInteractionEvent), any(), any(), anyInt());
 	}
 
 	@Test
@@ -102,36 +102,21 @@ class ButtonListenerUnitTest extends TestBase {
 		listener.onButtonInteraction(buttonInteractionEvent);
 
 		verify(reply, never()).ephemeral(buttonInteractionEvent, "Input not recognized.");
-		verify(reply).rsvp(buttonInteractionEvent, messageEmbed.getFields().size() * message.getEmbeds().size());
-		verify(reply, never()).signup(eq(buttonInteractionEvent), any(), any(), anyInt());
-	}
-
-	@Test
-	void buttonInteractionEventForSignupButtonWithoutContextIdDoesNotGetButtonEventSourceOrToggleSlots() {
-
-		when(buttonInteractionEvent.getComponentId()).thenReturn(ButtonEnum.SIGNUP.getId());
-
-		listener.onButtonInteraction(buttonInteractionEvent);
-
-		verify(reply, never()).ephemeral(buttonInteractionEvent, "Input not recognized.");
-		verify(reply, never()).rsvp(eq(buttonInteractionEvent), anyInt());
-		verify(reply, never()).signup(eq(buttonInteractionEvent), any(), any(), anyInt());
-
-		verify(message, never()).getMessageReference();
-		verify(buttonInteractionEvent, never()).getChannel();
+		verify(reply).rsvpInterest(buttonInteractionEvent, messageEmbed.getFields().size() * message.getEmbeds().size());
+		verify(reply, never()).rsvpToggle(eq(buttonInteractionEvent), any(), any(), anyInt());
 	}
 
 	@Test
 	void buttonInteractionEventForSignupButtonWithContextIdButNoMessageSourceDoesNotToggleSlots() {
 
-		when(buttonInteractionEvent.getComponentId()).thenReturn(ButtonEnum.SIGNUP.getId() + ":1");
+		when(buttonInteractionEvent.getComponentId()).thenReturn(ButtonEnum.RSVP.getId() + ":1");
 		when(message.getMessageReference()).thenReturn(null);
 
 		listener.onButtonInteraction(buttonInteractionEvent);
 
 		verify(reply, never()).ephemeral(buttonInteractionEvent, "Input not recognized.");
-		verify(reply, never()).rsvp(eq(buttonInteractionEvent), anyInt());
-		verify(reply, never()).signup(eq(buttonInteractionEvent), any(), any(), anyInt());
+		verify(reply, never()).rsvpInterest(eq(buttonInteractionEvent), anyInt());
+		verify(reply, never()).rsvpToggle(eq(buttonInteractionEvent), any(), any(), anyInt());
 
 		verify(message).getMessageReference();
 		verify(buttonInteractionEvent, never()).getChannel();
@@ -140,14 +125,14 @@ class ButtonListenerUnitTest extends TestBase {
 	@Test
 	void buttonInteractionEventForSignupButtonWithContextIdAndMessageSourceTogglesSlots() {
 
-		when(buttonInteractionEvent.getComponentId()).thenReturn(ButtonEnum.SIGNUP.getId() + ":1");
+		when(buttonInteractionEvent.getComponentId()).thenReturn(ButtonEnum.RSVP.getId() + ":1");
 		when(user.getAsMention()).thenReturn("@Testing");
 
 		listener.onButtonInteraction(buttonInteractionEvent);
 
 		verify(reply, never()).ephemeral(buttonInteractionEvent, "Input not recognized.");
-		verify(reply, never()).rsvp(eq(buttonInteractionEvent), anyInt());
-		verify(reply).signup(buttonInteractionEvent, message, "@Testing", 1);
+		verify(reply, never()).rsvpInterest(eq(buttonInteractionEvent), anyInt());
+		verify(reply).rsvpToggle(buttonInteractionEvent, message, "@Testing", 1);
 
 		verify(message).getMessageReference();
 		verify(buttonInteractionEvent).getMessageChannel();
