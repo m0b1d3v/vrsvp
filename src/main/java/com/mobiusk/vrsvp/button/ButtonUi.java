@@ -25,8 +25,7 @@ public class ButtonUi {
 	 */
 	public List<Button> buildEditTopLevelActionRow() {
 		return List.of(
-			Button.primary(ButtonEnum.EDIT_DESCRIPTION.getId(), ButtonEnum.EDIT_DESCRIPTION.getLabel()),
-			Button.primary(ButtonEnum.EDIT_EMBED_TITLE.getId(), ButtonEnum.EDIT_EMBED_TITLE.getLabel()),
+			Button.primary(ButtonEnum.EDIT_EVENT_DESCRIPTION.getId(), ButtonEnum.EDIT_EVENT_DESCRIPTION.getLabel()),
 			Button.primary(ButtonEnum.EDIT_EMBED_DESCRIPTION.getId(), ButtonEnum.EDIT_EMBED_DESCRIPTION.getLabel())
 		);
 	}

@@ -30,24 +30,6 @@ public class ModalReply {
 	}
 
 	/**
-	 * Edit an embed by changing the main description, and then edit the original ephemeral message to confirm the action.
-	 */
-	public void editEmbedTitle(
-		@Nonnull ModalInteractionEvent event,
-		@Nonnull Message message,
-		String textInput,
-		int embedIndex
-	) {
-
-		var existingEmbeds = message.getEmbeds();
-		var editedEmbeds = embedUi.editEmbedTitle(existingEmbeds, textInput, embedIndex);
-		message.editMessageEmbeds(editedEmbeds).queue();
-
-		var reply = Formatter.replies(String.format("Block #%d title has been updated.", embedIndex + 1));
-		event.getHook().editOriginal(reply).queue();
-	}
-
-	/**
 	 * Edit a field by changing the title, and then edit the original ephemeral message to confirm the action.
 	 */
 	public void editEmbedDescription(

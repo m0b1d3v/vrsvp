@@ -9,9 +9,8 @@ public enum ButtonEnum {
 
 	EDIT("edit", "Edit"),
 	EDIT_BACK("back", "Back"),
-	EDIT_DESCRIPTION("edit-description", "Description"),
-	EDIT_EMBED_TITLE("edit-embed-title", "Block Title"),
-	EDIT_EMBED_DESCRIPTION("edit-embed-description", "Block Description"),
+	EDIT_EVENT_DESCRIPTION("edit-event-description", "Event"),
+	EDIT_EMBED_DESCRIPTION("edit-embed-description", "Block"),
 	RSVP("rsvp", "RSVP"),
 	UNKNOWN("unknown", "UNKNOWN");
 

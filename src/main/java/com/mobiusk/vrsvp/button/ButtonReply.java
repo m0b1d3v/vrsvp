@@ -59,22 +59,12 @@ public class ButtonReply {
 	}
 
 	/**
-	 * Launch a modal with one text input to prompt an admin for an embed title.
-	 */
-	public void editEmbedTitle(@Nonnull ButtonInteractionEvent event, @Nonnull Message message, int embedIndex) {
-		var embeds = message.getEmbeds();
-		var currentText = embeds.get(embedIndex).getTitle();
-		var modal = modalUi.editText(ModalEnum.EMBED_TITLE, currentText, 500 / embeds.size(), embedIndex);
-		event.replyModal(modal).queue();
-	}
-
-	/**
-	 * Launch a modal with one text input to prompt an admin for a slot title.
+	 * Launch a modal with one text input to prompt an admin for a block edit.
 	 */
 	public void editEmbedDescription(@Nonnull ButtonInteractionEvent event, @Nonnull Message message, int embedIndex) {
 		var embeds = message.getEmbeds();
 		var currentText = Objects.requireNonNullElse(embeds.get(embedIndex).getDescription(), "");
-		var modal = modalUi.editText(ModalEnum.EMBED_DESCRIPTION, currentText, 5000 / embeds.size(), embedIndex);
+		var modal = modalUi.editText(ModalEnum.EMBED_DESCRIPTION, currentText, 5500 / embeds.size(), embedIndex);
 		event.replyModal(modal).queue();
 	}
 

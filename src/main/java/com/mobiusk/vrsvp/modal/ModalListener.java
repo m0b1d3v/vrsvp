@@ -41,7 +41,6 @@ public class ModalListener extends ListenerAdapter {
 		var modalEnum = ModalEnum.getById(actionId);
 		switch (modalEnum) {
 			case EVENT_DESCRIPTION -> handleEventDescriptionModalSubmission(event, rsvp, textInput);
-			case EMBED_TITLE -> handleEmbedTitleModalSubmission(event, rsvp, textInput);
 			case EMBED_DESCRIPTION -> handleEmbedDescriptionModalSubmission(event, rsvp, textInput);
 			default -> reply.ephemeral(event, "Input not recognized");
 		}
@@ -74,19 +73,6 @@ public class ModalListener extends ListenerAdapter {
 		String textInput
 	) {
 		reply.editEventDescription(event, message, textInput);
-	}
-
-	private void handleEmbedTitleModalSubmission(
-		@Nonnull ModalInteractionEvent event,
-		@Nonnull Message message,
-		String textInput
-	) {
-		var embedIndex = getModalInteractionContext(event);
-		if (embedIndex == null) {
-			reply.ephemeral(event, "Input not recognized.");
-		} else {
-			reply.editEmbedTitle(event, message, textInput, embedIndex);
-		}
 	}
 
 	private void handleEmbedDescriptionModalSubmission(

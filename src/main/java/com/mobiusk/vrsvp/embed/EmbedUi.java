@@ -32,29 +32,6 @@ public class EmbedUi {
 		return embeds;
 	}
 
-	public List<MessageEmbed> editEmbedTitle(
-		@Nonnull List<MessageEmbed> existingEmbeds,
-		String embedTitle,
-		int embedIndex
-	) {
-
-		var editedEmbeds = new LinkedList<MessageEmbed>();
-
-		for (var embedIndexCounter = 0; embedIndexCounter < existingEmbeds.size(); embedIndexCounter++) {
-
-			var embed = existingEmbeds.get(embedIndexCounter);
-			var embedBuilder = new EmbedBuilder(embed);
-
-			if (embedIndexCounter == embedIndex) {
-				embedBuilder.setTitle(embedTitle);
-			}
-
-			editedEmbeds.add(embedBuilder.build());
-		}
-
-		return editedEmbeds;
-	}
-
 	public List<MessageEmbed> editEmbedDescriptionFromAdmin(
 		@Nonnull List<MessageEmbed> existingEmbeds,
 		String description,
@@ -114,17 +91,6 @@ public class EmbedUi {
 	}
 
 	private MessageEmbed buildEmbed(@Nonnull SlashCommandInputs inputs, int embedIndex) {
-		return new EmbedBuilder()
-			.setTitle(buildEmbedTitle(embedIndex))
-			.setDescription(buildEmbedDescription(inputs, embedIndex))
-			.build();
-	}
-
-	private String buildEmbedTitle(int embedIndex) {
-		return String.format("Block %d", embedIndex + 1);
-	}
-
-	private String buildEmbedDescription(@Nonnull SlashCommandInputs inputs, int embedIndex) {
 
 		var slotsPerEmbed = inputs.getSlots();
 		var slotDurationInSeconds = inputs.getDurationInMinutes() * 60;
@@ -132,13 +98,18 @@ public class EmbedUi {
 		var embedStartTimestamp = inputs.getStartTimestamp() + (embedIndex * embedDurationInSeconds);
 
 		var description = new LinkedList<String>();
+
+		description.add(String.format("**Block %d**%n", embedIndex + 1));
+
 		for (var slotIndex = 0; slotIndex < slotsPerEmbed; slotIndex++) {
 			var slotTimestamp = embedStartTimestamp + (slotDurationInSeconds * slotIndex);
 			var line = String.format("> #%d%s<t:%d:t>", slotIndex + 1, SIGNUP_DELIMITER, slotTimestamp);
 			description.add(line);
 		}
 
-		return String.join(SLOT_DELIMITER, description);
+		return new EmbedBuilder()
+			.setDescription(String.join(SLOT_DELIMITER, description))
+			.build();
 	}
 
 	private String toggleUserMentionInSlot(String description, String userMention, int slotIndex) {

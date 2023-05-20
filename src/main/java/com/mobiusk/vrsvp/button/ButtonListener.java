@@ -31,8 +31,7 @@ public class ButtonListener extends ListenerAdapter {
 		switch (buttonEnum) {
 			case EDIT -> handleAdminEditButtonPress(event);
 			case EDIT_BACK -> handleAdminEditBackButtonPress(event);
-			case EDIT_DESCRIPTION -> handleEditEventDescriptionButtonPress(event);
-			case EDIT_EMBED_TITLE -> handleEditEmbedTitleButtonPress(event);
+			case EDIT_EVENT_DESCRIPTION -> handleEditEventDescriptionButtonPress(event);
 			case EDIT_EMBED_DESCRIPTION -> handleEditEmbedDescriptionButtonPress(event);
 			case RSVP -> handleRsvpButtonPress(event);
 			default -> reply.ephemeral(event, "Input not recognized.");
@@ -90,26 +89,6 @@ public class ButtonListener extends ListenerAdapter {
 		}
 
 		reply.editEventDescription(event, rsvp);
-	}
-
-	private void handleEditEmbedTitleButtonPress(@Nonnull ButtonInteractionEvent event) {
-
-		if (accessDenied(event)) {
-			return;
-		}
-
-		var rsvp = getEphemeralButtonEventSource(event);
-		if (rsvp == null) {
-			return;
-		}
-
-		var embedIndex = getButtonInteractionContext(event);
-		if (embedIndex != null) {
-			reply.editEmbedTitle(event, rsvp, embedIndex);
-		} else {
-			var selectionCount = rsvp.getEmbeds().size();
-			reply.editIndexedBlockSelection(event, ButtonEnum.EDIT_EMBED_TITLE.getId(), selectionCount);
-		}
 	}
 
 	private void handleEditEmbedDescriptionButtonPress(@Nonnull ButtonInteractionEvent event) {

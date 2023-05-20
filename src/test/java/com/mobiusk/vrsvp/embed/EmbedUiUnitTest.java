@@ -2,6 +2,7 @@ package com.mobiusk.vrsvp.embed;
 
 import com.mobiusk.vrsvp.TestBase;
 import com.mobiusk.vrsvp.command.SlashCommandInputs;
+import com.mobiusk.vrsvp.util.Parser;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import org.junit.jupiter.api.BeforeEach;
@@ -30,16 +31,21 @@ class EmbedUiUnitTest extends TestBase {
 	}
 
 	@Test
-	void buildsEmbedsWithTitles() {
+	void buildsEmbedDescriptionsWithHeaders() {
 
 		var embeds = embedUi.build(inputs);
+		var descriptions = embeds.stream().map(MessageEmbed::getDescription).toList();
+		var headers = descriptions.stream()
+			.flatMap(String::lines)
+			.filter(line -> ! line.isBlank())
+			.filter(line -> ! Parser.inputIsASlot(line))
+			.toList();
 
 		assertEquals(inputs.getBlocks(), embeds.size());
 
 		for (var embedIndex = 0; embedIndex < embeds.size(); embedIndex++) {
-			var embed = embeds.get(embedIndex);
-			var expected = String.format("Block %d", embedIndex + 1);
-			assertEquals(expected, embed.getTitle());
+			var expected = String.format("**Block %d**", embedIndex + 1);
+			assertEquals(expected, headers.get(embedIndex));
 		}
 	}
 
@@ -48,7 +54,7 @@ class EmbedUiUnitTest extends TestBase {
 
 		var embeds = embedUi.build(inputs);
 		var descriptions = embeds.stream().map(MessageEmbed::getDescription).toList();
-		var slots = descriptions.stream().flatMap(String::lines).toList();
+		var slots = descriptions.stream().flatMap(String::lines).filter(Parser::inputIsASlot).toList();
 
 		assertEquals(inputs.getBlocks() * inputs.getSlots(), slots.size());
 

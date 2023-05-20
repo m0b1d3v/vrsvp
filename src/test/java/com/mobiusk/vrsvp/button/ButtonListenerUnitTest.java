@@ -1,7 +1,6 @@
 package com.mobiusk.vrsvp.button;
 
 import com.mobiusk.vrsvp.TestBase;
-import net.dv8tion.jda.api.requests.RestAction;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -67,7 +66,7 @@ class ButtonListenerUnitTest extends TestBase {
 	@Test
 	void buttonInteractionEventWithoutMessageReferencesFailsForEditDescriptionInterest() {
 
-		when(buttonInteractionEvent.getComponentId()).thenReturn(ButtonEnum.EDIT_DESCRIPTION.getId());
+		when(buttonInteractionEvent.getComponentId()).thenReturn(ButtonEnum.EDIT_EVENT_DESCRIPTION.getId());
 		when(message.getMessageReference()).thenReturn(null);
 
 		listener.onButtonInteraction(buttonInteractionEvent);
@@ -79,7 +78,7 @@ class ButtonListenerUnitTest extends TestBase {
 	@Test
 	void buttonInteractionEventWithoutMessageSourceFailsForEditDescriptionInterest() {
 
-		when(buttonInteractionEvent.getComponentId()).thenReturn(ButtonEnum.EDIT_DESCRIPTION.getId());
+		when(buttonInteractionEvent.getComponentId()).thenReturn(ButtonEnum.EDIT_EVENT_DESCRIPTION.getId());
 		when(messageRestAction.complete()).thenReturn(null);
 
 		listener.onButtonInteraction(buttonInteractionEvent);
@@ -90,7 +89,7 @@ class ButtonListenerUnitTest extends TestBase {
 	@Test
 	void buttonInteractionEventHandledForEditDescriptionInterest() {
 
-		when(buttonInteractionEvent.getComponentId()).thenReturn(ButtonEnum.EDIT_DESCRIPTION.getId());
+		when(buttonInteractionEvent.getComponentId()).thenReturn(ButtonEnum.EDIT_EVENT_DESCRIPTION.getId());
 
 		listener.onButtonInteraction(buttonInteractionEvent);
 
