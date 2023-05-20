@@ -54,7 +54,7 @@ public class ButtonReply {
 	 */
 	public void editEventDescription(@Nonnull ButtonInteractionEvent event, @Nonnull Message message) {
 		var currentText = message.getContentDisplay();
-		var modal = modalUi.editText(ModalEnum.EVENT_DESCRIPTION, currentText, null);
+		var modal = modalUi.editText(ModalEnum.EVENT_DESCRIPTION, currentText, 500, null);
 		event.replyModal(modal).queue();
 	}
 
@@ -62,8 +62,9 @@ public class ButtonReply {
 	 * Launch a modal with one text input to prompt an admin for an embed title.
 	 */
 	public void editEmbedTitle(@Nonnull ButtonInteractionEvent event, @Nonnull Message message, int embedIndex) {
-		var currentText = message.getEmbeds().get(embedIndex).getTitle();
-		var modal = modalUi.editText(ModalEnum.EMBED_TITLE, currentText, embedIndex);
+		var embeds = message.getEmbeds();
+		var currentText = embeds.get(embedIndex).getTitle();
+		var modal = modalUi.editText(ModalEnum.EMBED_TITLE, currentText, 500 / embeds.size(), embedIndex);
 		event.replyModal(modal).queue();
 	}
 
@@ -71,8 +72,9 @@ public class ButtonReply {
 	 * Launch a modal with one text input to prompt an admin for a slot title.
 	 */
 	public void editEmbedDescription(@Nonnull ButtonInteractionEvent event, @Nonnull Message message, int embedIndex) {
-		var currentText = Objects.requireNonNullElse(message.getEmbeds().get(embedIndex).getDescription(), "");
-		var modal = modalUi.editText(ModalEnum.EMBED_DESCRIPTION, currentText, embedIndex);
+		var embeds = message.getEmbeds();
+		var currentText = Objects.requireNonNullElse(embeds.get(embedIndex).getDescription(), "");
+		var modal = modalUi.editText(ModalEnum.EMBED_DESCRIPTION, currentText, 5000 / embeds.size(), embedIndex);
 		event.replyModal(modal).queue();
 	}
 
