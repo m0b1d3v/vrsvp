@@ -48,7 +48,22 @@ class SlashCommandReplyUnitTest extends TestBase {
 	}
 
 	@Test
-	void rsvpCreationReturnsNonEphemeralFormReply() {
+	void rsvpCreationReturnsEphemeralValidationMessageIfValidationFails() {
+
+		inputs.setBlocks(5);
+		inputs.setSlots(10);
+
+		reply.rsvpCreation(slashCommandInteractionEvent, inputs);
+
+		verify(slashCommandInteractionEvent).reply(stringArgumentCaptor.capture());
+		verifyRsvpCreationActions(times(1), never());
+
+		var expectation = "The maximum amount of (blocks * slots) allowed in VRSVP is 25 due to a Discord limitation. Please retry this command with a smaller total block/slot count, or split your RSVP into more than one form.";
+		assertEquals(expectation, stringArgumentCaptor.getValue());
+	}
+
+	@Test
+	void rsvpCreationReturnsNonEphemeralFormReplyIfValidationPasses() {
 
 		reply.rsvpCreation(slashCommandInteractionEvent, inputs);
 

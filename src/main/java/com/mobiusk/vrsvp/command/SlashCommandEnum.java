@@ -15,7 +15,7 @@ public enum SlashCommandEnum {
 	// One week in seconds
 	DURATION("duration", 60*24*7, 1, "How long each slot will last in minutes"),
 
-	// 25
+	// 25 (extra validation on blocks * slots occurs)
 	SLOTS("slots", SelectMenu.OPTIONS_MAX_AMOUNT, 1, "How many slots to have for each block"),
 
 	// 2035-01-01

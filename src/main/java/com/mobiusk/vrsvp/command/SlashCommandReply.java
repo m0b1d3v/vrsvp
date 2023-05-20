@@ -19,6 +19,13 @@ public class SlashCommandReply {
 	 * Replies with an ephemeral validation error or an RSVP form everyone can use.
 	 */
 	public void rsvpCreation(@Nonnull SlashCommandInteractionEvent event, @Nonnull SlashCommandInputs inputs) {
+
+		var validationErrorMessage =SlashCommandValidation.buildValidationErrorMessage(inputs);
+		if ( ! validationErrorMessage.isBlank()) {
+			event.reply(validationErrorMessage).setEphemeral(true).queue();
+			return;
+		}
+
 		event.reply(buildEventDescription(inputs))
 			.addEmbeds(embedUi.build(inputs))
 			.addActionRow(buttonUi.buildRsvpActionPrompts())
