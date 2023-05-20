@@ -39,8 +39,7 @@ public class ModalReply {
 		int fieldIndex
 	) {
 
-		var existingEmbeds = message.getEmbeds();
-		var editedEmbeds = embedUi.editEmbedDescriptionFromAdmin(existingEmbeds, textInput, fieldIndex);
+		var editedEmbeds = embedUi.editEmbedDescriptionFromAdmin(message, textInput, fieldIndex);
 		message.editMessageEmbeds(editedEmbeds).queue();
 
 		var reply = Formatter.replies(String.format("Block #%d description has been updated.", fieldIndex + 1));

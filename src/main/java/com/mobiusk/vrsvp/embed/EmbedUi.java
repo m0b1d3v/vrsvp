@@ -33,12 +33,13 @@ public class EmbedUi {
 	}
 
 	public List<MessageEmbed> editEmbedDescriptionFromAdmin(
-		@Nonnull List<MessageEmbed> existingEmbeds,
+		@Nonnull Message message,
 		String description,
 		int embedIndex
 	) {
 
 		var editedEmbeds = new LinkedList<MessageEmbed>();
+		var existingEmbeds = message.getEmbeds();
 
 		for (var embedIndexCounter = 0; embedIndexCounter < existingEmbeds.size(); embedIndexCounter++) {
 
@@ -58,8 +59,8 @@ public class EmbedUi {
 	/**
 	 * Toggle (add or remove) a user's mention to the specified slot for the given message.
 	 */
-	public List<MessageEmbed> editEmbedDescriptionFromRSVP(
-		@Nonnull List<MessageEmbed> existingEmbeds,
+	public EmbedRsvpToggleResult editEmbedDescriptionFromRSVP(
+		@Nonnull Message message,
 		@Nonnull String userMention,
 		int slotIndexDestination
 	) {
@@ -67,7 +68,7 @@ public class EmbedUi {
 		var editedEmbeds = new LinkedList<MessageEmbed>();
 
 		var slotIndex = 0;
-		for (var embed : existingEmbeds) {
+		for (var embed : message.getEmbeds()) {
 
 			var embedBuilder = new EmbedBuilder(embed);
 
