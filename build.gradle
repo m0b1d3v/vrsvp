@@ -36,6 +36,8 @@ dependencies {
 
 	implementation 'ch.qos.logback:logback-classic:1.4.7'
 
+	implementation 'io.sentry:sentry:6.19.0'
+
 	testImplementation 'org.junit.jupiter:junit-jupiter:5.9.3'
 	testImplementation 'org.mockito:mockito-junit-jupiter:5.3.1'
 }
