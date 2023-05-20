@@ -24,13 +24,16 @@ class ButtonUiUnitTest extends TestBase {
 	}
 
 	@Test
-	void editTopLevelPromptsBuilt() {
+	void editActionsPromptsBuilt() {
 
-		var buttons = buttonUi.buildEditTopLevelActionRow();
+		var actions = buttonUi.buildEditActionPrompts(2);
 
-		assertEquals(2, buttons.size());
-		assertButtonInformation(buttons.get(0), ButtonStyle.PRIMARY, ButtonEnum.EDIT_EVENT_DESCRIPTION.getId(), ButtonEnum.EDIT_EVENT_DESCRIPTION.getLabel());
-		assertButtonInformation(buttons.get(1), ButtonStyle.PRIMARY, ButtonEnum.EDIT_EMBED_DESCRIPTION.getId(), ButtonEnum.EDIT_EMBED_DESCRIPTION.getLabel());
+		assertEquals(2, actions.size());
+		assertEquals(1, actions.get(0).getButtons().size());
+		assertEquals(2, actions.get(1).getButtons().size());
+		assertButtonInformation(actions.get(0).getButtons().get(0), ButtonStyle.PRIMARY, ButtonEnum.EDIT_EVENT_DESCRIPTION.getId(), ButtonEnum.EDIT_EVENT_DESCRIPTION.getLabel());
+		assertButtonInformation(actions.get(1).getButtons().get(0), ButtonStyle.PRIMARY, ButtonEnum.EDIT_EMBED_DESCRIPTION.getId() + ":0", "#1");
+		assertButtonInformation(actions.get(1).getButtons().get(1), ButtonStyle.PRIMARY, ButtonEnum.EDIT_EMBED_DESCRIPTION.getId() + ":1", "#2");
 	}
 
 	@Test

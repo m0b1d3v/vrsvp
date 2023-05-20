@@ -8,8 +8,7 @@ import lombok.RequiredArgsConstructor;
 public enum ButtonEnum {
 
 	EDIT("edit", "Edit"),
-	EDIT_BACK("back", "Back"),
-	EDIT_EVENT_DESCRIPTION("edit-event-description", "Event"),
+	EDIT_EVENT_DESCRIPTION("edit-event-description", "Event Description"),
 	EDIT_EMBED_DESCRIPTION("edit-embed-description", "Block"),
 	RSVP("rsvp", "RSVP"),
 	UNKNOWN("unknown", "UNKNOWN");

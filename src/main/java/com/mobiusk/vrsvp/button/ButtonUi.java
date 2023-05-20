@@ -23,23 +23,15 @@ public class ButtonUi {
 	/**
 	 * Builds a list of buttons that correspond to editing either signup message, embeds, or embed fields.
 	 */
-	public List<Button> buildEditTopLevelActionRow() {
-		return List.of(
-			Button.primary(ButtonEnum.EDIT_EVENT_DESCRIPTION.getId(), ButtonEnum.EDIT_EVENT_DESCRIPTION.getLabel()),
-			Button.primary(ButtonEnum.EDIT_EMBED_DESCRIPTION.getId(), ButtonEnum.EDIT_EMBED_DESCRIPTION.getLabel())
-		);
-	}
+	public List<ActionRow> buildEditActionPrompts(int embedCount) {
 
-	/**
-	 * Builds a list of action rows containing buttons that correspond to available objects in an RSVP message.
-	 * <p>
-	 * This includes a back button to return to the root of an edit flow.
-	 * We can only have five buttons per row, and five rows.
-	 */
-	public List<ActionRow> buildIndexedButtonActionRowsWithBackButton(String actionId, int slots) {
-		var buttons = buildIndexedButtonActionRows(actionId, slots);
-		buttons.add(ActionRow.of(Button.secondary(ButtonEnum.EDIT_BACK.getId(), ButtonEnum.EDIT_BACK.getLabel())));
-		return buttons;
+		var firstRow = ActionRow.of(Button.primary(ButtonEnum.EDIT_EVENT_DESCRIPTION.getId(), ButtonEnum.EDIT_EVENT_DESCRIPTION.getLabel()));
+		var embedButtons = buildIndexedButtonActionRows(ButtonEnum.EDIT_EMBED_DESCRIPTION.getId(), embedCount);
+
+		var actions = new LinkedList<ActionRow>();
+		actions.add(firstRow);
+		actions.addAll(embedButtons);
+		return actions;
 	}
 
 	/**
@@ -47,11 +39,11 @@ public class ButtonUi {
 	 * <p>
 	 * We can only have five buttons per row, and five rows.
 	 */
-	public List<ActionRow> buildIndexedButtonActionRows(String actionId, int slots) {
+	public List<ActionRow> buildIndexedButtonActionRows(String actionId, int buttonCount) {
 
 		var buttons = new LinkedList<Button>();
 
-		for (var buttonIndex = 0; buttonIndex < slots; buttonIndex++) {
+		for (var buttonIndex = 0; buttonIndex < buttonCount; buttonIndex++) {
 
 			var id = String.format("%s:%d", actionId, buttonIndex);
 			var label = String.format("#%d", buttonIndex + 1);

@@ -60,7 +60,7 @@ class ButtonListenerUnitTest extends TestBase {
 
 		listener.onButtonInteraction(buttonInteractionEvent);
 
-		verify(reply).edit(buttonInteractionEvent);
+		verify(reply).edit(buttonInteractionEvent, 2);
 	}
 
 	@Test
