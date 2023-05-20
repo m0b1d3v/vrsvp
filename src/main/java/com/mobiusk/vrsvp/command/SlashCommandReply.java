@@ -37,15 +37,28 @@ public class SlashCommandReply {
 		var description = Formatter.replies("""
 			**Signups are now available for a new event**
 
-			Slots start <t:%d:R> on <t:%d:F> and each is %d minute(s) long."""
+			Slots start <t:%d:R> on <t:%d:F> and each is %d minute(s) long.%s%s"""
 		);
 
 		return String.format(
 			description,
 			inputs.getStartTimestamp(),
 			inputs.getStartTimestamp(),
-			inputs.getDurationInMinutes()
+			inputs.getDurationInMinutes(),
+			buildRsvpLimitAddendum(SlashCommandEnum.RSVP_LIMIT_PER_SLOT, inputs.getRsvpLimitPerSlot()),
+			buildRsvpLimitAddendum(SlashCommandEnum.RSVP_LIMIT_PER_PERSON, inputs.getRsvpLimitPerPerson())
 		);
+	}
+
+	private String buildRsvpLimitAddendum(SlashCommandEnum slashCommandEnum, Integer limit) {
+
+		var description = "";
+
+		if (limit != null) {
+			description = String.format("%n%s: %d", slashCommandEnum.getDescription(), limit);
+		}
+
+		return description;
 	}
 
 }
