@@ -103,7 +103,7 @@ public class EmbedUi {
 
 		for (var slotIndex = 0; slotIndex < slotsPerEmbed; slotIndex++) {
 			var slotTimestamp = embedStartTimestamp + (slotDurationInSeconds * slotIndex);
-			var line = String.format("> #%d%s<t:%d:t>", slotIndex + 1, SIGNUP_DELIMITER, slotTimestamp);
+			var line = String.format("> #%d%s<t:%d:t>", (embedIndex * slotsPerEmbed) + slotIndex + 1, SIGNUP_DELIMITER, slotTimestamp);
 			description.add(line);
 		}
 
