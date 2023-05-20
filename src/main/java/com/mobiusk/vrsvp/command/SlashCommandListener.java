@@ -29,9 +29,11 @@ public class SlashCommandListener extends ListenerAdapter {
 
 		var inputs = new SlashCommandInputs();
 		inputs.setBlocks(getSlashCommandInput(event, SlashCommandEnum.BLOCKS));
-		inputs.setSlots(getSlashCommandInput(event, SlashCommandEnum.SLOTS));
 		inputs.setDurationInMinutes(getSlashCommandInput(event, SlashCommandEnum.DURATION));
+		inputs.setSlots(getSlashCommandInput(event, SlashCommandEnum.SLOTS));
 		inputs.setStartTimestamp(getSlashCommandInput(event, SlashCommandEnum.START));
+		inputs.setRsvpLimitPerSlot(getSlashCommandInput(event, SlashCommandEnum.RSVP_LIMIT_PER_SLOT));
+		inputs.setRsvpLimitPerPerson(getSlashCommandInput(event, SlashCommandEnum.RSVP_LIMIT_PER_PERSON));
 
 		reply.rsvpCreation(event, inputs);
 	}

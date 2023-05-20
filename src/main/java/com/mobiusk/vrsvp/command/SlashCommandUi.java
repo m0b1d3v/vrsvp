@@ -25,6 +25,8 @@ public class SlashCommandUi {
 		addOption(data, SlashCommandEnum.BLOCKS);
 		addOption(data, SlashCommandEnum.SLOTS);
 		addOption(data, SlashCommandEnum.DURATION);
+		addOption(data, SlashCommandEnum.RSVP_LIMIT_PER_PERSON);
+		addOption(data, SlashCommandEnum.RSVP_LIMIT_PER_SLOT);
 
 		return data;
 	}

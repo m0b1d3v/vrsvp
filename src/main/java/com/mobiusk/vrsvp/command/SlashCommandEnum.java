@@ -25,6 +25,22 @@ public enum SlashCommandEnum {
 		true
 	),
 
+	RSVP_LIMIT_PER_SLOT(
+		"rsvp-limit-per-slot",
+		null,
+		0,
+		"Maximum number of people that can RSVP for a single slot",
+		false
+	),
+
+	RSVP_LIMIT_PER_PERSON(
+		"rsvp-limit-per-person",
+		null,
+		0,
+		"Maximum number of slots a person can RSVP for",
+		false
+	),
+
 	SLOTS(
 		"slots",
 		SelectMenu.OPTIONS_MAX_AMOUNT, // 25 (extra validation on blocks * slots occurs)
