@@ -79,15 +79,14 @@ public class ButtonReply {
 		int slotIndex
 	) {
 
-		var existingEmbeds = message.getEmbeds();
-		var editedEmbeds = embedUi.editEmbedDescriptionFromRSVP(existingEmbeds, userMention, slotIndex);
-		message.editMessageEmbeds(editedEmbeds).queue();
 		var userMention = event.getUser().getAsMention();
+		var result = embedUi.editEmbedDescriptionFromRSVP(message, userMention, slotIndex);
+
+
+		message.editMessageEmbeds(result.getMessageEmbeds()).queue();
 
 		var reply = Formatter.replies(String.format("RSVP state toggled for slot #%d", slotIndex + 1));
-
-		event.editMessage(reply)
-			.queue();
+		event.editMessage(reply).queue();
 	}
 
 	/**

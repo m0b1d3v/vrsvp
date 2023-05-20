@@ -1,6 +1,7 @@
 package com.mobiusk.vrsvp.button;
 
 import com.mobiusk.vrsvp.TestBase;
+import com.mobiusk.vrsvp.embed.EmbedRsvpToggleResult;
 import com.mobiusk.vrsvp.embed.EmbedUi;
 import com.mobiusk.vrsvp.command.SlashCommandInputs;
 import net.dv8tion.jda.api.interactions.components.ActionRow;
@@ -10,7 +11,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
-import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -74,7 +74,7 @@ class ButtonReplyUnitTest extends TestBase {
 	@Test
 	void signupToggleAdjustsEmbedAndEditsEphemeralMessage() {
 
-		when(embedUi.editEmbedDescriptionFromRSVP(any(), any(), anyInt())).thenReturn(Collections.emptyList());
+		when(embedUi.editEmbedDescriptionFromRSVP(any(), any(), anyInt())).thenReturn(new EmbedRsvpToggleResult());
 		when(message.editMessageEmbeds(anyCollection())).thenReturn(messageEditAction);
 		when(user.getAsMention()).thenReturn("@Testing");
 

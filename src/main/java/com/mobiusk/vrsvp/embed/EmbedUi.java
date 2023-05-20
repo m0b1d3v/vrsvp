@@ -3,18 +3,15 @@ package com.mobiusk.vrsvp.embed;
 import com.mobiusk.vrsvp.command.SlashCommandInputs;
 import com.mobiusk.vrsvp.util.Parser;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
 import javax.annotation.Nonnull;
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 
 public class EmbedUi {
-
-	private static final String SIGNUP_DELIMITER = ", ";
-	private static final String SLOT_DELIMITER = "\n";
 
 	/**
 	 * Build a list of embeds (blocks) with an identical number of fields (slots).
@@ -65,30 +62,37 @@ public class EmbedUi {
 		int slotIndexDestination
 	) {
 
-		var editedEmbeds = new LinkedList<MessageEmbed>();
+		var result = new EmbedRsvpToggleResult();
 
 		var slotIndex = 0;
 		for (var embed : message.getEmbeds()) {
 
-			var embedBuilder = new EmbedBuilder(embed);
+			var description = Objects.requireNonNullElse(embed.getDescription(), "");
+			var descriptionLines = new LinkedList<>(description.lines().toList());
 
-			var slotsInEmbed = Parser.countSlotsInMessageEmbed(embed);
-			if ((slotIndex + slotsInEmbed) >= slotIndexDestination) {
+			for (var lineIndex = 0; lineIndex < descriptionLines.size(); lineIndex++) {
 
-				slotIndexDestination -= slotIndex;
+				var line = descriptionLines.get(lineIndex);
 
-				var embedDescription = Objects.requireNonNullElse(embed.getDescription(), "");
-				embedDescription = toggleUserMentionInSlot(embedDescription, userMention, slotIndexDestination);
+				if (Parser.inputIsASlot(line)) {
 
-				embedBuilder.setDescription(embedDescription);
-				slotIndexDestination = 999; // Never hit this logic again, but still go through the other embeds
+					if (slotIndex == slotIndexDestination) {
+						var editedLine = toggleUserMentionInSlot(line, userMention);
+						descriptionLines.set(lineIndex, editedLine);
+						result.setUserAddedToSlot(editedLine.length() > line.length());
+					}
+
+					slotIndex++;
+				}
 			}
 
-			editedEmbeds.add(embedBuilder.build());
-			slotIndex += slotsInEmbed;
+			result.getMessageEmbeds().add(new EmbedBuilder(embed)
+				.setDescription(String.join(Parser.SLOT_DELIMITER, descriptionLines))
+				.build()
+			);
 		}
 
-		return editedEmbeds;
+		return result;
 	}
 
 	private MessageEmbed buildEmbed(@Nonnull SlashCommandInputs inputs, int embedIndex) {
@@ -103,35 +107,22 @@ public class EmbedUi {
 		description.add(String.format("**Block %d**%n", embedIndex + 1));
 
 		for (var slotIndex = 0; slotIndex < slotsPerEmbed; slotIndex++) {
+
+			var slotNumber = (embedIndex * slotsPerEmbed) + slotIndex + 1;
 			var slotTimestamp = embedStartTimestamp + (slotDurationInSeconds * slotIndex);
-			var line = String.format("> #%d%s<t:%d:t>", (embedIndex * slotsPerEmbed) + slotIndex + 1, SIGNUP_DELIMITER, slotTimestamp);
+
+			var line = String.format("> #%d%s<t:%d:t>", slotNumber, Parser.SIGNUP_DELIMITER, slotTimestamp);
 			description.add(line);
 		}
 
 		return new EmbedBuilder()
-			.setDescription(String.join(SLOT_DELIMITER, description))
+			.setDescription(String.join(Parser.SLOT_DELIMITER, description))
 			.build();
 	}
 
-	private String toggleUserMentionInSlot(String description, String userMention, int slotIndex) {
+	private String toggleUserMentionInSlot(String input, String userMention) {
 
-		var embedLines = description.split("\n");
-
-		var slotsFoundIndexCounter = 0;
-		for (var embedLinesCounter = 0; embedLinesCounter < embedLines.length; embedLinesCounter++) {
-			if (Parser.inputIsASlot(embedLines[embedLinesCounter])) {
-				if (slotIndex == slotsFoundIndexCounter) {
-					slotIndex = embedLinesCounter;
-					break;
-				}
-				slotsFoundIndexCounter++;
-			}
-		}
-
-		var userMentions = new LinkedList<>(Arrays.stream(embedLines[slotIndex].split(SIGNUP_DELIMITER))
-			.filter(mention -> !mention.isBlank())
-			.toList()
-		);
+		var userMentions = Parser.readDataInSlot(input);
 
 		var userAlreadySignedUp = userMentions.contains(userMention);
 		if (userAlreadySignedUp) {
@@ -140,9 +131,7 @@ public class EmbedUi {
 			userMentions.add(userMention);
 		}
 
-		embedLines[slotIndex] = String.join(SIGNUP_DELIMITER, userMentions);
-
-		return String.join(SLOT_DELIMITER, embedLines);
+		return String.join(Parser.SIGNUP_DELIMITER, userMentions);
 	}
 
 }
