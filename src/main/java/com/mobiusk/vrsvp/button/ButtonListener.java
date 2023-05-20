@@ -27,6 +27,10 @@ public class ButtonListener extends ListenerAdapter {
 
 		var buttonInteractionAction = getButtonInteractionAction(event);
 
+		if (buttonInteractionAction.contains(ButtonEnum.EDIT.getId()) && accessDenied(event)) {
+			return;
+		}
+
 		var buttonEnum = ButtonEnum.getById(buttonInteractionAction);
 		switch (buttonEnum) {
 			case EDIT -> handleAdminEditButtonPress(event);
@@ -59,21 +63,11 @@ public class ButtonListener extends ListenerAdapter {
 	}
 
 	private void handleAdminEditButtonPress(@Nonnull ButtonInteractionEvent event) {
-
-		if (accessDenied(event)) {
-			return;
-		}
-
 		var embedCount = event.getMessage().getEmbeds().size();
-
 		reply.edit(event, embedCount);
 	}
 
 	private void handleEditEventDescriptionButtonPress(@Nonnull ButtonInteractionEvent event) {
-
-		if (accessDenied(event)) {
-			return;
-		}
 
 		var rsvp = getEphemeralButtonEventSource(event);
 		if (rsvp == null) {
@@ -84,10 +78,6 @@ public class ButtonListener extends ListenerAdapter {
 	}
 
 	private void handleEditEmbedDescriptionButtonPress(@Nonnull ButtonInteractionEvent event) {
-
-		if (accessDenied(event)) {
-			return;
-		}
 
 		var rsvp = getEphemeralButtonEventSource(event);
 		if (rsvp == null) {
