@@ -16,7 +16,8 @@ public class ButtonUi {
 	public List<Button> buildRsvpActionPrompts() {
 		return List.of(
 			Button.primary(ButtonEnum.RSVP.getId(), ButtonEnum.RSVP.getLabel()),
-			Button.secondary(ButtonEnum.EDIT.getId(), ButtonEnum.EDIT.getLabel())
+			Button.secondary(ButtonEnum.EDIT.getId(), ButtonEnum.EDIT.getLabel()),
+			Button.link("https://mobiusk.com/code/vrsvp", "About")
 		);
 	}
 

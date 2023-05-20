@@ -18,9 +18,14 @@ class ButtonUiUnitTest extends TestBase {
 
 		var buttons = buttonUi.buildRsvpActionPrompts();
 
-		assertEquals(2, buttons.size());
+		assertEquals(3, buttons.size());
 		assertButtonInformation(buttons.get(0), ButtonStyle.PRIMARY, ButtonEnum.RSVP.getId(), ButtonEnum.RSVP.getLabel());
 		assertButtonInformation(buttons.get(1), ButtonStyle.SECONDARY, ButtonEnum.EDIT.getId(), ButtonEnum.EDIT.getLabel());
+
+		var aboutLink = buttons.get(2);
+		assertEquals(ButtonStyle.LINK, aboutLink.getStyle());
+		assertEquals("https://mobiusk.com/code/vrsvp", aboutLink.getUrl());
+		assertEquals("About", aboutLink.getLabel());
 	}
 
 	@Test
