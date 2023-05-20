@@ -7,6 +7,7 @@ import com.mobiusk.vrsvp.util.Formatter;
 import lombok.RequiredArgsConstructor;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
+import net.dv8tion.jda.api.interactions.components.ActionRow;
 
 import javax.annotation.Nonnull;
 import java.util.Objects;
@@ -31,6 +32,20 @@ public class ButtonReply {
 		event.reply(message)
 			.setEphemeral(true)
 			.addActionRow(buttonRow)
+			.queue();
+	}
+
+	/**
+	 * Returns ephemeral message back to the root of the admin edit flow.
+	 */
+	public void editBack(@Nonnull ButtonInteractionEvent event) {
+
+		var buttonRow = buttonUi.buildEditTopLevelActionRow();
+
+		var message = Formatter.replies("Use these buttons to start editing the signup.");
+
+		event.editMessage(message)
+			.setComponents(ActionRow.of(buttonRow))
 			.queue();
 	}
 
@@ -70,7 +85,7 @@ public class ButtonReply {
 		int buttonCount
 	) {
 
-		var buttonRows = buttonUi.buildIndexedButtonActionRows(actionId, buttonCount);
+		var buttonRows = buttonUi.buildIndexedButtonActionRowsWithBackButton(actionId, buttonCount);
 
 		var reply = Formatter.replies("Select the block number you wish to edit.");
 

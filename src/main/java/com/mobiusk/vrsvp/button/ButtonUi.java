@@ -34,11 +34,24 @@ public class ButtonUi {
 	/**
 	 * Builds a list of action rows containing buttons that correspond to available objects in an RSVP message.
 	 * <p>
+	 * This includes a back button to return to the root of an edit flow.
+	 * We can only have five buttons per row, and five rows.
+	 */
+	public List<ActionRow> buildIndexedButtonActionRowsWithBackButton(String actionId, int slots) {
+		var buttons = buildIndexedButtonActionRows(actionId, slots);
+		buttons.add(ActionRow.of(Button.secondary(ButtonEnum.EDIT_BACK.getId(), ButtonEnum.EDIT_BACK.getLabel())));
+		return buttons;
+	}
+
+	/**
+	 * Builds a list of action rows containing buttons that correspond to available objects in an RSVP message.
+	 * <p>
 	 * We can only have five buttons per row, and five rows.
 	 */
 	public List<ActionRow> buildIndexedButtonActionRows(String actionId, int slots) {
 
 		var buttons = new LinkedList<Button>();
+
 		for (var buttonIndex = 0; buttonIndex < slots; buttonIndex++) {
 
 			var id = String.format("%s:%d", actionId, buttonIndex);

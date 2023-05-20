@@ -28,6 +28,7 @@ public class ButtonListener extends ListenerAdapter {
 		var buttonEnum = ButtonEnum.getById(buttonInteractionAction);
 		switch (buttonEnum) {
 			case EDIT -> handleAdminEditButtonPress(event);
+			case EDIT_BACK -> handleAdminEditBackButtonPress(event);
 			case EDIT_DESCRIPTION -> handleEditEventDescriptionButtonPress(event);
 			case EDIT_EMBED_TITLE -> handleEditEmbedTitleButtonPress(event);
 			case EDIT_EMBED_DESCRIPTION -> handleEditEmbedDescriptionButtonPress(event);
@@ -64,6 +65,15 @@ public class ButtonListener extends ListenerAdapter {
 		}
 
 		reply.edit(event);
+	}
+
+	private void handleAdminEditBackButtonPress(@Nonnull ButtonInteractionEvent event) {
+
+		if (accessDenied(event)) {
+			return;
+		}
+
+		reply.editBack(event);
 	}
 
 	private void handleEditEventDescriptionButtonPress(@Nonnull ButtonInteractionEvent event) {
