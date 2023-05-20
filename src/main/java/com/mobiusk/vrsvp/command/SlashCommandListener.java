@@ -25,16 +25,6 @@ public class SlashCommandListener extends ListenerAdapter {
 		handleSlashCommandInteraction(event);
 	}
 
-	private int getSlashCommandInput(@Nonnull SlashCommandInteractionEvent event, SlashCommandEnum slashCommandEnum) {
-
-		var option = event.getOption(slashCommandEnum.getId());
-		if (option == null) {
-			return -1;
-		}
-
-		return option.getAsInt();
-	}
-
 	private void handleSlashCommandInteraction(@Nonnull SlashCommandInteractionEvent event) {
 
 		var inputs = new SlashCommandInputs();
@@ -44,6 +34,16 @@ public class SlashCommandListener extends ListenerAdapter {
 		inputs.setStartTimestamp(getSlashCommandInput(event, SlashCommandEnum.START));
 
 		reply.rsvpCreation(event, inputs);
+	}
+
+	private Integer getSlashCommandInput(@Nonnull SlashCommandInteractionEvent event, SlashCommandEnum slashCommandEnum) {
+
+		var option = event.getOption(slashCommandEnum.getId());
+		if (option == null) {
+			return null;
+		}
+
+		return option.getAsInt();
 	}
 
 }

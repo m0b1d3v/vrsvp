@@ -35,10 +35,19 @@ public class SlashCommandUi {
 	) {
 
 		var optionData = new OptionData(OptionType.INTEGER, input.getId(), input.getDescription());
-		optionData.setMaxValue(input.getMaximum());
-		optionData.setMinValue(input.getMinimum());
-		optionData.setRequired(true);
 		optionData.setAutoComplete(false);
+
+		if (input.isRequired()) {
+			optionData.setRequired(true);
+		}
+
+		if (input.getMaximum() != null) {
+			optionData.setMaxValue(input.getMaximum());
+		}
+
+		if (input.getMinimum() != null) {
+			optionData.setMinValue(input.getMinimum());
+		}
 
 		data.addOptions(optionData);
 	}
