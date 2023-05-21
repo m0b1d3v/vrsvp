@@ -22,29 +22,47 @@ public class Parser {
 
 	private static final Pattern RSVP_LIMIT_PER_SLOT_PATTERN = buildRegexPatternForLimit(SlashCommandEnum.RSVP_LIMIT_PER_SLOT);
 
+	/**
+	 * Read the message description from the first embed, defaulting to an empty string if not found.
+	 */
 	public static String readMessageDescription(@Nonnull Message message) {
 		var embed = message.getEmbeds().get(0);
 		return Objects.requireNonNullElse(embed.getDescription(), "");
 	}
 
-	public static int countSlotsInText(String text) {
+	/**
+	 * Determines if given line starts with the necessary characters to indicate a slot.
+	 */
+	public static boolean isSlot(@Nonnull String line) {
+		return line.startsWith("> #");
+	}
+
+	/**
+	 * @see Parser#isSlot for more information.
+	 */
+	public static int countSlotsInText(@Nonnull String text) {
 		return (int) text.lines()
-			.filter(Parser::inputIsASlot)
+			.filter(Parser::isSlot)
 			.count();
 	}
 
-	public static boolean inputIsASlot(String input) {
-		return input.startsWith("> #");
+	/**
+	 * Given some slot text, separate them based on known delimiter and convert to a modifiable list.
+	 */
+	public static List<String> splitSlotText(@Nonnull String text) {
+		return new LinkedList<>(Arrays.stream(text.split(SIGNUP_DELIMITER)).toList());
 	}
 
-	public static List<String> readDataInSlot(String input) {
-		return new LinkedList<>(Arrays.stream(input.split(SIGNUP_DELIMITER)).toList());
-	}
-
+	/**
+	 * Find the first result matching the RSVP limit per person pattern and return the desired integer if found.
+	 */
 	public static Integer findRsvpLimitPerPersonInText(String text) {
 		return runRegexPatternToFindNumberInText(RSVP_LIMIT_PER_PERSON_PATTERN, text);
 	}
 
+	/**
+	 * Find the first result matching the RSVP limit per slot pattern and return the desired integer if found.
+	 */
 	public static Integer findRsvpLimitPerSlotInText(String text) {
 		return runRegexPatternToFindNumberInText(RSVP_LIMIT_PER_SLOT_PATTERN, text);
 	}

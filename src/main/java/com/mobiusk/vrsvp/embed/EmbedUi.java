@@ -3,6 +3,7 @@ package com.mobiusk.vrsvp.embed;
 import com.mobiusk.vrsvp.command.SlashCommandEnum;
 import com.mobiusk.vrsvp.command.SlashCommandInputs;
 import com.mobiusk.vrsvp.util.Parser;
+import lombok.experimental.UtilityClass;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
@@ -11,12 +12,13 @@ import javax.annotation.Nonnull;
 import java.util.LinkedList;
 import java.util.Objects;
 
+@UtilityClass
 public class EmbedUi {
 
 	/**
 	 * Build an RSVP form everyone can see with a given number of time slot, each with an index and incremented timestamp title.
 	 */
-	public MessageEmbed build(@Nonnull SlashCommandInputs inputs) {
+	public static MessageEmbed build(@Nonnull SlashCommandInputs inputs) {
 
 		var slotDurationInSeconds = inputs.getDurationInMinutes() * 60;
 
@@ -41,7 +43,10 @@ public class EmbedUi {
 			.build();
 	}
 
-	public MessageEmbed editEmbedDescriptionFromAdmin(@Nonnull Message message, String description) {
+	/**
+	 * Copy an existing message embed and replace the description for admin edits.
+	 */
+	public static MessageEmbed editEmbedDescriptionFromAdmin(@Nonnull Message message, String description) {
 
 		var embed = message.getEmbeds().get(0);
 
@@ -53,7 +58,7 @@ public class EmbedUi {
 	/**
 	 * Toggle (add or remove) a user's mention to the specified slot for the given message.
 	 */
-	public MessageEmbed editEmbedDescriptionFromRSVP(
+	public static MessageEmbed editEmbedDescriptionFromRSVP(
 		@Nonnull Message message,
 		@Nonnull String userMention,
 		int slotIndexDestination
@@ -69,7 +74,7 @@ public class EmbedUi {
 
 			var line = descriptionLines.get(lineIndex);
 
-			if (Parser.inputIsASlot(line)) {
+			if (Parser.isSlot(line)) {
 
 				if (slotIndex == slotIndexDestination) {
 					var editedLine = toggleUserMentionInSlot(line, userMention);
@@ -86,18 +91,18 @@ public class EmbedUi {
 			.build();
 	}
 
-	private String buildRsvpLimitAddendum(SlashCommandEnum slashCommandEnum, Integer limit) {
+	private static String buildRsvpLimitAddendum(SlashCommandEnum slashCommandEnum, Integer limit) {
 
 		if (limit != null) {
-			return String.format("- %n%s: %d", slashCommandEnum.getDescription(), limit);
+			return String.format("- %s: %d", slashCommandEnum.getDescription(), limit);
 		}
 
 		return null;
 	}
 
-	private String toggleUserMentionInSlot(String input, String userMention) {
+	private static String toggleUserMentionInSlot(String input, String userMention) {
 
-		var userMentions = Parser.readDataInSlot(input);
+		var userMentions = Parser.splitSlotText(input);
 
 		var userAlreadySignedUp = userMentions.contains(userMention);
 		if (userAlreadySignedUp) {

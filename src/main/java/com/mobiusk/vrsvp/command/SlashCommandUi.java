@@ -13,7 +13,7 @@ public class SlashCommandUi {
 	public static final String INVOCATION = "vrsvp";
 
 	/**
-	 * Builds the only slash command this bot concerns itself with and supplies the required input options
+	 * Builds the only slash command this bot concerns itself with and supplies the required input options.
 	 */
 	public static SlashCommandData create() {
 
@@ -37,7 +37,6 @@ public class SlashCommandUi {
 
 		var optionData = new OptionData(OptionType.INTEGER, input.getId(), input.getDescription());
 
-		optionData.setAutoComplete(false);
 		optionData.setRequired(input.isRequired());
 
 		if (input.getMaximum() != null) {

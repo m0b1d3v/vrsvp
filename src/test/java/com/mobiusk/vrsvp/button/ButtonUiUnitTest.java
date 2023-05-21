@@ -4,23 +4,25 @@ import com.mobiusk.vrsvp.TestBase;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import net.dv8tion.jda.api.interactions.components.buttons.ButtonStyle;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 class ButtonUiUnitTest extends TestBase {
 
-	@InjectMocks private ButtonUi buttonUi;
+	@Test
+	void utilityClass() throws NoSuchMethodException {
+		assertUtilityClass(ButtonUi.class);
+	}
 
 	@Test
-	void rsvpActionsPromptsBuilt() {
+	void buildRsvpActionPrompts() {
 
-		var buttons = buttonUi.buildRsvpActionPrompts();
+		var buttons = ButtonUi.buildRsvpActionPrompts();
 
 		assertEquals(3, buttons.size());
-		assertButtonInformation(buttons.get(0), ButtonStyle.PRIMARY, ButtonEnum.RSVP.getId(), ButtonEnum.RSVP.getLabel());
-		assertButtonInformation(buttons.get(1), ButtonStyle.SECONDARY, ButtonEnum.EDIT.getId(), ButtonEnum.EDIT.getLabel());
+		assertButtonInformation(buttons.get(0), ButtonStyle.PRIMARY, ButtonEnum.RSVP);
+		assertButtonInformation(buttons.get(1), ButtonStyle.SECONDARY, ButtonEnum.EDIT);
 
 		var aboutLink = buttons.get(2);
 		assertEquals(ButtonStyle.LINK, aboutLink.getStyle());
@@ -29,19 +31,19 @@ class ButtonUiUnitTest extends TestBase {
 	}
 
 	@Test
-	void editActionsPromptsBuilt() {
+	void buildEditActionPrompts() {
 
-		var buttons = buttonUi.buildEditActionPrompts();
+		var buttons = ButtonUi.buildEditActionPrompts();
 
 		assertEquals(2, buttons.size());
-		assertButtonInformation(buttons.get(0), ButtonStyle.PRIMARY, ButtonEnum.EDIT_EVENT_DESCRIPTION.getId(), ButtonEnum.EDIT_EVENT_DESCRIPTION.getLabel());
-		assertButtonInformation(buttons.get(1), ButtonStyle.DANGER, ButtonEnum.EDIT_EVENT_ACTIVE.getId(), ButtonEnum.EDIT_EVENT_ACTIVE.getLabel());
+		assertButtonInformation(buttons.get(0), ButtonStyle.PRIMARY, ButtonEnum.EDIT_EVENT_DESCRIPTION);
+		assertButtonInformation(buttons.get(1), ButtonStyle.DANGER, ButtonEnum.EDIT_EVENT_ACTIVE);
 	}
 
 	@Test
-	void rsvpActionRowsBuiltWithFiveButtonsPerRow() {
+	void buildIndexedButtonActionRowsPartitionCorrectly() {
 
-		var buttonRows = buttonUi.buildIndexedButtonActionRows(ButtonEnum.RSVP.getId(), 11);
+		var buttonRows = ButtonUi.buildIndexedButtonActionRows(ButtonEnum.RSVP.getId(), 11);
 
 		assertEquals(3, buttonRows.size());
 		assertEquals(5, buttonRows.get(0).getButtons().size());
@@ -50,16 +52,20 @@ class ButtonUiUnitTest extends TestBase {
 	}
 
 	@Test
-	void rsvpActionRowsButtonsFormedCorrectly() {
+	void buildIndexedButtonActionRowsFormButtonsCorrectly() {
 
-		var buttonRows = buttonUi.buildIndexedButtonActionRows(ButtonEnum.RSVP.getId(), 2);
-		var buttons = buttonRows.get(0);
+		var buttonRows = ButtonUi.buildIndexedButtonActionRows(ButtonEnum.RSVP.getId(), 2);
+		var buttons = buttonRows.get(0).getButtons();
 
-		assertButtonInformation(buttons.getButtons().get(0), ButtonStyle.PRIMARY, "rsvp:0", "#1");
-		assertButtonInformation(buttons.getButtons().get(1), ButtonStyle.PRIMARY, "rsvp:1", "#2");
+		assertButtonInformation(buttons.get(0), ButtonStyle.PRIMARY, "rsvp:0", "#1");
+		assertButtonInformation(buttons.get(1), ButtonStyle.PRIMARY, "rsvp:1", "#2");
 	}
 
 	// Test utility method(s)
+
+	private void assertButtonInformation(Button button, ButtonStyle buttonStyle, ButtonEnum buttonEnum) {
+		assertButtonInformation(button, buttonStyle, buttonEnum.getId(), button.getLabel());
+	}
 
 	private void assertButtonInformation(Button button, ButtonStyle buttonStyle, String id, String label) {
 

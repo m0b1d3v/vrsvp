@@ -1,10 +1,9 @@
 package com.mobiusk.vrsvp.button;
 
-import com.mobiusk.vrsvp.modal.ModalEnum;
 import com.mobiusk.vrsvp.embed.EmbedUi;
+import com.mobiusk.vrsvp.modal.ModalEnum;
 import com.mobiusk.vrsvp.modal.ModalUi;
 import com.mobiusk.vrsvp.util.Parser;
-import lombok.RequiredArgsConstructor;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.interactions.components.ActionRow;
@@ -13,20 +12,14 @@ import javax.annotation.Nonnull;
 import java.util.LinkedList;
 import java.util.Objects;
 
-@RequiredArgsConstructor
 public class ButtonReply {
-
-	// Class constructor field(s)
-	private final ButtonUi buttonUi;
-	private final EmbedUi embedUi;
-	private final ModalUi modalUi;
 
 	/**
 	 * Replies with an ephemeral list of buttons admins can click to start editing part of an RSVP form.
 	 */
-	public void edit(@Nonnull ButtonInteractionEvent event) {
+	public void editInterest(@Nonnull ButtonInteractionEvent event) {
 
-		var buttons = buttonUi.buildEditActionPrompts();
+		var buttons = ButtonUi.buildEditActionPrompts();
 
 		var reply = """
 			Use these buttons to edit the RSVP form.
@@ -65,7 +58,7 @@ public class ButtonReply {
 	public void editEventDescription(@Nonnull ButtonInteractionEvent event, @Nonnull Message message) {
 
 		var currentText = Parser.readMessageDescription(message);
-		var modal = modalUi.editText(ModalEnum.EVENT_DESCRIPTION, currentText);
+		var modal = ModalUi.editText(ModalEnum.EVENT_DESCRIPTION, currentText);
 
 		event.replyModal(modal).queue();
 	}
@@ -77,7 +70,7 @@ public class ButtonReply {
 
 		var embedDescription = Parser.readMessageDescription(event.getMessage());
 		var slots = Parser.countSlotsInText(embedDescription);
-		var buttonRows = buttonUi.buildIndexedButtonActionRows(ButtonEnum.RSVP.getId(), slots);
+		var buttonRows = ButtonUi.buildIndexedButtonActionRows(ButtonEnum.RSVP.getId(), slots);
 
 		event.reply("Use these buttons to toggle your RSVP for any slot.")
 			.setEphemeral(true)
@@ -98,7 +91,7 @@ public class ButtonReply {
 
 		var originalDescription = Parser.readMessageDescription(message);
 
-		var editedEmbed = embedUi.editEmbedDescriptionFromRSVP(message, userMention, slotIndex);
+		var editedEmbed = EmbedUi.editEmbedDescriptionFromRSVP(message, userMention, slotIndex);
 		var editedDescription = Objects.requireNonNullElse(editedEmbed.getDescription(), "");
 
 		if (editedDescription.length() > originalDescription.length()
@@ -141,7 +134,7 @@ public class ButtonReply {
 		var description = Parser.readMessageDescription(message);
 
 		return description.lines()
-			.filter(Parser::inputIsASlot)
+			.filter(Parser::isSlot)
 			.filter(line -> line.contains(userMention))
 			.count();
 	}
@@ -153,10 +146,10 @@ public class ButtonReply {
 		var descriptionLines = new LinkedList<>(description.lines().toList());
 
 		for (String line : descriptionLines) {
-			if (Parser.inputIsASlot(line)) {
+			if (Parser.isSlot(line)) {
 
 				if (slotIndex == slotIndexDestination) {
-					return Parser.readDataInSlot(line).stream().filter(data -> data.contains("@")).count();
+					return Parser.splitSlotText(line).stream().filter(data -> data.contains("@")).count();
 				}
 
 				slotIndex++;

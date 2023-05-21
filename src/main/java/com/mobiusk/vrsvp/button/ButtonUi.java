@@ -1,11 +1,13 @@
 package com.mobiusk.vrsvp.button;
 
+import lombok.experimental.UtilityClass;
 import net.dv8tion.jda.api.interactions.components.ActionRow;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 
 import java.util.LinkedList;
 import java.util.List;
 
+@UtilityClass
 public class ButtonUi {
 
 	/**
@@ -13,7 +15,7 @@ public class ButtonUi {
 	 *
 	 * This is cleaner than just trying to shove all the signup buttons together.
 	 */
-	public List<Button> buildRsvpActionPrompts() {
+	public static List<Button> buildRsvpActionPrompts() {
 		return List.of(
 			Button.primary(ButtonEnum.RSVP.getId(), ButtonEnum.RSVP.getLabel()),
 			Button.secondary(ButtonEnum.EDIT.getId(), ButtonEnum.EDIT.getLabel()),
@@ -24,7 +26,7 @@ public class ButtonUi {
 	/**
 	 * Builds buttons that correspond to editing either event description or RSVP button status.
 	 */
-	public List<Button> buildEditActionPrompts() {
+	public static List<Button> buildEditActionPrompts() {
 		return List.of(
 			Button.primary(ButtonEnum.EDIT_EVENT_DESCRIPTION.getId(), ButtonEnum.EDIT_EVENT_DESCRIPTION.getLabel()),
 			Button.danger(ButtonEnum.EDIT_EVENT_ACTIVE.getId(), ButtonEnum.EDIT_EVENT_ACTIVE.getLabel())
@@ -36,7 +38,7 @@ public class ButtonUi {
 	 *
 	 * We can only have five buttons per row, and five rows.
 	 */
-	public List<ActionRow> buildIndexedButtonActionRows(String actionId, int buttonCount) {
+	public static List<ActionRow> buildIndexedButtonActionRows(String actionId, int buttonCount) {
 
 		var buttons = new LinkedList<Button>();
 

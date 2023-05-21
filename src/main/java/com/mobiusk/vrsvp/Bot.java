@@ -4,12 +4,9 @@ import com.mobiusk.vrsvp.command.SlashCommandReply;
 import com.mobiusk.vrsvp.command.SlashCommandUi;
 import com.mobiusk.vrsvp.button.ButtonListener;
 import com.mobiusk.vrsvp.command.SlashCommandListener;
-import com.mobiusk.vrsvp.button.ButtonUi;
 import com.mobiusk.vrsvp.button.ButtonReply;
-import com.mobiusk.vrsvp.embed.EmbedUi;
 import com.mobiusk.vrsvp.modal.ModalListener;
 import com.mobiusk.vrsvp.modal.ModalReply;
-import com.mobiusk.vrsvp.modal.ModalUi;
 import lombok.RequiredArgsConstructor;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
@@ -58,13 +55,9 @@ public class Bot {
 	 */
 	private void addEventListeners() {
 
-		var buttonUi = new ButtonUi();
-		var embedUi = new EmbedUi();
-		var modalUi = new ModalUi();
-
-		var buttonReply = new ButtonReply(buttonUi, embedUi, modalUi);
-		var slashCommandReply = new SlashCommandReply(buttonUi, embedUi);
-		var modalReply = new ModalReply(embedUi);
+		var buttonReply = new ButtonReply();
+		var slashCommandReply = new SlashCommandReply();
+		var modalReply = new ModalReply();
 
 		jda.addEventListener(new ButtonListener(buttonReply));
 		jda.addEventListener(new SlashCommandListener(slashCommandReply));

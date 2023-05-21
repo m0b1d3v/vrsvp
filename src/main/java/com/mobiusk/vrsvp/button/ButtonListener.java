@@ -1,10 +1,10 @@
 package com.mobiusk.vrsvp.button;
 
+import com.mobiusk.vrsvp.util.Fetcher;
 import com.mobiusk.vrsvp.util.Formatter;
+import com.mobiusk.vrsvp.util.GateKeeper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.dv8tion.jda.api.Permission;
-import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
@@ -25,29 +25,31 @@ public class ButtonListener extends ListenerAdapter {
 	@Override
 	public void onButtonInteraction(@Nonnull ButtonInteractionEvent event) {
 
-		var buttonInteractionAction = getButtonInteractionAction(event);
-
 		log.info(
 			Formatter.logMarkers(event).and(Formatter.logMarker("button", event.getComponentId())),
 			"RSVP button received"
 		);
 
-		if (buttonInteractionAction.contains(ButtonEnum.EDIT.getId()) && accessDenied(event)) {
+		var buttonIdAction = getButtonInteractionAction(event);
+		var buttonIdContext = getButtonInteractionContext(event);
+
+		if (buttonIdAction.contains(ButtonEnum.EDIT.getId()) && GateKeeper.accessDenied(event)) {
 
 			log.warn(
-				Formatter.logMarkers(event).and(Formatter.logMarker("button", buttonInteractionAction)),
+				Formatter.logMarkers(event).and(Formatter.logMarker("button", buttonIdAction)),
 				"RSVP edit denied"
 			);
 
+			reply.ephemeral(event, "Access denied.");
 			return;
 		}
 
-		var buttonEnum = ButtonEnum.getById(buttonInteractionAction);
+		var buttonEnum = ButtonEnum.getById(buttonIdAction);
 		switch (buttonEnum) {
-			case EDIT -> handleAdminEditButtonPress(event);
-			case EDIT_EVENT_ACTIVE -> handleEditEventActiveToggleButtonPress(event);
+			case EDIT -> reply.editInterest(event);
+			case EDIT_EVENT_ACTIVE -> handleEditEventActiveButtonPress(event);
 			case EDIT_EVENT_DESCRIPTION -> handleEditEventDescriptionButtonPress(event);
-			case RSVP -> handleRsvpButtonPress(event);
+			case RSVP -> handleRsvpButtonPress(event, buttonIdContext);
 			default -> reply.ephemeral(event, "Input not recognized.");
 		}
 	}
@@ -73,14 +75,11 @@ public class ButtonListener extends ListenerAdapter {
 		return Integer.parseInt(contextIndex);
 	}
 
-	private void handleAdminEditButtonPress(@Nonnull ButtonInteractionEvent event) {
-		reply.edit(event);
-	}
+	private void handleEditEventActiveButtonPress(@Nonnull ButtonInteractionEvent event) {
 
-	private void handleEditEventActiveToggleButtonPress(@Nonnull ButtonInteractionEvent event) {
-
-		var rsvp = getEphemeralButtonEventSource(event);
+		var rsvp = Fetcher.getEphemeralMessageSource(event.getMessage(), event.getMessageChannel());
 		if (rsvp == null) {
+			reply.ephemeral(event, Formatter.FORM_NOT_FOUND_REPLY);
 			return;
 		}
 
@@ -89,58 +88,28 @@ public class ButtonListener extends ListenerAdapter {
 
 	private void handleEditEventDescriptionButtonPress(@Nonnull ButtonInteractionEvent event) {
 
-		var rsvp = getEphemeralButtonEventSource(event);
+		var rsvp = Fetcher.getEphemeralMessageSource(event.getMessage(), event.getMessageChannel());
 		if (rsvp == null) {
+			reply.ephemeral(event, Formatter.FORM_NOT_FOUND_REPLY);
 			return;
 		}
 
 		reply.editEventDescription(event, rsvp);
 	}
 
-	private void handleRsvpButtonPress(@Nonnull ButtonInteractionEvent event) {
+	private void handleRsvpButtonPress(@Nonnull ButtonInteractionEvent event, Integer context) {
+		if (context != null) {
 
-		var slotIndex = getButtonInteractionContext(event);
-		if (slotIndex != null) {
-
-			var rsvp = getEphemeralButtonEventSource(event);
+			var rsvp = Fetcher.getEphemeralMessageSource(event.getMessage(), event.getMessageChannel());
 			if (rsvp == null) {
+				reply.ephemeral(event, Formatter.FORM_NOT_FOUND_REPLY);
 				return;
 			}
 
-			reply.rsvpToggle(event, rsvp, slotIndex);
-
+			reply.rsvpToggle(event, rsvp, context);
 		} else {
 			reply.rsvpInterest(event);
 		}
-	}
-
-	// Any changes here should be propagated to the similar method in ModalListener (no common parent = copied code)
-	private Message getEphemeralButtonEventSource(ButtonInteractionEvent event) {
-
-		var eventMessageReference = event.getMessage().getMessageReference();
-		if (eventMessageReference == null) {
-			return null;
-		}
-
-		return event.getMessageChannel()
-			.retrieveMessageById(eventMessageReference.getMessageIdLong())
-			.onErrorMap(ex -> {
-				log.warn("Message retrieval attempted on deleted message", ex);
-				return null;
-			})
-			.complete();
-	}
-
-	private boolean accessDenied(@Nonnull ButtonInteractionEvent event) {
-
-		var member = event.getMember();
-
-		var accessDenied = member != null && ! member.hasPermission(Permission.ADMINISTRATOR);
-		if (accessDenied) {
-			reply.ephemeral(event, "Access denied.");
-		}
-
-		return accessDenied;
 	}
 
 }

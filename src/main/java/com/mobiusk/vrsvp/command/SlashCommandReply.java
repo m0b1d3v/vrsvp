@@ -10,17 +10,13 @@ import javax.annotation.Nonnull;
 @RequiredArgsConstructor
 public class SlashCommandReply {
 
-	// Class constructor field(s)
-	private final ButtonUi buttonUi;
-	private final EmbedUi embedUi;
-
 	/**
 	 * Build an RSVP form everyone can see with a given number of time slot, each with an index and incremented timestamp title.
 	 */
 	public void rsvpCreation(@Nonnull SlashCommandInteractionEvent event, @Nonnull SlashCommandInputs inputs) {
 		event.reply("")
-			.addEmbeds(embedUi.build(inputs))
-			.addActionRow(buttonUi.buildRsvpActionPrompts())
+			.addEmbeds(EmbedUi.build(inputs))
+			.addActionRow(ButtonUi.buildRsvpActionPrompts())
 			.queue();
 	}
 
