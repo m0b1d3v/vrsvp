@@ -121,7 +121,7 @@ class ButtonListenerUnitTest extends TestBase {
 		verify(reply, never()).rsvpToggle(eq(buttonInteractionEvent), any(), anyInt());
 
 		verify(message).getMessageReference();
-		verify(buttonInteractionEvent, never()).getChannel();
+		verify(buttonInteractionEvent, never()).getMessageChannel();
 	}
 
 	@Test

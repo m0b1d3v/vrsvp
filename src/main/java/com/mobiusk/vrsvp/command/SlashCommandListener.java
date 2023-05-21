@@ -1,12 +1,15 @@
 package com.mobiusk.vrsvp.command;
 
+import com.mobiusk.vrsvp.util.Formatter;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
 import javax.annotation.Nonnull;
 
 @RequiredArgsConstructor
+@Slf4j
 public class SlashCommandListener extends ListenerAdapter {
 
 	// Class constructor field(s)
@@ -19,6 +22,12 @@ public class SlashCommandListener extends ListenerAdapter {
 	public void onSlashCommandInteraction(@Nonnull SlashCommandInteractionEvent event) {
 
 		if ( ! SlashCommandUi.INVOCATION.equals(event.getName())) {
+
+			log.warn(
+				Formatter.logMarkers(event).and(Formatter.logMarker("eventName", event.getName())),
+				"Unrecognized slash command received"
+			);
+
 			return;
 		}
 
@@ -34,6 +43,11 @@ public class SlashCommandListener extends ListenerAdapter {
 		inputs.setStartTimestamp(getSlashCommandInput(event, SlashCommandEnum.START));
 		inputs.setRsvpLimitPerSlot(getSlashCommandInput(event, SlashCommandEnum.RSVP_LIMIT_PER_SLOT));
 		inputs.setRsvpLimitPerPerson(getSlashCommandInput(event, SlashCommandEnum.RSVP_LIMIT_PER_PERSON));
+
+		log.info(
+			Formatter.logMarkers(event).and(Formatter.logMarker("inputs", inputs)),
+			"Slash command received"
+		);
 
 		reply.rsvpCreation(event, inputs);
 	}

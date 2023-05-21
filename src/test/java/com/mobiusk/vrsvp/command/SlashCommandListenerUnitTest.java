@@ -2,6 +2,7 @@ package com.mobiusk.vrsvp.command;
 
 import com.mobiusk.vrsvp.TestBase;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -14,6 +15,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -25,6 +27,11 @@ class SlashCommandListenerUnitTest extends TestBase {
 
 	private final int SLASH_COMMAND_INPUT_COUNT = SlashCommandEnum.values().length;
 
+	@BeforeEach
+	public void beforeEach() {
+		when(slashCommandInteractionEvent.getUser()).thenReturn(user);
+	}
+
 	@Test
 	void unexpectedSlashCommandsAreIgnored() {
 
@@ -32,7 +39,7 @@ class SlashCommandListenerUnitTest extends TestBase {
 
 		listener.onSlashCommandInteraction(slashCommandInteractionEvent);
 
-		verify(slashCommandInteractionEvent).getName();
+		verify(slashCommandInteractionEvent, times(2)).getName();
 		verify(reply, never()).rsvpCreation(any(), any());
 	}
 

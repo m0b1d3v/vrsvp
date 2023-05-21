@@ -1,5 +1,6 @@
 package com.mobiusk.vrsvp.button;
 
+import com.mobiusk.vrsvp.util.Formatter;
 import com.mobiusk.vrsvp.util.Parser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,7 +28,18 @@ public class ButtonListener extends ListenerAdapter {
 
 		var buttonInteractionAction = getButtonInteractionAction(event);
 
+		log.info(
+			Formatter.logMarkers(event).and(Formatter.logMarker("button", event.getComponentId())),
+			"RSVP button received"
+		);
+
 		if (buttonInteractionAction.contains(ButtonEnum.EDIT.getId()) && accessDenied(event)) {
+
+			log.warn(
+				Formatter.logMarkers(event).and(Formatter.logMarker("button", buttonInteractionAction)),
+				"RSVP edit denied"
+			);
+
 			return;
 		}
 

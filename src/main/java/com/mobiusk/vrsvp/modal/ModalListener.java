@@ -1,6 +1,8 @@
 package com.mobiusk.vrsvp.modal;
 
+import com.mobiusk.vrsvp.util.Formatter;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.interaction.ModalInteractionEvent;
@@ -9,6 +11,7 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import javax.annotation.Nonnull;
 
 @RequiredArgsConstructor
+@Slf4j
 public class ModalListener extends ListenerAdapter {
 
 	// Class constructor field(s)
@@ -23,6 +26,11 @@ public class ModalListener extends ListenerAdapter {
 		event.deferEdit().queue();
 
 		var actionId = getModalInteractionAction(event);
+
+		log.info(
+			Formatter.logMarkers(event).and(Formatter.logMarker("modalId", event.getModalId())),
+			"Modal submission received"
+		);
 
 		var textInput = getModalTextInput(event);
 		if (textInput == null) {
