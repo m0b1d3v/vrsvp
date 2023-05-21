@@ -2,12 +2,8 @@ package com.mobiusk.vrsvp.embed;
 
 import com.mobiusk.vrsvp.TestBase;
 import com.mobiusk.vrsvp.command.SlashCommandInputs;
-import com.mobiusk.vrsvp.util.Parser;
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.entities.MessageEmbed;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
 
 import java.util.List;
 import java.util.Objects;
@@ -17,90 +13,106 @@ import static org.mockito.Mockito.when;
 
 class EmbedUiUnitTest extends TestBase {
 
-	private static final String USER_MENTION = "@Testing";
+	@Test
+	void utilityClass() throws NoSuchMethodException {
+		assertUtilityClass(EmbedUi.class);
+	}
 
-	@InjectMocks private EmbedUi embedUi;
+	@Test
+	void buildWithoutRsvpLimitAddendum() {
 
-	private final SlashCommandInputs inputs = new SlashCommandInputs();
+		var inputs = new SlashCommandInputs();
+		inputs.setSlots(2);
+		inputs.setDurationInMinutes(5);
+		inputs.setStartTimestamp(10);
 
-	@BeforeEach
-	public void beforeEach() {
-		inputs.setBlocks(2);
+		var embed = EmbedUi.build(inputs);
+		var description = Objects.requireNonNullElse(embed.getDescription(), "");
+
+		var expectation = """
+			**New Event**
+			
+			- Starts <t:10:R> on <t:10:F>
+			- Each slot is 5 minutes long
+			
+			> #1, <t:10:t>
+			> #2, <t:310:t>""";
+
+		assertEquals(expectation, description);
+	}
+
+	@Test
+	void buildWithRsvpLimitAddendum() {
+
+		var inputs = new SlashCommandInputs();
 		inputs.setSlots(3);
-		inputs.setDurationInMinutes(4);
-		inputs.setStartTimestamp(5);
+		inputs.setDurationInMinutes(20);
+		inputs.setStartTimestamp(100);
+		inputs.setRsvpLimitPerPerson(3);
+		inputs.setRsvpLimitPerSlot(2);
+
+		var embed = EmbedUi.build(inputs);
+		var description = Objects.requireNonNullElse(embed.getDescription(), "");
+
+		var expectation = """
+			**New Event**
+			
+			- Starts <t:100:R> on <t:100:F>
+			- Each slot is 20 minutes long
+			- Maximum number of people that can RSVP for a single slot: 2
+			- Maximum number of slots a person can RSVP for: 3
+			
+			> #1, <t:100:t>
+			> #2, <t:1300:t>
+			> #3, <t:2500:t>""";
+
+		assertEquals(expectation, description);
 	}
 
 	@Test
-	void buildsEmbedDescriptionsWithHeaders() {
+	void editEmbedDescriptionFromAdmin() {
 
-		var embeds = embedUi.build(inputs);
-		var descriptions = embeds.stream().map(MessageEmbed::getDescription).toList();
-		var headers = descriptions.stream()
-			.flatMap(String::lines)
-			.filter(line -> ! line.isBlank())
-			.filter(line -> ! Parser.inputIsASlot(line))
-			.toList();
+		var embed = new EmbedBuilder().setTitle("Original Title").setDescription("Original Description").build();
+		when(message.getEmbeds()).thenReturn(List.of(embed));
 
-		assertEquals(inputs.getBlocks(), embeds.size());
+		var result = EmbedUi.editEmbedDescriptionFromAdmin(message, "Testing");
 
-		for (var embedIndex = 0; embedIndex < embeds.size(); embedIndex++) {
-			var expected = String.format("**Block %d**", embedIndex + 1);
-			assertEquals(expected, headers.get(embedIndex));
-		}
+		assertEquals(embed.getTitle(), result.getTitle());
+		assertEquals("Testing", result.getDescription());
 	}
 
 	@Test
-	void buildsEmbedDescriptionsWithSlots() {
-
-		var embeds = embedUi.build(inputs);
-		var descriptions = embeds.stream().map(MessageEmbed::getDescription).toList();
-		var slots = descriptions.stream().flatMap(String::lines).filter(Parser::inputIsASlot).toList();
-
-		assertEquals(inputs.getBlocks() * inputs.getSlots(), slots.size());
-
-		for (var slotIndex = 0; slotIndex < embeds.size(); slotIndex++) {
-
-			var slot = slots.get(slotIndex);
-			var slotTimestamp = inputs.getStartTimestamp() + (inputs.getDurationInMinutes() * 60 * slotIndex);
-			var expectedContent = String.format("> #%d, <t:%d:t>", slotIndex + 1, slotTimestamp);
-
-			assertEquals(expectedContent, slot);
-		}
-	}
-
-	@Test
-	void toggleRsvpForEmptyFieldAddsUserMention() {
-		var result = toggleRsvpOnOneEmbedWithOneSlot("> #1, <t:5:t>");
+	void editEmbedDescriptionFromRsvpAddsUserMention() {
+		var result = toggleRsvp("> #1, <t:5:t>");
 		assertEquals("> #1, <t:5:t>, @Testing", result);
 	}
 
 	@Test
-	void toggleRsvpForSlotWithExistingMentionRemovesIt() {
-		var result = toggleRsvpOnOneEmbedWithOneSlot("> #1, <t:5:t>, @Testing");
+	void editEmbedDescriptionFromRsvpWithExistingMentionRemovesIt() {
+		var result = toggleRsvp("> #1, <t:5:t>, @Testing");
 		assertEquals("> #1, <t:5:t>", result);
 	}
 
 	@Test
-	void toggleRsvpForSlotWithExistingMentionsAddsToEnd() {
-		var result = toggleRsvpOnOneEmbedWithOneSlot("> #1, <t:5:t>, @Test1, @Test2");
+	void editEmbedDescriptionFromRsvpWithExistingMentionsAddsToEnd() {
+		var result = toggleRsvp("> #1, <t:5:t>, @Test1, @Test2");
 		assertEquals("> #1, <t:5:t>, @Test1, @Test2, @Testing", result);
 	}
 
 	@Test
-	void toggleRsvpForSlotWithWithExistingMentionBetweenOtherMentionsRemovesIt() {
-		var result = toggleRsvpOnOneEmbedWithOneSlot("> #1, <t:5:t>, @Test1, @Testing, @Test2");
+	void editEmbedDescriptionFromRsvpWithWithExistingMentionBetweenOtherMentionsRemovesIt() {
+		var result = toggleRsvp("> #1, <t:5:t>, @Test1, @Testing, @Test2");
 		assertEquals("> #1, <t:5:t>, @Test1, @Test2", result);
 	}
 
 	@Test
-	void rsvpForMoreThanOneFieldIsAllowed() {
+	void editEmbedDescriptionFromRsvpForMoreThanOneFieldIsAllowed() {
 
 		var embed = new EmbedBuilder().setDescription("> #1, <t:0:F>, @Testing\n> #2, <t:1:F>").build();
 		when(message.getEmbeds()).thenReturn(List.of(embed));
 
-		var result = embedUi.editEmbedDescriptionFromRSVP(message, USER_MENTION, 1);
-		var slots = Objects.requireNonNull(result.getMessageEmbeds().get(0).getDescription()).split("\n");
+		var editedEmbed = EmbedUi.editEmbedDescriptionFromRSVP(message, "@Testing", 1);
+		var slots = Objects.requireNonNull(editedEmbed.getDescription()).split("\n");
 
 		assertEquals("> #1, <t:0:F>, @Testing", slots[0]);
 		assertEquals("> #2, <t:1:F>, @Testing", slots[1]);
@@ -108,15 +120,14 @@ class EmbedUiUnitTest extends TestBase {
 
 	// Test utility method(s)
 
-	private String toggleRsvpOnOneEmbedWithOneSlot(String slotValue) {
+	private String toggleRsvp(String slotValue) {
 
 		var embed = new EmbedBuilder().setDescription(slotValue).build();
 		when(message.getEmbeds()).thenReturn(List.of(embed));
 
-		var result = embedUi.editEmbedDescriptionFromRSVP(message, USER_MENTION, 0);
+		var editedEmbed = EmbedUi.editEmbedDescriptionFromRSVP(message, "@Testing", 0);
 
-		assertEquals(1, result.getMessageEmbeds().size());
-		return result.getMessageEmbeds().get(0).getDescription();
+		return editedEmbed.getDescription();
 	}
 
 }

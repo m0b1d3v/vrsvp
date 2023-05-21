@@ -9,7 +9,6 @@ import lombok.Setter;
 @Setter
 public class SlashCommandInputs {
 
-    private Integer blocks;
     private Integer durationInMinutes;
     private Integer slots;
     private Integer startTimestamp;

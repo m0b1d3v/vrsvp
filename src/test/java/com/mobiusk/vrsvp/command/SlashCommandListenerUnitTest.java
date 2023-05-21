@@ -15,7 +15,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -34,20 +33,15 @@ class SlashCommandListenerUnitTest extends TestBase {
 
 	@Test
 	void unexpectedSlashCommandsAreIgnored() {
-
 		when(slashCommandInteractionEvent.getName()).thenReturn("unknown-command");
-
 		listener.onSlashCommandInteraction(slashCommandInteractionEvent);
-
-		verify(slashCommandInteractionEvent, times(2)).getName();
 		verify(reply, never()).rsvpCreation(any(), any());
 	}
 
 	@Test
 	void slashCommandDefaultsInputsToInvalidValuesIfNotFound() {
 
-		IntStream.range(0, SLASH_COMMAND_INPUT_COUNT).forEach(ignored -> when(slashCommandInteractionEvent.getOption(any())).thenReturn(null));
-
+		when(slashCommandInteractionEvent.getOption(any())).thenReturn(null);
 		when(slashCommandInteractionEvent.getName()).thenReturn(SlashCommandUi.INVOCATION);
 
 		listener.onSlashCommandInteraction(slashCommandInteractionEvent);
@@ -55,7 +49,6 @@ class SlashCommandListenerUnitTest extends TestBase {
 		verify(reply).rsvpCreation(eq(slashCommandInteractionEvent), inputsArgumentCaptor.capture());
 
 		var inputs = inputsArgumentCaptor.getValue();
-		assertNull(inputs.getBlocks());
 		assertNull(inputs.getSlots());
 		assertNull(inputs.getDurationInMinutes());
 		assertNull(inputs.getStartTimestamp());
@@ -76,10 +69,11 @@ class SlashCommandListenerUnitTest extends TestBase {
 			})
 			.toList();
 
-		when(slashCommandInteractionEvent.getOption(SlashCommandEnum.BLOCKS.getId())).thenReturn(options.get(0));
-		when(slashCommandInteractionEvent.getOption(SlashCommandEnum.SLOTS.getId())).thenReturn(options.get(1));
-		when(slashCommandInteractionEvent.getOption(SlashCommandEnum.DURATION.getId())).thenReturn(options.get(2));
-		when(slashCommandInteractionEvent.getOption(SlashCommandEnum.START.getId())).thenReturn(options.get(3));
+		when(slashCommandInteractionEvent.getOption(SlashCommandEnum.SLOTS.getId())).thenReturn(options.get(0));
+		when(slashCommandInteractionEvent.getOption(SlashCommandEnum.DURATION.getId())).thenReturn(options.get(1));
+		when(slashCommandInteractionEvent.getOption(SlashCommandEnum.START.getId())).thenReturn(options.get(2));
+		when(slashCommandInteractionEvent.getOption(SlashCommandEnum.RSVP_LIMIT_PER_PERSON.getId())).thenReturn(options.get(3));
+		when(slashCommandInteractionEvent.getOption(SlashCommandEnum.RSVP_LIMIT_PER_SLOT.getId())).thenReturn(options.get(4));
 
 		when(slashCommandInteractionEvent.getName()).thenReturn(SlashCommandUi.INVOCATION);
 
@@ -88,12 +82,11 @@ class SlashCommandListenerUnitTest extends TestBase {
 		verify(reply).rsvpCreation(eq(slashCommandInteractionEvent), inputsArgumentCaptor.capture());
 
 		var inputs = inputsArgumentCaptor.getValue();
-		assertEquals(1, inputs.getBlocks());
-		assertEquals(2, inputs.getSlots());
-		assertEquals(3, inputs.getDurationInMinutes());
-		assertEquals(4, inputs.getStartTimestamp());
-		assertNull(inputs.getRsvpLimitPerPerson());
-		assertNull(inputs.getRsvpLimitPerSlot());
+		assertEquals(1, inputs.getSlots());
+		assertEquals(2, inputs.getDurationInMinutes());
+		assertEquals(3, inputs.getStartTimestamp());
+		assertEquals(4, inputs.getRsvpLimitPerPerson());
+		assertEquals(5, inputs.getRsvpLimitPerSlot());
 	}
 
 }

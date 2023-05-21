@@ -2,6 +2,7 @@ package com.mobiusk.vrsvp;
 
 import com.mobiusk.vrsvp.button.ButtonListener;
 import com.mobiusk.vrsvp.command.SlashCommandListener;
+import com.mobiusk.vrsvp.modal.ModalListener;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
@@ -67,6 +68,7 @@ class BotUnitTest extends TestBase {
 
 		verify(jda).addEventListener(any(ButtonListener.class));
 		verify(jda).addEventListener(any(SlashCommandListener.class));
+		verify(jda).addEventListener(any(ModalListener.class));
 	}
 
 	@Test

@@ -9,8 +9,7 @@ public enum ButtonEnum {
 
 	EDIT("edit", "Edit"),
 	EDIT_EVENT_ACTIVE("edit-toggle-rsvp-active", "Toggle RSVP Active"),
-	EDIT_EVENT_DESCRIPTION("edit-event-description", "Event Description"),
-	EDIT_EMBED_DESCRIPTION("edit-embed-description", "Block"),
+	EDIT_EVENT_DESCRIPTION("edit-event-description", "Edit Description"),
 	RSVP("rsvp", "RSVP"),
 	UNKNOWN("unknown", "UNKNOWN");
 

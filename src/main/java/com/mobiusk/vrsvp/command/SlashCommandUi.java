@@ -13,7 +13,7 @@ public class SlashCommandUi {
 	public static final String INVOCATION = "vrsvp";
 
 	/**
-	 * Builds the only slash command this bot concerns itself with and supplies the required input options
+	 * Builds the only slash command this bot concerns itself with and supplies the required input options.
 	 */
 	public static SlashCommandData create() {
 
@@ -22,7 +22,6 @@ public class SlashCommandUi {
 
 		// Order matters here, this was chosen for the most logical flow
 		addOption(data, SlashCommandEnum.START);
-		addOption(data, SlashCommandEnum.BLOCKS);
 		addOption(data, SlashCommandEnum.SLOTS);
 		addOption(data, SlashCommandEnum.DURATION);
 		addOption(data, SlashCommandEnum.RSVP_LIMIT_PER_PERSON);
@@ -37,11 +36,8 @@ public class SlashCommandUi {
 	) {
 
 		var optionData = new OptionData(OptionType.INTEGER, input.getId(), input.getDescription());
-		optionData.setAutoComplete(false);
 
-		if (input.isRequired()) {
-			optionData.setRequired(true);
-		}
+		optionData.setRequired(input.isRequired());
 
 		if (input.getMaximum() != null) {
 			optionData.setMaxValue(input.getMaximum());

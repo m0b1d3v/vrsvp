@@ -9,17 +9,18 @@ import static net.logstash.logback.marker.Markers.append;
 @UtilityClass
 public class Formatter {
 
-	public static final String REPLY_PREFIX = "---\n";
-	public static final String REPLY_SUFFIX = "\n---";
+	public static final String FORM_NOT_FOUND_REPLY = "RSVP form not found.";
 
-	public static String replies(String message) {
-		return REPLY_PREFIX + message + REPLY_SUFFIX;
-	}
-
+	/**
+	 * Create a singular key-value log marker for JSON logging.
+	 */
 	public static LogstashMarker logMarker(String key, Object value) {
 		return append(key, value);
 	}
 
+	/**
+	 * Create key-value log markers for JSON logging containing guild (server), channel, and user information.
+	 */
 	public static LogstashMarker logMarkers(GenericInteractionCreateEvent event) {
 		return logGuildMarker(event)
 			.and(logChannelMarker(event))
