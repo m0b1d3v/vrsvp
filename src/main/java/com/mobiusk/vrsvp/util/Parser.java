@@ -3,12 +3,12 @@ package com.mobiusk.vrsvp.util;
 import com.mobiusk.vrsvp.command.SlashCommandEnum;
 import lombok.experimental.UtilityClass;
 import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.MessageEmbed;
 
 import javax.annotation.Nonnull;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 import java.util.regex.Pattern;
 
 @UtilityClass
@@ -21,6 +21,11 @@ public class Parser {
 	private static final Pattern RSVP_LIMIT_PER_PERSON_PATTERN = buildRegexPatternForLimit(SlashCommandEnum.RSVP_LIMIT_PER_PERSON);
 
 	private static final Pattern RSVP_LIMIT_PER_SLOT_PATTERN = buildRegexPatternForLimit(SlashCommandEnum.RSVP_LIMIT_PER_SLOT);
+
+	public static String readMessageDescription(@Nonnull Message message) {
+		var embed = message.getEmbeds().get(0);
+		return Objects.requireNonNullElse(embed.getDescription(), "");
+	}
 
 	public static int countSlotsInText(String text) {
 		return (int) text.lines()

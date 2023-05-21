@@ -64,7 +64,7 @@ public class ButtonReply {
 	 */
 	public void editEventDescription(@Nonnull ButtonInteractionEvent event, @Nonnull Message message) {
 
-		var currentText = Objects.requireNonNullElse(message.getEmbeds().get(0).getDescription(), "");
+		var currentText = Parser.readMessageDescription(message);
 		var modal = modalUi.editText(ModalEnum.EVENT_DESCRIPTION, currentText);
 
 		event.replyModal(modal).queue();
@@ -75,8 +75,7 @@ public class ButtonReply {
 	 */
 	public void rsvpInterest(@Nonnull ButtonInteractionEvent event) {
 
-		var embed = event.getMessage().getEmbeds().get(0);
-		var embedDescription = Objects.requireNonNullElse(embed.getDescription(), "");
+		var embedDescription = Parser.readMessageDescription(event.getMessage());
 		var slots = Parser.countSlotsInText(embedDescription);
 		var buttonRows = buttonUi.buildIndexedButtonActionRows(ButtonEnum.RSVP.getId(), slots);
 
@@ -97,8 +96,7 @@ public class ButtonReply {
 
 		var userMention = event.getUser().getAsMention();
 
-		var originalEmbed = message.getEmbeds().get(0);
-		var originalDescription = Objects.requireNonNullElse(originalEmbed.getDescription(), "");
+		var originalDescription = Parser.readMessageDescription(message);
 
 		var editedEmbed = embedUi.editEmbedDescriptionFromRSVP(message, userMention, slotIndex);
 		var editedDescription = Objects.requireNonNullElse(editedEmbed.getDescription(), "");
@@ -126,26 +124,21 @@ public class ButtonReply {
 
 	private boolean rsvpLimitPerPersonExceeded(@Nonnull Message message, String userMention) {
 
-		var embed = message.getEmbeds().get(0);
-		var description = Objects.requireNonNullElse(embed.getDescription(), "");
+		var description = Parser.readMessageDescription(message);
 
 		var limit = Parser.findRsvpLimitPerPersonInText(description);
 		return limit != null && currentRsvpCountForUser(message, userMention) >= limit;
 	}
 
 	private boolean rsvpLimitPerSlotExceeded(@Nonnull Message message, int slotIndex) {
-
-		var embed = message.getEmbeds().get(0);
-		var description = Objects.requireNonNullElse(embed.getDescription(), "");
-
+		var description = Parser.readMessageDescription(message);
 		var limit = Parser.findRsvpLimitPerSlotInText(description);
 		return limit != null && currentRsvpCountForSlot(message, slotIndex) >= limit;
 	}
 
 	private long currentRsvpCountForUser(@Nonnull Message message, String userMention) {
 
-		var embed = message.getEmbeds().get(0);
-		var description = Objects.requireNonNullElse(embed.getDescription(), "");
+		var description = Parser.readMessageDescription(message);
 
 		return description.lines()
 			.filter(Parser::inputIsASlot)
@@ -156,8 +149,7 @@ public class ButtonReply {
 	private long currentRsvpCountForSlot(@Nonnull Message message, int slotIndexDestination) {
 
 		var slotIndex = 0;
-		var embed = message.getEmbeds().get(0);
-		var description = Objects.requireNonNullElse(embed.getDescription(), "");
+		var description = Parser.readMessageDescription(message);
 		var descriptionLines = new LinkedList<>(description.lines().toList());
 
 		for (String line : descriptionLines) {

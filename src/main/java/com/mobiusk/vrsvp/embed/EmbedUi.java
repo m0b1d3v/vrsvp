@@ -61,8 +61,7 @@ public class EmbedUi {
 
 		var slotIndex = 0;
 
-		var embed = message.getEmbeds().get(0);
-		var description = Objects.requireNonNullElse(embed.getDescription(), "");
+		var description = Parser.readMessageDescription(message);
 
 		var descriptionLines = new LinkedList<>(description.lines().toList());
 
@@ -81,6 +80,7 @@ public class EmbedUi {
 			}
 		}
 
+		var embed = message.getEmbeds().get(0);
 		return new EmbedBuilder(embed)
 			.setDescription(String.join(Parser.SLOT_DELIMITER, descriptionLines))
 			.build();
