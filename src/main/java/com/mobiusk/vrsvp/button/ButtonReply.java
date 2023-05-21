@@ -3,11 +3,9 @@ package com.mobiusk.vrsvp.button;
 import com.mobiusk.vrsvp.modal.ModalEnum;
 import com.mobiusk.vrsvp.embed.EmbedUi;
 import com.mobiusk.vrsvp.modal.ModalUi;
-import com.mobiusk.vrsvp.util.Formatter;
 import com.mobiusk.vrsvp.util.Parser;
 import lombok.RequiredArgsConstructor;
 import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.interactions.components.ActionRow;
 
@@ -26,17 +24,17 @@ public class ButtonReply {
 	/**
 	 * Replies with an ephemeral list of buttons admins can click to start editing part of an RSVP form.
 	 */
-	public void edit(@Nonnull ButtonInteractionEvent event, int embedCount) {
+	public void edit(@Nonnull ButtonInteractionEvent event) {
 
-		var editActions = buttonUi.buildEditActionPrompts(embedCount);
+		var buttons = buttonUi.buildEditActionPrompts();
 
-		var message = Formatter.replies("""
+		var reply = """
 			Use these buttons to edit the RSVP form.
-			The numbered buttons correspond to blocks, not slots!""");
+			When editing descriptions, it is suggested to copy the text into your favorite editor for making changes.""";
 
-		event.reply(message)
+		event.reply(reply)
 			.setEphemeral(true)
-			.setComponents(editActions)
+			.addActionRow(buttons)
 			.queue();
 	}
 
@@ -47,8 +45,7 @@ public class ButtonReply {
 
 		var rsvpButton = message.getButtonById(ButtonEnum.RSVP.getId());
 		if (rsvpButton == null) {
-			var reply = Formatter.replies("Could not toggle RSVP button");
-			event.editMessage(reply).queue();
+			event.editMessage("Could not toggle RSVP button").queue();
 			return;
 		}
 
@@ -59,39 +56,31 @@ public class ButtonReply {
 
 		message.editMessageComponents(ActionRow.of(buttons)).queue();
 
-		var reply = Formatter.replies("RSVP button toggled");
-		event.editMessage(reply).queue();
+		event.editMessage("RSVP button toggled").queue();
 	}
 
 	/**
-	 * Replies with an ephemeral list of buttons admins can click to start editing part of an RSVP form.
+	 * Launch a modal with one text input to prompt an admin for a complete edit of the event.
 	 */
 	public void editEventDescription(@Nonnull ButtonInteractionEvent event, @Nonnull Message message) {
-		var currentText = message.getContentDisplay();
-		var modal = modalUi.editText(ModalEnum.EVENT_DESCRIPTION, currentText, 500, null);
-		event.replyModal(modal).queue();
-	}
 
-	/**
-	 * Launch a modal with one text input to prompt an admin for a block edit.
-	 */
-	public void editEmbedDescription(@Nonnull ButtonInteractionEvent event, @Nonnull Message message, int embedIndex) {
-		var embeds = message.getEmbeds();
-		var currentText = Objects.requireNonNullElse(embeds.get(embedIndex).getDescription(), "");
-		var modal = modalUi.editText(ModalEnum.EMBED_DESCRIPTION, currentText, 5500 / embeds.size(), embedIndex);
+		var currentText = Objects.requireNonNullElse(message.getEmbeds().get(0).getDescription(), "");
+		var modal = modalUi.editText(ModalEnum.EVENT_DESCRIPTION, currentText);
+
 		event.replyModal(modal).queue();
 	}
 
 	/**
 	 * Replies with an ephemeral list of buttons users can click to toggle RSVP state for slots.
 	 */
-	public void rsvpInterest(@Nonnull ButtonInteractionEvent event, int slotsAvailable) {
+	public void rsvpInterest(@Nonnull ButtonInteractionEvent event) {
 
-		var buttonRows = buttonUi.buildIndexedButtonActionRows(ButtonEnum.RSVP.getId(), slotsAvailable);
+		var embed = event.getMessage().getEmbeds().get(0);
+		var embedDescription = Objects.requireNonNullElse(embed.getDescription(), "");
+		var slots = Parser.countSlotsInText(embedDescription);
+		var buttonRows = buttonUi.buildIndexedButtonActionRows(ButtonEnum.RSVP.getId(), slots);
 
-		var message = Formatter.replies("Use these buttons to toggle your RSVP for any slot.");
-
-		event.reply(message)
+		event.reply("Use these buttons to toggle your RSVP for any slot.")
 			.setEphemeral(true)
 			.setComponents(buttonRows)
 			.queue();
@@ -107,19 +96,24 @@ public class ButtonReply {
 	) {
 
 		var userMention = event.getUser().getAsMention();
-		var result = embedUi.editEmbedDescriptionFromRSVP(message, userMention, slotIndex);
 
-		if (result.isUserAddedToSlot()
+		var originalEmbed = message.getEmbeds().get(0);
+		var originalDescription = Objects.requireNonNullElse(originalEmbed.getDescription(), "");
+
+		var editedEmbed = embedUi.editEmbedDescriptionFromRSVP(message, userMention, slotIndex);
+		var editedDescription = Objects.requireNonNullElse(editedEmbed.getDescription(), "");
+
+		if (editedDescription.length() > originalDescription.length()
 			&& (rsvpLimitPerPersonExceeded(message, userMention) || rsvpLimitPerSlotExceeded(message, slotIndex))
 		) {
-			var errorMessage = Formatter.replies(String.format("Signup limit exceeded, cannot RSVP for slot #%d", slotIndex + 1));
+			var errorMessage = String.format("Signup limit exceeded, cannot RSVP for slot #%d", slotIndex + 1);
 			event.editMessage(errorMessage).queue();
 			return;
 		}
 
-		message.editMessageEmbeds(result.getMessageEmbeds()).queue();
+		message.editMessageEmbeds(editedEmbed).queue();
 
-		var reply = Formatter.replies(String.format("RSVP state toggled for slot #%d", slotIndex + 1));
+		var reply = String.format("RSVP state toggled for slot #%d", slotIndex + 1);
 		event.editMessage(reply).queue();
 	}
 
@@ -131,22 +125,29 @@ public class ButtonReply {
 	}
 
 	private boolean rsvpLimitPerPersonExceeded(@Nonnull Message message, String userMention) {
-		var description = message.getContentDisplay();
+
+		var embed = message.getEmbeds().get(0);
+		var description = Objects.requireNonNullElse(embed.getDescription(), "");
+
 		var limit = Parser.findRsvpLimitPerPersonInText(description);
 		return limit != null && currentRsvpCountForUser(message, userMention) >= limit;
 	}
 
 	private boolean rsvpLimitPerSlotExceeded(@Nonnull Message message, int slotIndex) {
-		var description = message.getContentDisplay();
+
+		var embed = message.getEmbeds().get(0);
+		var description = Objects.requireNonNullElse(embed.getDescription(), "");
+
 		var limit = Parser.findRsvpLimitPerSlotInText(description);
 		return limit != null && currentRsvpCountForSlot(message, slotIndex) >= limit;
 	}
 
 	private long currentRsvpCountForUser(@Nonnull Message message, String userMention) {
-		return message.getEmbeds().stream()
-			.map(MessageEmbed::getDescription)
-			.filter(Objects::nonNull)
-			.flatMap(String::lines)
+
+		var embed = message.getEmbeds().get(0);
+		var description = Objects.requireNonNullElse(embed.getDescription(), "");
+
+		return description.lines()
 			.filter(Parser::inputIsASlot)
 			.filter(line -> line.contains(userMention))
 			.count();
@@ -155,20 +156,18 @@ public class ButtonReply {
 	private long currentRsvpCountForSlot(@Nonnull Message message, int slotIndexDestination) {
 
 		var slotIndex = 0;
-		for (var embed : message.getEmbeds()) {
+		var embed = message.getEmbeds().get(0);
+		var description = Objects.requireNonNullElse(embed.getDescription(), "");
+		var descriptionLines = new LinkedList<>(description.lines().toList());
 
-			var description = Objects.requireNonNullElse(embed.getDescription(), "");
-			var descriptionLines = new LinkedList<>(description.lines().toList());
+		for (String line : descriptionLines) {
+			if (Parser.inputIsASlot(line)) {
 
-			for (String line : descriptionLines) {
-				if (Parser.inputIsASlot(line)) {
-
-					if (slotIndex == slotIndexDestination) {
-						return Parser.readDataInSlot(line).stream().filter(data -> data.contains("@")).count();
-					}
-
-					slotIndex++;
+				if (slotIndex == slotIndexDestination) {
+					return Parser.readDataInSlot(line).stream().filter(data -> data.contains("@")).count();
 				}
+
+				slotIndex++;
 			}
 		}
 

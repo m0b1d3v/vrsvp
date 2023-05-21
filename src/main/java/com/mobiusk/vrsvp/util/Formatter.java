@@ -9,13 +9,6 @@ import static net.logstash.logback.marker.Markers.append;
 @UtilityClass
 public class Formatter {
 
-	public static final String REPLY_PREFIX = "---\n";
-	public static final String REPLY_SUFFIX = "\n---";
-
-	public static String replies(String message) {
-		return REPLY_PREFIX + message + REPLY_SUFFIX;
-	}
-
 	public static LogstashMarker logMarker(String key, Object value) {
 		return append(key, value);
 	}

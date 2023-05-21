@@ -47,32 +47,17 @@ public class ModalListener extends ListenerAdapter {
 		}
 
 		var modalEnum = ModalEnum.getById(actionId);
-		switch (modalEnum) {
-			case EVENT_DESCRIPTION -> handleEventDescriptionModalSubmission(event, rsvp, textInput);
-			case EMBED_DESCRIPTION -> handleEmbedDescriptionModalSubmission(event, rsvp, textInput);
-			default -> reply.ephemeral(event, "Input not recognized");
+		if (modalEnum == ModalEnum.EVENT_DESCRIPTION) {
+			handleEventDescriptionModalSubmission(event, rsvp, textInput);
+		} else {
+			reply.ephemeral(event, "Input not recognized");
 		}
-	}
-
-	private String[] getModalInteractionId(@Nonnull ModalInteractionEvent event) {
-		var buttonId = event.getModalId();
-		return buttonId.split(":");
 	}
 
 	private String getModalInteractionAction(@Nonnull ModalInteractionEvent event) {
-		var buttonId = getModalInteractionId(event);
-		return buttonId[0];
-	}
-
-	private Integer getModalInteractionContext(@Nonnull ModalInteractionEvent event) {
-
-		var buttonId = getModalInteractionId(event);
-		if (buttonId.length < 2) {
-			return null;
-		}
-
-		var contextIndex = buttonId[1];
-		return Integer.parseInt(contextIndex);
+		var buttonId = event.getModalId();
+		var idParts = buttonId.split(":");
+		return idParts[0];
 	}
 
 	private void handleEventDescriptionModalSubmission(
@@ -81,19 +66,6 @@ public class ModalListener extends ListenerAdapter {
 		String textInput
 	) {
 		reply.editEventDescription(event, message, textInput);
-	}
-
-	private void handleEmbedDescriptionModalSubmission(
-		@Nonnull ModalInteractionEvent event,
-		@Nonnull Message message,
-		String textInput
-	) {
-		var embedIndex = getModalInteractionContext(event);
-		if (embedIndex == null) {
-			reply.ephemeral(event, "Input not recognized.");
-		} else {
-			reply.editEmbedDescription(event, message, textInput, embedIndex);
-		}
 	}
 
 	private String getModalTextInput(@Nonnull ModalInteractionEvent event) {

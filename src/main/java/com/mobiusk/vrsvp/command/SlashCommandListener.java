@@ -37,7 +37,6 @@ public class SlashCommandListener extends ListenerAdapter {
 	private void handleSlashCommandInteraction(@Nonnull SlashCommandInteractionEvent event) {
 
 		var inputs = new SlashCommandInputs();
-		inputs.setBlocks(getSlashCommandInput(event, SlashCommandEnum.BLOCKS));
 		inputs.setDurationInMinutes(getSlashCommandInput(event, SlashCommandEnum.DURATION));
 		inputs.setSlots(getSlashCommandInput(event, SlashCommandEnum.SLOTS));
 		inputs.setStartTimestamp(getSlashCommandInput(event, SlashCommandEnum.START));

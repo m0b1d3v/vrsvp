@@ -55,7 +55,6 @@ class SlashCommandListenerUnitTest extends TestBase {
 		verify(reply).rsvpCreation(eq(slashCommandInteractionEvent), inputsArgumentCaptor.capture());
 
 		var inputs = inputsArgumentCaptor.getValue();
-		assertNull(inputs.getBlocks());
 		assertNull(inputs.getSlots());
 		assertNull(inputs.getDurationInMinutes());
 		assertNull(inputs.getStartTimestamp());
@@ -76,10 +75,9 @@ class SlashCommandListenerUnitTest extends TestBase {
 			})
 			.toList();
 
-		when(slashCommandInteractionEvent.getOption(SlashCommandEnum.BLOCKS.getId())).thenReturn(options.get(0));
-		when(slashCommandInteractionEvent.getOption(SlashCommandEnum.SLOTS.getId())).thenReturn(options.get(1));
-		when(slashCommandInteractionEvent.getOption(SlashCommandEnum.DURATION.getId())).thenReturn(options.get(2));
-		when(slashCommandInteractionEvent.getOption(SlashCommandEnum.START.getId())).thenReturn(options.get(3));
+		when(slashCommandInteractionEvent.getOption(SlashCommandEnum.SLOTS.getId())).thenReturn(options.get(0));
+		when(slashCommandInteractionEvent.getOption(SlashCommandEnum.DURATION.getId())).thenReturn(options.get(1));
+		when(slashCommandInteractionEvent.getOption(SlashCommandEnum.START.getId())).thenReturn(options.get(2));
 
 		when(slashCommandInteractionEvent.getName()).thenReturn(SlashCommandUi.INVOCATION);
 
@@ -88,7 +86,6 @@ class SlashCommandListenerUnitTest extends TestBase {
 		verify(reply).rsvpCreation(eq(slashCommandInteractionEvent), inputsArgumentCaptor.capture());
 
 		var inputs = inputsArgumentCaptor.getValue();
-		assertEquals(1, inputs.getBlocks());
 		assertEquals(2, inputs.getSlots());
 		assertEquals(3, inputs.getDurationInMinutes());
 		assertEquals(4, inputs.getStartTimestamp());

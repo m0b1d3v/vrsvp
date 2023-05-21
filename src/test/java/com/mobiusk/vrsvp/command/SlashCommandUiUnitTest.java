@@ -52,11 +52,10 @@ class SlashCommandUiUnitTest extends TestBase {
 		var options = command.getOptions();
 		assertEquals(6, options.size());
 		assertEquals(SlashCommandEnum.START.getId(), options.get(0).getName());
-		assertEquals(SlashCommandEnum.BLOCKS.getId(), options.get(1).getName());
-		assertEquals(SlashCommandEnum.SLOTS.getId(), options.get(2).getName());
-		assertEquals(SlashCommandEnum.DURATION.getId(), options.get(3).getName());
-		assertEquals(SlashCommandEnum.RSVP_LIMIT_PER_PERSON.getId(), options.get(4).getName());
-		assertEquals(SlashCommandEnum.RSVP_LIMIT_PER_SLOT.getId(), options.get(5).getName());
+		assertEquals(SlashCommandEnum.SLOTS.getId(), options.get(1).getName());
+		assertEquals(SlashCommandEnum.DURATION.getId(), options.get(2).getName());
+		assertEquals(SlashCommandEnum.RSVP_LIMIT_PER_PERSON.getId(), options.get(3).getName());
+		assertEquals(SlashCommandEnum.RSVP_LIMIT_PER_SLOT.getId(), options.get(4).getName());
 	}
 
 }

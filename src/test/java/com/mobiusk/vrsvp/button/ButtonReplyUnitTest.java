@@ -1,7 +1,6 @@
 package com.mobiusk.vrsvp.button;
 
 import com.mobiusk.vrsvp.TestBase;
-import com.mobiusk.vrsvp.embed.EmbedRsvpToggleResult;
 import com.mobiusk.vrsvp.embed.EmbedUi;
 import com.mobiusk.vrsvp.command.SlashCommandInputs;
 import net.dv8tion.jda.api.interactions.components.ActionRow;
@@ -14,10 +13,8 @@ import org.mockito.Mock;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.anyCollection;
-import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -48,7 +45,6 @@ class ButtonReplyUnitTest extends TestBase {
 		when(buttonInteractionEvent.getInteraction()).thenReturn(buttonInteraction);
 		when(buttonInteractionEvent.reply(anyString())).thenReturn(replyCallbackAction);
 
-		inputs.setBlocks(2);
 		inputs.setSlots(3);
 		inputs.setDurationInMinutes(4);
 		inputs.setStartTimestamp(5);
@@ -58,14 +54,13 @@ class ButtonReplyUnitTest extends TestBase {
 	void rsvpBuildsEphemeralListOfButtons() {
 
 		var button = Button.primary("test", "Test");
-		var totalSlots = inputs.getBlocks() * inputs.getSlots();
 		List<ActionRow> buttonRows = List.of(ActionRow.of(button), ActionRow.of(button));
-		when(buttonUi.buildIndexedButtonActionRows(ButtonEnum.RSVP.getId(), totalSlots)).thenReturn(buttonRows);
+		when(buttonUi.buildIndexedButtonActionRows(ButtonEnum.RSVP.getId(), inputs.getSlots())).thenReturn(buttonRows);
 
-		reply.rsvpInterest(buttonInteractionEvent, totalSlots);
+		reply.rsvpInterest(buttonInteractionEvent);
 
 		verify(buttonInteractionEvent).reply(stringArgumentCaptor.capture());
-		verify(buttonUi).buildIndexedButtonActionRows(ButtonEnum.RSVP.getId(), totalSlots);
+		verify(buttonUi).buildIndexedButtonActionRows(ButtonEnum.RSVP.getId(), inputs.getSlots());
 		verify(replyCallbackAction).setEphemeral(true);
 		verify(replyCallbackAction).setComponents(anyCollection());
 		verify(replyCallbackAction).queue();
@@ -75,16 +70,12 @@ class ButtonReplyUnitTest extends TestBase {
 	}
 
 	@Test
-	void signupToggleAdjustsEmbedAndEditsEphemeralMessage() {
+	void signupToggleAdjustsDescriptionAndEditsEphemeralMessage() {
 
-		when(embedUi.editEmbedDescriptionFromRSVP(any(), any(), anyInt())).thenReturn(new EmbedRsvpToggleResult());
-		when(message.editMessageEmbeds(anyCollection())).thenReturn(messageEditAction);
 		when(user.getAsMention()).thenReturn("@Testing");
 
 		reply.rsvpToggle(buttonInteractionEvent, message, 1);
 
-		verify(embedUi).editEmbedDescriptionFromRSVP(any(), any(), anyInt());
-		verify(message).editMessageEmbeds(anyCollection());
 		verify(messageEditAction).queue();
 		verify(buttonInteractionEvent).editMessage(stringArgumentCaptor.capture());
 		verify(messageEditCallbackAction).queue();

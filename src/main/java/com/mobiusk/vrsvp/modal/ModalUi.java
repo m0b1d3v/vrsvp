@@ -10,21 +10,15 @@ public class ModalUi {
 	/**
 	 * Creates a modal that allows exactly one existing string to be edited in paragraph format.
 	 */
-	public Modal editText(ModalEnum modalEnum, String existingText, int maximumLength, Integer contextId) {
-
+	public Modal editText(ModalEnum modalEnum, String existingText) {
 		var id = modalEnum.getId();
-		if (contextId != null) {
-			id = String.format("%s:%d", id, contextId);
-		}
-
-		var textInput = buildTextInput(id, modalEnum, existingText, maximumLength);
+		var textInput = buildTextInput(id, modalEnum, existingText);
 		return buildModal(id, textInput);
 	}
 
-	private TextInput buildTextInput(String id, ModalEnum modalEnum, String existingText, int maximumLength) {
+	private TextInput buildTextInput(String id, ModalEnum modalEnum, String existingText) {
 		return TextInput.create(id, modalEnum.getLabel(), TextInputStyle.PARAGRAPH)
 			.setPlaceholder(modalEnum.getPlaceholder())
-			.setMaxLength(maximumLength)
 			.setValue(existingText)
 			.setRequired(false)
 			.build();

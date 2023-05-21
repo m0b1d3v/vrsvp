@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
-import java.util.List;
 import java.util.function.Function;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -26,7 +25,6 @@ class ButtonListenerUnitTest extends TestBase {
 	@BeforeEach
 	public void beforeEach() {
 
-		when(message.getEmbeds()).thenReturn(List.of(messageEmbed, messageEmbed));
 		when(message.getMessageReference()).thenReturn(messageReference);
 
 		when(messageReference.getMessageIdLong()).thenReturn(1L);
@@ -49,7 +47,7 @@ class ButtonListenerUnitTest extends TestBase {
 		listener.onButtonInteraction(buttonInteractionEvent);
 
 		verify(reply).ephemeral(buttonInteractionEvent, "Input not recognized.");
-		verify(reply, never()).rsvpInterest(eq(buttonInteractionEvent), anyInt());
+		verify(reply, never()).rsvpInterest(eq(buttonInteractionEvent));
 		verify(reply, never()).rsvpToggle(eq(buttonInteractionEvent), any(), anyInt());
 	}
 
@@ -60,7 +58,7 @@ class ButtonListenerUnitTest extends TestBase {
 
 		listener.onButtonInteraction(buttonInteractionEvent);
 
-		verify(reply).edit(buttonInteractionEvent, 2);
+		verify(reply).edit(buttonInteractionEvent);
 	}
 
 	@Test
@@ -104,7 +102,7 @@ class ButtonListenerUnitTest extends TestBase {
 		listener.onButtonInteraction(buttonInteractionEvent);
 
 		verify(reply, never()).ephemeral(buttonInteractionEvent, "Input not recognized.");
-		verify(reply).rsvpInterest(buttonInteractionEvent, messageEmbed.getFields().size() * message.getEmbeds().size());
+		verify(reply).rsvpInterest(buttonInteractionEvent);
 		verify(reply, never()).rsvpToggle(eq(buttonInteractionEvent), any(), anyInt());
 	}
 
@@ -117,7 +115,7 @@ class ButtonListenerUnitTest extends TestBase {
 		listener.onButtonInteraction(buttonInteractionEvent);
 
 		verify(reply, never()).ephemeral(buttonInteractionEvent, "Input not recognized.");
-		verify(reply, never()).rsvpInterest(eq(buttonInteractionEvent), anyInt());
+		verify(reply, never()).rsvpInterest(eq(buttonInteractionEvent));
 		verify(reply, never()).rsvpToggle(eq(buttonInteractionEvent), any(), anyInt());
 
 		verify(message).getMessageReference();
@@ -133,7 +131,7 @@ class ButtonListenerUnitTest extends TestBase {
 		listener.onButtonInteraction(buttonInteractionEvent);
 
 		verify(reply, never()).ephemeral(buttonInteractionEvent, "Input not recognized.");
-		verify(reply, never()).rsvpInterest(eq(buttonInteractionEvent), anyInt());
+		verify(reply, never()).rsvpInterest(eq(buttonInteractionEvent));
 		verify(reply).rsvpToggle(buttonInteractionEvent, message, 1);
 
 		verify(message).getMessageReference();

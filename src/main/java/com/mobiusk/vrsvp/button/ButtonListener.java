@@ -1,7 +1,6 @@
 package com.mobiusk.vrsvp.button;
 
 import com.mobiusk.vrsvp.util.Formatter;
-import com.mobiusk.vrsvp.util.Parser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.Permission;
@@ -20,8 +19,8 @@ public class ButtonListener extends ListenerAdapter {
 
 	/**
 	 * Direct all button presses from bot messages based on the button ID.
-	 * <p>
-	 * Button IDs sometimes include extra context by splitting information with ":", like "signup:1".
+	 *
+	 * Button IDs sometimes include extra context by splitting information with ":", like "rsvp:1".
 	 */
 	@Override
 	public void onButtonInteraction(@Nonnull ButtonInteractionEvent event) {
@@ -48,7 +47,6 @@ public class ButtonListener extends ListenerAdapter {
 			case EDIT -> handleAdminEditButtonPress(event);
 			case EDIT_EVENT_ACTIVE -> handleEditEventActiveToggleButtonPress(event);
 			case EDIT_EVENT_DESCRIPTION -> handleEditEventDescriptionButtonPress(event);
-			case EDIT_EMBED_DESCRIPTION -> handleEditEmbedDescriptionButtonPress(event);
 			case RSVP -> handleRsvpButtonPress(event);
 			default -> reply.ephemeral(event, "Input not recognized.");
 		}
@@ -76,8 +74,7 @@ public class ButtonListener extends ListenerAdapter {
 	}
 
 	private void handleAdminEditButtonPress(@Nonnull ButtonInteractionEvent event) {
-		var embedCount = event.getMessage().getEmbeds().size();
-		reply.edit(event, embedCount);
+		reply.edit(event);
 	}
 
 	private void handleEditEventActiveToggleButtonPress(@Nonnull ButtonInteractionEvent event) {
@@ -100,21 +97,6 @@ public class ButtonListener extends ListenerAdapter {
 		reply.editEventDescription(event, rsvp);
 	}
 
-	private void handleEditEmbedDescriptionButtonPress(@Nonnull ButtonInteractionEvent event) {
-
-		var rsvp = getEphemeralButtonEventSource(event);
-		if (rsvp == null) {
-			return;
-		}
-
-		var embedIndex = getButtonInteractionContext(event);
-		if (embedIndex != null) {
-			reply.editEmbedDescription(event, rsvp, embedIndex);
-		} else {
-			reply.ephemeral(event, "Input not recognized.");
-		}
-	}
-
 	private void handleRsvpButtonPress(@Nonnull ButtonInteractionEvent event) {
 
 		var slotIndex = getButtonInteractionContext(event);
@@ -128,8 +110,7 @@ public class ButtonListener extends ListenerAdapter {
 			reply.rsvpToggle(event, rsvp, slotIndex);
 
 		} else {
-			var slots = Parser.countSlotsInMessageEmbeds(event.getMessage());
-			reply.rsvpInterest(event, slots);
+			reply.rsvpInterest(event);
 		}
 	}
 

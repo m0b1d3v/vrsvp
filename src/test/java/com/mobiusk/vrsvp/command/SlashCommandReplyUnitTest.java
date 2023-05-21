@@ -41,25 +41,9 @@ class SlashCommandReplyUnitTest extends TestBase {
 
 		when(slashCommandInteractionEvent.reply(anyString())).thenReturn(replyCallbackAction);
 
-		inputs.setBlocks(2);
 		inputs.setSlots(3);
 		inputs.setDurationInMinutes(4);
 		inputs.setStartTimestamp(5);
-	}
-
-	@Test
-	void rsvpCreationReturnsEphemeralValidationMessageIfValidationFails() {
-
-		inputs.setBlocks(5);
-		inputs.setSlots(10);
-
-		reply.rsvpCreation(slashCommandInteractionEvent, inputs);
-
-		verify(slashCommandInteractionEvent).reply(stringArgumentCaptor.capture());
-		verifyRsvpCreationActions(times(1), never());
-
-		var expectation = "The maximum amount of (blocks * slots) allowed in VRSVP is 25 due to a Discord limitation. Please retry this command with a smaller total block/slot count, or split your RSVP into more than one form.";
-		assertEquals(expectation, stringArgumentCaptor.getValue());
 	}
 
 	@Test
@@ -70,7 +54,7 @@ class SlashCommandReplyUnitTest extends TestBase {
 		verify(slashCommandInteractionEvent).reply(stringArgumentCaptor.capture());
 		verifyRsvpCreationActions(never(), times(1));
 
-		var expectation = "---\n**New Event**\n\nSlots start <t:5:R> on <t:5:F> and each is 4 minute(s) long.\n---";
+		var expectation = "---\n**New Event**\n\n- Starts <t:5:R> on <t:5:F>\n- Each slot is 4 minute(s) long.\n---";
 		assertEquals(expectation, stringArgumentCaptor.getValue());
 	}
 

@@ -9,7 +9,6 @@ import javax.annotation.Nonnull;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Objects;
 import java.util.regex.Pattern;
 
 @UtilityClass
@@ -23,16 +22,8 @@ public class Parser {
 
 	private static final Pattern RSVP_LIMIT_PER_SLOT_PATTERN = buildRegexPatternForLimit(SlashCommandEnum.RSVP_LIMIT_PER_SLOT);
 
-	public static int countSlotsInMessageEmbeds(@Nonnull Message message) {
-		return message.getEmbeds().stream().mapToInt(Parser::countSlotsInMessageEmbed).sum();
-	}
-
-	public static int countSlotsInMessageEmbed(@Nonnull MessageEmbed messageEmbed) {
-
-		var embedDescription = Objects.requireNonNullElse(messageEmbed.getDescription(), "");
-
-		return (int) embedDescription
-			.lines()
+	public static int countSlotsInText(String text) {
+		return (int) text.lines()
 			.filter(Parser::inputIsASlot)
 			.count();
 	}

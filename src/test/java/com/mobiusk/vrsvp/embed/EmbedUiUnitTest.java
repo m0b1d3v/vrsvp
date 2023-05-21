@@ -4,7 +4,6 @@ import com.mobiusk.vrsvp.TestBase;
 import com.mobiusk.vrsvp.command.SlashCommandInputs;
 import com.mobiusk.vrsvp.util.Parser;
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.entities.MessageEmbed;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -25,47 +24,27 @@ class EmbedUiUnitTest extends TestBase {
 
 	@BeforeEach
 	public void beforeEach() {
-		inputs.setBlocks(2);
 		inputs.setSlots(3);
 		inputs.setDurationInMinutes(4);
 		inputs.setStartTimestamp(5);
 	}
 
 	@Test
-	void buildsEmbedDescriptionsWithHeaders() {
+	void buildsEmbedDescriptionWithSlots() {
 
-		var embeds = embedUi.build(inputs);
-		var descriptions = embeds.stream().map(MessageEmbed::getDescription).toList();
-		var headers = descriptions.stream()
-			.flatMap(String::lines)
-			.filter(line -> ! line.isBlank())
-			.filter(line -> ! Parser.inputIsASlot(line))
-			.toList();
+		var embed = embedUi.build(inputs);
+		var description = Objects.requireNonNullElse(embed.getDescription(), "");
+		var slots = description.lines().filter(Parser::inputIsASlot).toList();
 
-		assertEquals(inputs.getBlocks(), embeds.size());
+		assertEquals(inputs.getSlots(), slots.size());
 
-		for (var embedIndex = 0; embedIndex < embeds.size(); embedIndex++) {
-			var expected = String.format("**Block %d**", embedIndex + 1);
-			assertEquals(expected, headers.get(embedIndex));
-		}
-	}
-
-	@Test
-	void buildsEmbedDescriptionsWithSlots() {
-
-		var embeds = embedUi.build(inputs);
-		var descriptions = embeds.stream().map(MessageEmbed::getDescription).toList();
-		var slots = descriptions.stream().flatMap(String::lines).filter(Parser::inputIsASlot).toList();
-
-		assertEquals(inputs.getBlocks() * inputs.getSlots(), slots.size());
-
-		for (var slotIndex = 0; slotIndex < embeds.size(); slotIndex++) {
+		for (var slotIndex = 0; slotIndex < inputs.getSlots(); slotIndex++) {
 
 			var slot = slots.get(slotIndex);
 			var slotTimestamp = inputs.getStartTimestamp() + (inputs.getDurationInMinutes() * 60 * slotIndex);
-			var expectedContent = String.format("> #%d, <t:%d:t>", slotIndex + 1, slotTimestamp);
+			var expected = String.format("> #%d, <t:%d:t>", slotIndex + 1, slotTimestamp);
 
-			assertEquals(expectedContent, slot);
+			assertEquals(expected, slot);
 		}
 	}
 
@@ -99,8 +78,8 @@ class EmbedUiUnitTest extends TestBase {
 		var embed = new EmbedBuilder().setDescription("> #1, <t:0:F>, @Testing\n> #2, <t:1:F>").build();
 		when(message.getEmbeds()).thenReturn(List.of(embed));
 
-		var result = embedUi.editEmbedDescriptionFromRSVP(message, USER_MENTION, 1);
-		var slots = Objects.requireNonNull(result.getMessageEmbeds().get(0).getDescription()).split("\n");
+		var editedEmbed = embedUi.editEmbedDescriptionFromRSVP(message, USER_MENTION, 1);
+		var slots = Objects.requireNonNull(editedEmbed.getDescription()).split("\n");
 
 		assertEquals("> #1, <t:0:F>, @Testing", slots[0]);
 		assertEquals("> #2, <t:1:F>, @Testing", slots[1]);
@@ -113,10 +92,9 @@ class EmbedUiUnitTest extends TestBase {
 		var embed = new EmbedBuilder().setDescription(slotValue).build();
 		when(message.getEmbeds()).thenReturn(List.of(embed));
 
-		var result = embedUi.editEmbedDescriptionFromRSVP(message, USER_MENTION, 0);
+		var editedEmbed = embedUi.editEmbedDescriptionFromRSVP(message, USER_MENTION, 0);
 
-		assertEquals(1, result.getMessageEmbeds().size());
-		return result.getMessageEmbeds().get(0).getDescription();
+		return editedEmbed.getDescription();
 	}
 
 }

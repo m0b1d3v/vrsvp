@@ -12,9 +12,4 @@ class FormatterUnitTest extends TestBase {
 		assertUtilityClass(Formatter.class);
 	}
 
-	@Test
-	void outputFormatted() {
-		assertEquals("---\nTesting\n---", Formatter.replies("Testing"));
-	}
-
 }

@@ -1,7 +1,6 @@
 package com.mobiusk.vrsvp.modal;
 
 import com.mobiusk.vrsvp.embed.EmbedUi;
-import com.mobiusk.vrsvp.util.Formatter;
 import lombok.RequiredArgsConstructor;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.interaction.ModalInteractionEvent;
@@ -15,7 +14,7 @@ public class ModalReply {
 	private final EmbedUi embedUi;
 
 	/**
-	 * Edit a message by changing the main text, and then edit the original ephemeral message to confirm the action.
+	 * Edit a message by changing the description and then edit the original ephemeral message to confirm the action.
 	 */
 	public void editEventDescription(
 		@Nonnull ModalInteractionEvent event,
@@ -23,27 +22,13 @@ public class ModalReply {
 		String description
 	) {
 
-		message.editMessage(description).queue();
+		var embed = embedUi.editEmbedDescriptionFromAdmin(message, description);
+		message.editMessageEmbeds(embed).queue();
 
-		var reply = Formatter.replies("Description has been updated.");
-		event.getHook().editOriginal(reply).queue();
-	}
 
-	/**
-	 * Edit a field by changing the title, and then edit the original ephemeral message to confirm the action.
-	 */
-	public void editEmbedDescription(
-		@Nonnull ModalInteractionEvent event,
-		@Nonnull Message message,
-		String textInput,
-		int fieldIndex
-	) {
-
-		var editedEmbeds = embedUi.editEmbedDescriptionFromAdmin(message, textInput, fieldIndex);
-		message.editMessageEmbeds(editedEmbeds).queue();
-
-		var reply = Formatter.replies(String.format("Block #%d description has been updated.", fieldIndex + 1));
-		event.getHook().editOriginal(reply).queue();
+		event.getHook()
+			.editOriginal("Description has been updated.")
+			.queue();
 	}
 
 	/**

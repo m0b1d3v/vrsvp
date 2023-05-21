@@ -22,7 +22,6 @@ import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -39,7 +38,6 @@ public abstract class TestBase {
 	@Mock protected MessageEditAction messageEditAction;
 	@Mock protected MessageEditCallbackAction messageEditCallbackAction;
 	@Mock protected MessageEmbed messageEmbed;
-	@Mock protected MessageEmbed.Field messageEmbedField;
 	@Mock protected MessageReference messageReference;
 	@Mock protected ReplyCallbackAction replyCallbackAction;
 	@Mock protected RestAction<Message> messageRestAction;
@@ -47,7 +45,6 @@ public abstract class TestBase {
 	@Mock protected User user;
 
 	@Captor protected ArgumentCaptor<SlashCommandInputs> inputsArgumentCaptor;
-	@Captor protected ArgumentCaptor<List<Long>> listLongArgumentCaptor;
 	@Captor protected ArgumentCaptor<String> stringArgumentCaptor;
 
     /**

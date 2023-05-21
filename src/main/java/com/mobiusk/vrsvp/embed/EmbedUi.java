@@ -1,5 +1,6 @@
 package com.mobiusk.vrsvp.embed;
 
+import com.mobiusk.vrsvp.command.SlashCommandEnum;
 import com.mobiusk.vrsvp.command.SlashCommandInputs;
 import com.mobiusk.vrsvp.util.Parser;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -8,116 +9,90 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 
 import javax.annotation.Nonnull;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Objects;
 
 public class EmbedUi {
 
 	/**
-	 * Build a list of embeds (blocks) with an identical number of fields (slots).
-	 * <p>
-	 * Each embed block has a generic indexed title.
-	 * Each field slot has an index and incremented timestamp title, and a starting description.
+	 * Build an RSVP form everyone can see with a given number of time slot, each with an index and incremented timestamp title.
 	 */
-	public List<MessageEmbed> build(@Nonnull SlashCommandInputs inputs) {
+	public MessageEmbed build(@Nonnull SlashCommandInputs inputs) {
 
-		var embeds = new LinkedList<MessageEmbed>();
-		for (var embedIndex = 0; embedIndex < inputs.getBlocks(); embedIndex++) {
-			embeds.add(buildEmbed(inputs, embedIndex));
+		var slotDurationInSeconds = inputs.getDurationInMinutes() * 60;
+
+		var description = new LinkedList<String>();
+		description.add("**New Event**\n");
+		description.add(String.format("- Starts <t:%d:R> on <t:%d:F>", inputs.getStartTimestamp(), inputs.getStartTimestamp()));
+		description.add(String.format("- Each slot is %d minutes long", inputs.getDurationInMinutes()));
+		description.add(buildRsvpLimitAddendum(SlashCommandEnum.RSVP_LIMIT_PER_SLOT, inputs.getRsvpLimitPerSlot()));
+		description.add(buildRsvpLimitAddendum(SlashCommandEnum.RSVP_LIMIT_PER_PERSON, inputs.getRsvpLimitPerPerson()));
+		description.add("");
+
+		for (var slotIndex = 0; slotIndex < inputs.getSlots(); slotIndex++) {
+			var slotTimestamp = inputs.getStartTimestamp() + (slotDurationInSeconds * slotIndex);
+			var line = String.format("> #%d%s<t:%d:t>", slotIndex + 1, Parser.SIGNUP_DELIMITER, slotTimestamp);
+			description.add(line);
 		}
 
-		return embeds;
+		description.removeIf(Objects::isNull);
+
+		return new EmbedBuilder()
+			.setDescription(String.join(Parser.SLOT_DELIMITER, description))
+			.build();
 	}
 
-	public List<MessageEmbed> editEmbedDescriptionFromAdmin(
-		@Nonnull Message message,
-		String description,
-		int embedIndex
-	) {
+	public MessageEmbed editEmbedDescriptionFromAdmin(@Nonnull Message message, String description) {
 
-		var editedEmbeds = new LinkedList<MessageEmbed>();
-		var existingEmbeds = message.getEmbeds();
+		var embed = message.getEmbeds().get(0);
 
-		for (var embedIndexCounter = 0; embedIndexCounter < existingEmbeds.size(); embedIndexCounter++) {
-
-			var embed = existingEmbeds.get(embedIndexCounter);
-			var embedBuilder = new EmbedBuilder(embed);
-
-			if (embedIndexCounter == embedIndex) {
-				embedBuilder.setDescription(description);
-			}
-
-			editedEmbeds.add(embedBuilder.build());
-		}
-
-		return editedEmbeds;
+		return new EmbedBuilder(embed)
+			.setDescription(description)
+			.build();
 	}
 
 	/**
 	 * Toggle (add or remove) a user's mention to the specified slot for the given message.
 	 */
-	public EmbedRsvpToggleResult editEmbedDescriptionFromRSVP(
+	public MessageEmbed editEmbedDescriptionFromRSVP(
 		@Nonnull Message message,
 		@Nonnull String userMention,
 		int slotIndexDestination
 	) {
 
-		var result = new EmbedRsvpToggleResult();
-
 		var slotIndex = 0;
-		for (var embed : message.getEmbeds()) {
 
-			var description = Objects.requireNonNullElse(embed.getDescription(), "");
-			var descriptionLines = new LinkedList<>(description.lines().toList());
+		var embed = message.getEmbeds().get(0);
+		var description = Objects.requireNonNullElse(embed.getDescription(), "");
 
-			for (var lineIndex = 0; lineIndex < descriptionLines.size(); lineIndex++) {
+		var descriptionLines = new LinkedList<>(description.lines().toList());
 
-				var line = descriptionLines.get(lineIndex);
+		for (var lineIndex = 0; lineIndex < descriptionLines.size(); lineIndex++) {
 
-				if (Parser.inputIsASlot(line)) {
+			var line = descriptionLines.get(lineIndex);
 
-					if (slotIndex == slotIndexDestination) {
-						var editedLine = toggleUserMentionInSlot(line, userMention);
-						descriptionLines.set(lineIndex, editedLine);
-						result.setUserAddedToSlot(editedLine.length() > line.length());
-					}
+			if (Parser.inputIsASlot(line)) {
 
-					slotIndex++;
+				if (slotIndex == slotIndexDestination) {
+					var editedLine = toggleUserMentionInSlot(line, userMention);
+					descriptionLines.set(lineIndex, editedLine);
 				}
-			}
 
-			result.getMessageEmbeds().add(new EmbedBuilder(embed)
-				.setDescription(String.join(Parser.SLOT_DELIMITER, descriptionLines))
-				.build()
-			);
+				slotIndex++;
+			}
 		}
 
-		return result;
+		return new EmbedBuilder(embed)
+			.setDescription(String.join(Parser.SLOT_DELIMITER, descriptionLines))
+			.build();
 	}
 
-	private MessageEmbed buildEmbed(@Nonnull SlashCommandInputs inputs, int embedIndex) {
+	private String buildRsvpLimitAddendum(SlashCommandEnum slashCommandEnum, Integer limit) {
 
-		var slotsPerEmbed = inputs.getSlots();
-		var slotDurationInSeconds = inputs.getDurationInMinutes() * 60;
-		var embedDurationInSeconds = slotsPerEmbed * slotDurationInSeconds;
-		var embedStartTimestamp = inputs.getStartTimestamp() + (embedIndex * embedDurationInSeconds);
-
-		var description = new LinkedList<String>();
-
-		description.add(String.format("**Block %d**%n", embedIndex + 1));
-
-		for (var slotIndex = 0; slotIndex < slotsPerEmbed; slotIndex++) {
-
-			var slotNumber = (embedIndex * slotsPerEmbed) + slotIndex + 1;
-			var slotTimestamp = embedStartTimestamp + (slotDurationInSeconds * slotIndex);
-
-			var line = String.format("> #%d%s<t:%d:t>", slotNumber, Parser.SIGNUP_DELIMITER, slotTimestamp);
-			description.add(line);
+		if (limit != null) {
+			return String.format("- %n%s: %d", slashCommandEnum.getDescription(), limit);
 		}
 
-		return new EmbedBuilder()
-			.setDescription(String.join(Parser.SLOT_DELIMITER, description))
-			.build();
+		return null;
 	}
 
 	private String toggleUserMentionInSlot(String input, String userMention) {

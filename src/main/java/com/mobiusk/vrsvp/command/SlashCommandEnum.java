@@ -2,20 +2,11 @@ package com.mobiusk.vrsvp.command;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.interactions.components.selections.SelectMenu;
 
 @Getter
 @RequiredArgsConstructor
 public enum SlashCommandEnum {
-
-	BLOCKS(
-		"blocks",
-		Message.MAX_EMBED_COUNT, // 10
-		1,
-		"One each for separate set of slots, like for each DJ at a rave",
-		true
-	),
 
 	DURATION(
 		"duration",
@@ -43,9 +34,9 @@ public enum SlashCommandEnum {
 
 	SLOTS(
 		"slots",
-		SelectMenu.OPTIONS_MAX_AMOUNT, // 25 (extra validation on blocks * slots occurs)
+		SelectMenu.OPTIONS_MAX_AMOUNT, // 25
 		1,
-		"How many slots to have for each block",
+		"Number of time slots available for signing up",
 		true
 	),
 
