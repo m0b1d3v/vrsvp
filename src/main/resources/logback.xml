@@ -1,9 +1,14 @@
 <configuration>
 
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
-        <encoder>
-            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%thread] %logger{36} - %msg%n</pattern>
-        </encoder>
+		<encoder class="net.logstash.logback.encoder.LogstashEncoder">
+			<fieldNames>
+				<!-- https://github.com/logfellow/logstash-logback-encoder#loggingevent-fields -->
+				<levelValue>[ignore]</levelValue>
+				<timestamp>timestamp</timestamp>
+				<version>[ignore]</version>
+			</fieldNames>
+		</encoder>
     </appender>
 
     <root level="info">

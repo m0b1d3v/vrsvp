@@ -30,14 +30,21 @@ application {
 
 dependencies {
 
+	// Discord bot
 	implementation('net.dv8tion:JDA:5.0.0-beta.9') {
 		exclude module: 'opus-java'
 	}
 
+	// Logging
 	implementation 'ch.qos.logback:logback-classic:1.4.7'
 
+	// Used for JSON formatting of log messages
+	implementation 'net.logstash.logback:logstash-logback-encoder:7.3'
+
+	// Exception monitoring
 	implementation 'io.sentry:sentry:6.19.0'
 
+	// Unit tests
 	testImplementation 'org.junit.jupiter:junit-jupiter:5.9.3'
 	testImplementation 'org.mockito:mockito-junit-jupiter:5.3.1'
 }
