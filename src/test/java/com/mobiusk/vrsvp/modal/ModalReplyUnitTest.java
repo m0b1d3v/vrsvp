@@ -20,11 +20,10 @@ class ModalReplyUnitTest extends TestBase {
 
 	@BeforeEach
 	public void beforeEach() {
-		when(interactionHook.editOriginal(anyString())).thenReturn(webhookMessageEditActionMessage);
 		when(message.getEmbeds()).thenReturn(List.of(messageEmbed));
 		when(message.editMessageEmbeds(any(MessageEmbed[].class))).thenReturn(messageEditAction);
-		when(modalInteractionEvent.getHook()).thenReturn(interactionHook);
 		when(modalInteractionEvent.reply(anyString())).thenReturn(replyCallbackAction);
+		when(modalInteractionEvent.editMessage(anyString())).thenReturn(messageEditCallbackAction);
 		when(replyCallbackAction.setEphemeral(anyBoolean())).thenReturn(replyCallbackAction);
 	}
 
@@ -38,13 +37,12 @@ class ModalReplyUnitTest extends TestBase {
 	}
 
 	@Test
-	void editEventDescriptionFromAdminEditsOriginalEventHook() {
+	void editEventDescriptionFromAdminEditsOriginalMessage() {
 
 		reply.editEmbedDescriptionFromAdmin(modalInteractionEvent, message, "Testing");
 
-		verify(modalInteractionEvent).getHook();
-		verify(interactionHook).editOriginal("Description has been updated.");
-		verify(webhookMessageEditActionMessage).queue();
+		verify(modalInteractionEvent).editMessage("Description has been updated.");
+		verify(messageEditCallbackAction).queue();
 	}
 
 	@Test

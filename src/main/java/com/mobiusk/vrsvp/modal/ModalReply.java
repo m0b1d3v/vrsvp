@@ -20,9 +20,7 @@ public class ModalReply {
 		var embed = EmbedUi.editEmbedDescriptionFromAdmin(message, description);
 		message.editMessageEmbeds(embed).queue();
 
-		event.getHook()
-			.editOriginal("Description has been updated.")
-			.queue();
+		event.editMessage("Description has been updated.").queue();
 	}
 
 	/**

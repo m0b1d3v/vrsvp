@@ -13,14 +13,10 @@ import net.dv8tion.jda.api.events.interaction.GenericInteractionCreateEvent;
 import net.dv8tion.jda.api.events.interaction.ModalInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
-import net.dv8tion.jda.api.interactions.InteractionHook;
 import net.dv8tion.jda.api.interactions.components.ActionRow;
-import net.dv8tion.jda.api.interactions.components.buttons.Button;
-import net.dv8tion.jda.api.interactions.components.buttons.ButtonInteraction;
 import net.dv8tion.jda.api.interactions.modals.ModalMapping;
 import net.dv8tion.jda.api.requests.RestAction;
 import net.dv8tion.jda.api.requests.restaction.MessageEditAction;
-import net.dv8tion.jda.api.requests.restaction.WebhookMessageEditAction;
 import net.dv8tion.jda.api.requests.restaction.interactions.MessageEditCallbackAction;
 import net.dv8tion.jda.api.requests.restaction.interactions.ModalCallbackAction;
 import net.dv8tion.jda.api.requests.restaction.interactions.ReplyCallbackAction;
@@ -50,7 +46,6 @@ public abstract class TestBase {
 	@Mock protected Channel channel;
 	@Mock protected GenericInteractionCreateEvent genericInteractionCreateEvent;
 	@Mock protected Guild guild;
-	@Mock protected InteractionHook interactionHook;
 	@Mock protected Member member;
 	@Mock protected Message message;
 	@Mock protected MessageChannel messageChannel;
@@ -65,7 +60,6 @@ public abstract class TestBase {
 	@Mock protected RestAction<Message> restActionMessage;
 	@Mock protected SlashCommandInteractionEvent slashCommandInteractionEvent;
 	@Mock protected User user;
-	@Mock protected WebhookMessageEditAction<Message> webhookMessageEditActionMessage;
 
 	@Captor protected ArgumentCaptor<SlashCommandInputs> inputsArgumentCaptor;
 	@Captor protected ArgumentCaptor<ActionRow> actionRowArgumentCaptor;
