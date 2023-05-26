@@ -33,3 +33,6 @@ sonar: clean test
 
 updates:
 	./gradlew dependencyUpdates
+
+transfer:
+	scp build/distributions/*.tar projects:~/vrsvp
