@@ -2,6 +2,7 @@
 
 ## 2023-05-27
 
+- Adding permission denied exception messages when bot not given necessary roles/view
 - Adding audit trail logging on deleted or limited RSVP interactions
 
 ## 2023-05-26

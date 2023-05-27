@@ -53,7 +53,7 @@ public class ModalListener extends ListenerAdapter {
 
 			var messageSource = Fetcher.getEphemeralMessageSource(event.getMessage(), event.getMessageChannel());
 			if (messageSource == null) {
-				log.warn(Formatter.logMarkers(event), Formatter.FORM_NOT_FOUND_REPLY);
+				log.warn(Formatter.logMarkers(event), "Message source not found");
 				reply.ephemeral(event, Formatter.FORM_NOT_FOUND_REPLY);
 				return;
 			}

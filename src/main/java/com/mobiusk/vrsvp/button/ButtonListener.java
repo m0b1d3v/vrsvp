@@ -109,7 +109,7 @@ public class ButtonListener extends ListenerAdapter {
 
 		var rsvp = Fetcher.getEphemeralMessageSource(event.getMessage(), event.getMessageChannel());
 		if (rsvp == null) {
-			log.warn(Formatter.logMarkers(event), Formatter.FORM_NOT_FOUND_REPLY);
+			log.warn(Formatter.logMarkers(event), "Message source not found");
 			reply.ephemeral(event, Formatter.FORM_NOT_FOUND_REPLY);
 		}
 

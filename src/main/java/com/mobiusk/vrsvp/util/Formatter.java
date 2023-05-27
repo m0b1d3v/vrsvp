@@ -9,7 +9,7 @@ import static net.logstash.logback.marker.Markers.append;
 @UtilityClass
 public class Formatter {
 
-	public static final String FORM_NOT_FOUND_REPLY = "RSVP form not found.";
+	public static final String FORM_NOT_FOUND_REPLY = "Cannot find event post. Was it deleted? Does the bot have read permissions?";
 
 	/**
 	 * Create a singular key-value log marker for JSON logging.
