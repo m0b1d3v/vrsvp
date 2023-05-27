@@ -8,8 +8,11 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
+import java.util.List;
+
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -19,11 +22,12 @@ class ModalListenerUnitTest extends TestBase {
 
 	@Mock private ModalReply reply;
 
+	private static final List<ModalEnum> VALID_MODAL_ENUMS = List.of(ModalEnum.EVENT_CREATION, ModalEnum.EVENT_DESCRIPTION);
+
 	@BeforeEach
 	public void beforeEach() {
 		when(user.getName()).thenReturn("@Testing");
 		when(modalInteractionEvent.getUser()).thenReturn(user);
-		when(modalInteractionEvent.getModalId()).thenReturn(ModalEnum.EVENT_DESCRIPTION.getId());
 		when(modalInteractionEvent.getMember()).thenReturn(member);
 		when(member.hasPermission(Permission.ADMINISTRATOR)).thenReturn(true);
 	}
@@ -42,51 +46,80 @@ class ModalListenerUnitTest extends TestBase {
 	@Test
 	void onModalInteractionAccessCanBeDeniedBeforeAnythingIsRead() {
 
-		when(member.hasPermission(Permission.ADMINISTRATOR)).thenReturn(false);
+		for (var modalId : VALID_MODAL_ENUMS) {
 
-		listener.onModalInteraction(modalInteractionEvent);
+			when(modalInteractionEvent.getModalId()).thenReturn(modalId.getId());
+			when(member.hasPermission(Permission.ADMINISTRATOR)).thenReturn(false);
 
-		verify(reply).ephemeral(modalInteractionEvent, "Access denied.");
+			listener.onModalInteraction(modalInteractionEvent);
+		}
+
+		verify(reply, times(VALID_MODAL_ENUMS.size())).ephemeral(modalInteractionEvent, "Access denied.");
 		verify(modalInteractionEvent, never()).getValue(any());
 	}
 
 	@Test
-	void onModalInteractionFailsIfThereIsNoInputBeforeMessageReferenceFetched() {
+	void onModalInteractionFailsIfThereIsNoInput() {
 
-		when(modalInteractionEvent.getValue(any())).thenReturn(null);
+		for (var modalId : VALID_MODAL_ENUMS) {
 
-		listener.onModalInteraction(modalInteractionEvent);
+			when(modalInteractionEvent.getModalId()).thenReturn(modalId.getId());
+			when(modalInteractionEvent.getValue(any())).thenReturn(null);
 
-		verify(reply).ephemeral(modalInteractionEvent, "No text input received.");
+			listener.onModalInteraction(modalInteractionEvent);
+		}
+
+		verify(reply, times(VALID_MODAL_ENUMS.size())).ephemeral(modalInteractionEvent, "No text input received.");
 		verify(modalInteractionEvent, never()).getMessage();
 		verify(modalInteractionEvent, never()).getMessageChannel();
 	}
 
 	@Test
-	void onModalInteractionFailsIfTheMessageSourceCannotBeFetchedBeforeModalEdited() {
+	void onModalInteractionFailsIfTheMessageSourceCannotBeFetchedBeforeEventEdited() {
 
 		when(modalMapping.getAsString()).thenReturn("Testing");
+		when(modalInteractionEvent.getModalId()).thenReturn(ModalEnum.EVENT_DESCRIPTION.getId());
 		when(modalInteractionEvent.getValue(any())).thenReturn(modalMapping);
 		when(modalInteractionEvent.getMessage()).thenReturn(null);
 
 		listener.onModalInteraction(modalInteractionEvent);
 
 		verify(reply).ephemeral(modalInteractionEvent, Formatter.FORM_NOT_FOUND_REPLY);
+		verify(reply, never()).createEmbedFormFromAdmin(modalInteractionEvent, "Testing");
 		verify(reply, never()).editEmbedDescriptionFromAdmin(modalInteractionEvent, message, "Testing");
 	}
 
 	@Test
-	void onModalInteraction() {
+	void onModalInteractionForEventCreate() {
 
 		setupFetcher(message);
 
 		when(modalMapping.getAsString()).thenReturn("Testing");
+		when(modalInteractionEvent.getModalId()).thenReturn(ModalEnum.EVENT_CREATION.getId());
 		when(modalInteractionEvent.getValue(any())).thenReturn(modalMapping);
 		when(modalInteractionEvent.getMessage()).thenReturn(message);
 		when(modalInteractionEvent.getMessageChannel()).thenReturn(messageChannel);
 
 		listener.onModalInteraction(modalInteractionEvent);
 
+		verify(reply).createEmbedFormFromAdmin(modalInteractionEvent, "Testing");
+		verify(reply, never()).editEmbedDescriptionFromAdmin(modalInteractionEvent, message, "Testing");
+	}
+
+	@Test
+	void onModalInteractionForEventEdit() {
+
+		setupFetcher(message);
+
+		when(modalMapping.getAsString()).thenReturn("Testing");
+		when(modalInteractionEvent.getModalId()).thenReturn(ModalEnum.EVENT_DESCRIPTION.getId());
+		when(modalInteractionEvent.getValue(any())).thenReturn(modalMapping);
+		when(modalInteractionEvent.getMessage()).thenReturn(message);
+		when(modalInteractionEvent.getMessageChannel()).thenReturn(messageChannel);
+
+		listener.onModalInteraction(modalInteractionEvent);
+
+		verify(reply, never()).createEmbedFormFromAdmin(modalInteractionEvent, "Testing");
 		verify(reply).editEmbedDescriptionFromAdmin(modalInteractionEvent, message, "Testing");
 	}
 
