@@ -10,6 +10,7 @@ import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyBoolean;
+import static org.mockito.ArgumentMatchers.anyCollection;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -20,11 +21,27 @@ class ModalReplyUnitTest extends TestBase {
 
 	@BeforeEach
 	public void beforeEach() {
+
 		when(message.getEmbeds()).thenReturn(List.of(messageEmbed));
 		when(message.editMessageEmbeds(any(MessageEmbed[].class))).thenReturn(messageEditAction);
+
 		when(modalInteractionEvent.reply(anyString())).thenReturn(replyCallbackAction);
 		when(modalInteractionEvent.editMessage(anyString())).thenReturn(messageEditCallbackAction);
+
 		when(replyCallbackAction.setEphemeral(anyBoolean())).thenReturn(replyCallbackAction);
+		when(replyCallbackAction.addEmbeds(any(MessageEmbed[].class))).thenReturn(replyCallbackAction);
+		when(replyCallbackAction.addActionRow(anyCollection())).thenReturn(replyCallbackAction);
+	}
+
+	@Test
+	void createEmbedFormFromAdminAddsNecessaryComponents() {
+
+		reply.createEmbedFormFromAdmin(modalInteractionEvent, "Testing");
+
+		verify(modalInteractionEvent).reply("");
+		verify(replyCallbackAction).addEmbeds(any(MessageEmbed.class));
+		verify(replyCallbackAction).addActionRow(anyCollection());
+		verify(replyCallbackAction).queue();
 	}
 
 	@Test

@@ -1,5 +1,9 @@
 # VRSVP Changelog
 
+## 2023-05-26
+
+- Adding step between slash command input and messaging the channel so admins can make layout changes
+
 ## 2023-05-21 (v1.0)
 
 - Releasing beta version for limited public usage
