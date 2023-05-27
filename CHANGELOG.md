@@ -2,6 +2,7 @@
 
 ## 2023-05-27
 
+- Adding exception monitoring startup message for my peace of mind
 - Adding permission denied exception messages when bot not given necessary roles/view
 - Adding audit trail logging on deleted or limited RSVP interactions
 

@@ -17,6 +17,9 @@ public class Main {
 	private static void startErrorMonitoring() {
 		var dsn = Objects.requireNonNullElse(SENTRY_DSN, "");
 		Sentry.init(options -> options.setDsn(dsn));
+		if ( ! dsn.isEmpty()) {
+			Sentry.captureMessage("Error monitoring initialized");
+		}
 	}
 
 	private static void startDiscordBot() throws InterruptedException {
