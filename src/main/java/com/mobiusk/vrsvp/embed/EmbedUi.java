@@ -1,7 +1,5 @@
 package com.mobiusk.vrsvp.embed;
 
-import com.mobiusk.vrsvp.command.SlashCommandEnum;
-import com.mobiusk.vrsvp.command.SlashCommandInputs;
 import com.mobiusk.vrsvp.util.Parser;
 import lombok.experimental.UtilityClass;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -10,36 +8,16 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 
 import javax.annotation.Nonnull;
 import java.util.LinkedList;
-import java.util.Objects;
 
 @UtilityClass
 public class EmbedUi {
 
 	/**
-	 * Build an RSVP form everyone can see with a given number of time slot, each with an index and incremented timestamp title.
+	 * Create a new embed with a description from admin input.
 	 */
-	public static MessageEmbed build(@Nonnull SlashCommandInputs inputs) {
-
-		var slotDurationInSeconds = inputs.getDurationInMinutes() * 60;
-
-		var description = new LinkedList<String>();
-		description.add("**New Event**\n");
-		description.add(String.format("- Starts <t:%d:R> on <t:%d:F>", inputs.getStartTimestamp(), inputs.getStartTimestamp()));
-		description.add(String.format("- Each slot is %d minutes long", inputs.getDurationInMinutes()));
-		description.add(buildRsvpLimitAddendum(SlashCommandEnum.RSVP_LIMIT_PER_SLOT, inputs.getRsvpLimitPerSlot()));
-		description.add(buildRsvpLimitAddendum(SlashCommandEnum.RSVP_LIMIT_PER_PERSON, inputs.getRsvpLimitPerPerson()));
-		description.add("");
-
-		for (var slotIndex = 0; slotIndex < inputs.getSlots(); slotIndex++) {
-			var slotTimestamp = inputs.getStartTimestamp() + (slotDurationInSeconds * slotIndex);
-			var line = String.format("> #%d%s<t:%d:t>", slotIndex + 1, Parser.SIGNUP_DELIMITER, slotTimestamp);
-			description.add(line);
-		}
-
-		description.removeIf(Objects::isNull);
-
+	public static MessageEmbed createEmbedDescriptionFromAdmin(String description) {
 		return new EmbedBuilder()
-			.setDescription(String.join(Parser.SLOT_DELIMITER, description))
+			.setDescription(description)
 			.build();
 	}
 
@@ -89,15 +67,6 @@ public class EmbedUi {
 		return new EmbedBuilder(embed)
 			.setDescription(String.join(Parser.SLOT_DELIMITER, descriptionLines))
 			.build();
-	}
-
-	private static String buildRsvpLimitAddendum(SlashCommandEnum slashCommandEnum, Integer limit) {
-
-		if (limit != null) {
-			return String.format("- %s: %d", slashCommandEnum.getDescription(), limit);
-		}
-
-		return null;
 	}
 
 	private static String toggleUserMentionInSlot(String input, String userMention) {
