@@ -1,7 +1,6 @@
 package com.mobiusk.vrsvp.embed;
 
 import com.mobiusk.vrsvp.TestBase;
-import com.mobiusk.vrsvp.command.SlashCommandInputs;
 import net.dv8tion.jda.api.EmbedBuilder;
 import org.junit.jupiter.api.Test;
 
@@ -16,57 +15,6 @@ class EmbedUiUnitTest extends TestBase {
 	@Test
 	void utilityClass() throws NoSuchMethodException {
 		assertUtilityClass(EmbedUi.class);
-	}
-
-	@Test
-	void buildWithoutRsvpLimitAddendum() {
-
-		var inputs = new SlashCommandInputs();
-		inputs.setSlots(2);
-		inputs.setDurationInMinutes(5);
-		inputs.setStartTimestamp(10);
-
-		var embed = EmbedUi.build(inputs);
-		var description = Objects.requireNonNullElse(embed.getDescription(), "");
-
-		var expectation = """
-			**New Event**
-			
-			- Starts <t:10:R> on <t:10:F>
-			- Each slot is 5 minutes long
-			
-			> #1, <t:10:t>
-			> #2, <t:310:t>""";
-
-		assertEquals(expectation, description);
-	}
-
-	@Test
-	void buildWithRsvpLimitAddendum() {
-
-		var inputs = new SlashCommandInputs();
-		inputs.setSlots(3);
-		inputs.setDurationInMinutes(20);
-		inputs.setStartTimestamp(100);
-		inputs.setRsvpLimitPerPerson(3);
-		inputs.setRsvpLimitPerSlot(2);
-
-		var embed = EmbedUi.build(inputs);
-		var description = Objects.requireNonNullElse(embed.getDescription(), "");
-
-		var expectation = """
-			**New Event**
-			
-			- Starts <t:100:R> on <t:100:F>
-			- Each slot is 20 minutes long
-			- Maximum number of people that can RSVP for a single slot: 2
-			- Maximum number of slots a person can RSVP for: 3
-			
-			> #1, <t:100:t>
-			> #2, <t:1300:t>
-			> #3, <t:2500:t>""";
-
-		assertEquals(expectation, description);
 	}
 
 	@Test

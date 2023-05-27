@@ -7,7 +7,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum ModalEnum {
 
-	EVENT_DESCRIPTION("event-description", "Event Description", "Title, important timestamps, and slots are good to have here."),
+	EVENT_CREATION("event-creation", "Event Creation", ModalUi.MODAL_PLACEHOLDER),
+	EVENT_DESCRIPTION("event-description", "Event Description", ModalUi.MODAL_PLACEHOLDER),
 	UNKNOWN("unknown", "Unknown", "Unknown");
 
 	private final String id;

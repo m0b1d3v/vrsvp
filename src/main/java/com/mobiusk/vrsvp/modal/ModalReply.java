@@ -1,5 +1,6 @@
 package com.mobiusk.vrsvp.modal;
 
+import com.mobiusk.vrsvp.button.ButtonUi;
 import com.mobiusk.vrsvp.embed.EmbedUi;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.interaction.ModalInteractionEvent;
@@ -7,6 +8,16 @@ import net.dv8tion.jda.api.events.interaction.ModalInteractionEvent;
 import javax.annotation.Nonnull;
 
 public class ModalReply {
+
+	/**
+	 * Build an RSVP form everyone can see with a given number of time slot, each with an index and incremented timestamp title.
+	 */
+	public void createEmbedFormFromAdmin(@Nonnull ModalInteractionEvent event, String description) {
+		event.reply("")
+			.addEmbeds(EmbedUi.createEmbedDescriptionFromAdmin(description))
+			.addActionRow(ButtonUi.buildRsvpActionPrompts())
+			.queue();
+	}
 
 	/**
 	 * Edit a message by changing the description and then edit the original ephemeral message to confirm the action.

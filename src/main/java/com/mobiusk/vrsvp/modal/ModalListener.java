@@ -30,7 +30,7 @@ public class ModalListener extends ListenerAdapter {
 
 		var actionId = event.getModalId();
 		var modalEnum = ModalEnum.getById(actionId);
-		if (modalEnum != ModalEnum.EVENT_DESCRIPTION) {
+		if (modalEnum == ModalEnum.UNKNOWN) {
 			reply.ephemeral(event, "Input not recognized.");
 			return;
 		}
@@ -47,13 +47,18 @@ public class ModalListener extends ListenerAdapter {
 			return;
 		}
 
-		var messageSource = Fetcher.getEphemeralMessageSource(event.getMessage(), event.getMessageChannel());
-		if (messageSource == null) {
-			reply.ephemeral(event, Formatter.FORM_NOT_FOUND_REPLY);
-			return;
-		}
+		if (modalEnum == ModalEnum.EVENT_CREATION) {
+			reply.createEmbedFormFromAdmin(event, textInput);
+		} else {
 
-		reply.editEmbedDescriptionFromAdmin(event, messageSource, textInput);
+			var messageSource = Fetcher.getEphemeralMessageSource(event.getMessage(), event.getMessageChannel());
+			if (messageSource == null) {
+				reply.ephemeral(event, Formatter.FORM_NOT_FOUND_REPLY);
+				return;
+			}
+
+			reply.editEmbedDescriptionFromAdmin(event, messageSource, textInput);
+		}
 	}
 
 	private String getModalTextInput(@Nonnull ModalInteractionEvent event) {

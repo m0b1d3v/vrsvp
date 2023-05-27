@@ -43,7 +43,7 @@ class ModalUiUnitTest extends TestBase {
 		var modal = ModalUi.editText(ModalEnum.EVENT_DESCRIPTION, "Testing");
 
 		assertEquals(ModalEnum.EVENT_DESCRIPTION.getId(), modal.getId());
-		assertEquals("VRSVP Edit", modal.getTitle());
+		assertEquals("VRSVP", modal.getTitle());
 	}
 
 }

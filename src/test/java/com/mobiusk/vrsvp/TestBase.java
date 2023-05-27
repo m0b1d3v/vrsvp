@@ -14,6 +14,7 @@ import net.dv8tion.jda.api.events.interaction.ModalInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.interactions.components.ActionRow;
+import net.dv8tion.jda.api.interactions.modals.Modal;
 import net.dv8tion.jda.api.interactions.modals.ModalMapping;
 import net.dv8tion.jda.api.requests.RestAction;
 import net.dv8tion.jda.api.requests.restaction.MessageEditAction;
@@ -61,8 +62,9 @@ public abstract class TestBase {
 	@Mock protected SlashCommandInteractionEvent slashCommandInteractionEvent;
 	@Mock protected User user;
 
-	@Captor protected ArgumentCaptor<SlashCommandInputs> inputsArgumentCaptor;
 	@Captor protected ArgumentCaptor<ActionRow> actionRowArgumentCaptor;
+	@Captor protected ArgumentCaptor<Modal> modalArgumentCaptor;
+	@Captor protected ArgumentCaptor<SlashCommandInputs> inputsArgumentCaptor;
 
 	protected void setupFetcher(Message output) {
 		when(message.getMessageReference()).thenReturn(messageReference);

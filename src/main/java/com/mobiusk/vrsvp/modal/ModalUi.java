@@ -9,6 +9,8 @@ import net.dv8tion.jda.api.interactions.modals.Modal;
 @UtilityClass
 public class ModalUi {
 
+	public static final String MODAL_PLACEHOLDER = "Title, important timestamps, and slots are good to have here.";
+
 	/**
 	 * Creates a modal that allows exactly one existing string to be edited in paragraph format.
 	 */
@@ -26,7 +28,7 @@ public class ModalUi {
 	}
 
 	private static Modal buildModal(String id, ItemComponent input) {
-		return Modal.create(id, "VRSVP Edit")
+		return Modal.create(id, "VRSVP")
 			.addActionRow(input)
 			.build();
 	}
