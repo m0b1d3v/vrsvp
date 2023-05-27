@@ -3,7 +3,9 @@ package com.mobiusk.vrsvp.button;
 import com.mobiusk.vrsvp.embed.EmbedUi;
 import com.mobiusk.vrsvp.modal.ModalEnum;
 import com.mobiusk.vrsvp.modal.ModalUi;
+import com.mobiusk.vrsvp.util.Formatter;
 import com.mobiusk.vrsvp.util.Parser;
+import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
@@ -13,6 +15,7 @@ import javax.annotation.Nonnull;
 import java.util.LinkedList;
 import java.util.Objects;
 
+@Slf4j
 public class ButtonReply {
 
 	/**
@@ -90,6 +93,7 @@ public class ButtonReply {
 
 		var rsvpButton = message.getButtonById(ButtonEnum.RSVP.getId());
 		if (rsvpButton == null || rsvpButton.isDisabled()) {
+			log.warn(Formatter.logMarkers(event), "RSVP declined for disabled event");
 			event.editMessage("RSVP has been disabled for this event.").queue();
 			return;
 		}
@@ -98,6 +102,7 @@ public class ButtonReply {
 		var editedEmbed = EmbedUi.editEmbedDescriptionFromRSVP(message, userMention, slotIndex);
 
 		if (rsvpLimitsExceeded(message, editedEmbed, userMention, slotIndex)) {
+			log.info(Formatter.logMarkers(event), "RSVP declined for signup limit");
 			var errorMessage = String.format("Signup limit exceeded, cannot RSVP for slot #%d", slotIndex + 1);
 			event.editMessage(errorMessage).queue();
 			return;

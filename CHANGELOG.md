@@ -1,5 +1,9 @@
 # VRSVP Changelog
 
+## 2023-05-27
+
+- Adding audit trail logging on deleted or limited RSVP interactions
+
 ## 2023-05-26
 
 - Ensuring that signups can not be changed after RSVP is disabled

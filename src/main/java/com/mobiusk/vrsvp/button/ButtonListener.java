@@ -5,6 +5,7 @@ import com.mobiusk.vrsvp.util.Formatter;
 import com.mobiusk.vrsvp.util.GateKeeper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
@@ -77,39 +78,42 @@ public class ButtonListener extends ListenerAdapter {
 
 	private void handleEditEventActiveButtonPress(@Nonnull ButtonInteractionEvent event) {
 
-		var rsvp = Fetcher.getEphemeralMessageSource(event.getMessage(), event.getMessageChannel());
-		if (rsvp == null) {
-			reply.ephemeral(event, Formatter.FORM_NOT_FOUND_REPLY);
-			return;
+		var rsvp = getMessageSource(event);
+		if (rsvp != null) {
+			reply.editToggleRsvpActive(event, rsvp);
 		}
-
-		reply.editToggleRsvpActive(event, rsvp);
 	}
 
 	private void handleEditEventDescriptionButtonPress(@Nonnull ButtonInteractionEvent event) {
 
-		var rsvp = Fetcher.getEphemeralMessageSource(event.getMessage(), event.getMessageChannel());
-		if (rsvp == null) {
-			reply.ephemeral(event, Formatter.FORM_NOT_FOUND_REPLY);
-			return;
+		var rsvp = getMessageSource(event);
+		if (rsvp != null) {
+			reply.editEventDescription(event, rsvp);
 		}
-
-		reply.editEventDescription(event, rsvp);
 	}
 
 	private void handleRsvpButtonPress(@Nonnull ButtonInteractionEvent event, Integer context) {
 		if (context != null) {
 
-			var rsvp = Fetcher.getEphemeralMessageSource(event.getMessage(), event.getMessageChannel());
-			if (rsvp == null) {
-				reply.ephemeral(event, Formatter.FORM_NOT_FOUND_REPLY);
-				return;
+			var rsvp = getMessageSource(event);
+			if (rsvp != null) {
+				reply.rsvpToggle(event, rsvp, context);
 			}
 
-			reply.rsvpToggle(event, rsvp, context);
 		} else {
 			reply.rsvpInterest(event);
 		}
+	}
+
+	private Message getMessageSource(@Nonnull ButtonInteractionEvent event) {
+
+		var rsvp = Fetcher.getEphemeralMessageSource(event.getMessage(), event.getMessageChannel());
+		if (rsvp == null) {
+			log.warn(Formatter.logMarkers(event), Formatter.FORM_NOT_FOUND_REPLY);
+			reply.ephemeral(event, Formatter.FORM_NOT_FOUND_REPLY);
+		}
+
+		return rsvp;
 	}
 
 }
