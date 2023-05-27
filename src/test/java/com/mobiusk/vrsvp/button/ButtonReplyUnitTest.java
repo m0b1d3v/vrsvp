@@ -30,6 +30,8 @@ class ButtonReplyUnitTest extends TestBase {
 		when(user.getName()).thenReturn("@Testing");
 		when(user.getAsMention()).thenReturn("@Testing");
 
+		when(button.isDisabled()).thenReturn(false);
+
 		when(buttonInteractionEvent.getUser()).thenReturn(user);
 		when(buttonInteractionEvent.getMessage()).thenReturn(message);
 		when(buttonInteractionEvent.reply(anyString())).thenReturn(replyCallbackAction);
@@ -40,9 +42,11 @@ class ButtonReplyUnitTest extends TestBase {
 		when(replyCallbackAction.setComponents(anyCollection())).thenReturn(replyCallbackAction);
 		when(replyCallbackAction.addActionRow(anyCollection())).thenReturn(replyCallbackAction);
 
+		when(message.getButtonById(ButtonEnum.RSVP.getId())).thenReturn(button);
 		when(message.editMessageEmbeds(any(MessageEmbed.class))).thenReturn(messageEditAction);
 		when(message.editMessageComponents(any(ActionRow.class))).thenReturn(messageEditAction);
 		when(message.getEmbeds()).thenReturn(List.of(messageEmbed));
+
 		when(messageEmbed.getDescription()).thenReturn("> #1");
 	}
 
@@ -60,7 +64,7 @@ class ButtonReplyUnitTest extends TestBase {
 	}
 
 	@Test
-	void editToggleRsvpActiveFailsIfButtonNotFoundWithoutEditingMessageComponents() {
+	void editToggleRsvpActiveFailsIfButtonNotFoundWhenEditingMessageComponents() {
 
 		when(message.getButtonById(ButtonEnum.RSVP.getId())).thenReturn(null);
 
@@ -109,6 +113,30 @@ class ButtonReplyUnitTest extends TestBase {
 		verify(replyCallbackAction).setEphemeral(true);
 		verify(replyCallbackAction).setComponents(anyCollection());
 		verify(replyCallbackAction).queue();
+	}
+
+	@Test
+	void rsvpToggleFailsIfRsvpButtonNotFoundOnSourceMessage() {
+
+		when(message.getButtonById(ButtonEnum.RSVP.getId())).thenReturn(null);
+
+		reply.rsvpToggle(buttonInteractionEvent, message, 0);
+
+		verify(buttonInteractionEvent).editMessage("RSVP has been disabled for this event.");
+		verify(messageEditCallbackAction).queue();
+		verify(message, never()).editMessageEmbeds(any(MessageEmbed.class));
+	}
+
+	@Test
+	void rsvpToggleFailsIfAdminHasTurnedOffRsvpForEvent() {
+
+		when(button.isDisabled()).thenReturn(true);
+
+		reply.rsvpToggle(buttonInteractionEvent, message, 0);
+
+		verify(buttonInteractionEvent).editMessage("RSVP has been disabled for this event.");
+		verify(messageEditCallbackAction).queue();
+		verify(message, never()).editMessageEmbeds(any(MessageEmbed.class));
 	}
 
 	@Test

@@ -2,6 +2,7 @@
 
 ## 2023-05-26
 
+- Ensuring that signups can not be changed after RSVP is disabled
 - Adding step between slash command input and messaging the channel so admins can make layout changes
 
 ## 2023-05-21 (v1.0)

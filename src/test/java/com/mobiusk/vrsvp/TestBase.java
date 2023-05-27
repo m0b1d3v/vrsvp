@@ -14,6 +14,7 @@ import net.dv8tion.jda.api.events.interaction.ModalInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.interactions.components.ActionRow;
+import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import net.dv8tion.jda.api.interactions.modals.Modal;
 import net.dv8tion.jda.api.interactions.modals.ModalMapping;
 import net.dv8tion.jda.api.requests.RestAction;
@@ -43,6 +44,7 @@ import static org.mockito.Mockito.when;
 public abstract class TestBase {
 
 	// All JDA mocks
+	@Mock protected Button button;
 	@Mock protected ButtonInteractionEvent buttonInteractionEvent;
 	@Mock protected Channel channel;
 	@Mock protected GenericInteractionCreateEvent genericInteractionCreateEvent;

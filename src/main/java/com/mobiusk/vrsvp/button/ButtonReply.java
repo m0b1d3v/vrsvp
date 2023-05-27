@@ -5,6 +5,7 @@ import com.mobiusk.vrsvp.modal.ModalEnum;
 import com.mobiusk.vrsvp.modal.ModalUi;
 import com.mobiusk.vrsvp.util.Parser;
 import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.interactions.components.ActionRow;
 
@@ -87,16 +88,16 @@ public class ButtonReply {
 		int slotIndex
 	) {
 
+		var rsvpButton = message.getButtonById(ButtonEnum.RSVP.getId());
+		if (rsvpButton == null || rsvpButton.isDisabled()) {
+			event.editMessage("RSVP has been disabled for this event.").queue();
+			return;
+		}
+
 		var userMention = event.getUser().getAsMention();
-
-		var originalDescription = Parser.readMessageDescription(message);
-
 		var editedEmbed = EmbedUi.editEmbedDescriptionFromRSVP(message, userMention, slotIndex);
-		var editedDescription = Objects.requireNonNullElse(editedEmbed.getDescription(), "");
 
-		if (editedDescription.length() > originalDescription.length()
-			&& (rsvpLimitPerPersonExceeded(message, userMention) || rsvpLimitPerSlotExceeded(message, slotIndex))
-		) {
+		if (rsvpLimitsExceeded(message, editedEmbed, userMention, slotIndex)) {
 			var errorMessage = String.format("Signup limit exceeded, cannot RSVP for slot #%d", slotIndex + 1);
 			event.editMessage(errorMessage).queue();
 			return;
@@ -113,6 +114,20 @@ public class ButtonReply {
 	 */
 	public void ephemeral(@Nonnull ButtonInteractionEvent event, String message) {
 		event.reply(message).setEphemeral(true).queue();
+	}
+
+	private boolean rsvpLimitsExceeded(
+		@Nonnull Message message,
+		MessageEmbed editedEmbed,
+		String userMention,
+		int slotIndex
+	) {
+
+		var originalDescription = Parser.readMessageDescription(message);
+		var editedDescription = Objects.requireNonNullElse(editedEmbed.getDescription(), "");
+
+		return editedDescription.length() > originalDescription.length()
+			&& (rsvpLimitPerPersonExceeded(message, userMention) || rsvpLimitPerSlotExceeded(message, slotIndex));
 	}
 
 	private boolean rsvpLimitPerPersonExceeded(@Nonnull Message message, String userMention) {
