@@ -10,7 +10,7 @@ public enum SlashCommandEnum {
 	DURATION(
 		"duration",
 		60L * 24 * 7, // One week in seconds
-		1L,
+		1,
 		"How long each slot will last in minutes",
 		true
 	),
@@ -18,7 +18,7 @@ public enum SlashCommandEnum {
 	RSVP_LIMIT_PER_SLOT(
 		"rsvp-limit-per-slot",
 		null,
-		0L,
+		0,
 		"Maximum number of people that can RSVP for a single slot",
 		false
 	),
@@ -26,7 +26,7 @@ public enum SlashCommandEnum {
 	RSVP_LIMIT_PER_PERSON(
 		"rsvp-limit-per-person",
 		null,
-		0L,
+		0,
 		"Maximum number of slots a person can RSVP for",
 		false
 	),
@@ -34,7 +34,7 @@ public enum SlashCommandEnum {
 	SLOTS(
 		"slots",
 		25L,
-		1L,
+		1,
 		"Number of time slots available for signing up",
 		true
 	),
@@ -42,14 +42,14 @@ public enum SlashCommandEnum {
 	START(
 		"start",
 		2_051_244_000L, // 2035-01-01
-		0L,
+		0,
 		"Timestamp from https://hammertime.cyou/ like '1684043839'",
 		true
 	);
 
 	private final String id;
 	private final Long maximum;
-	private final Long minimum;
+	private final long minimum;
 	private final String description;
 	private final boolean required;
 

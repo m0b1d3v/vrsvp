@@ -11,6 +11,7 @@ import org.mockito.InjectMocks;
 
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -76,7 +77,7 @@ class ButtonReplyUnitTest extends TestBase {
 	}
 
 	@Test
-	void editToggleRsvpActiveChangesStateOfFirstButton() {
+	void editToggleRsvpActiveChangesStateOfFirstButtonToDisabled() {
 
 		var button = Button.primary("test", "Testing");
 		var notToggled = Button.secondary("test2", "Testing 2");
@@ -95,6 +96,23 @@ class ButtonReplyUnitTest extends TestBase {
 		assertEquals(2, buttons.size());
 		assertNotEquals(button.isDisabled(), buttons.get(0).isDisabled());
 		assertEquals(notToggled.isDisabled(), buttons.get(1).isDisabled());
+	}
+
+	@Test
+	void editToggleRsvpActiveChangesStateOfFirstButtonToEnabled() {
+
+		var button = Button.primary("test", "Testing")
+			.withDisabled(true);
+
+		when(message.getButtonById(ButtonEnum.RSVP.getId())).thenReturn(button);
+		when(message.getButtons()).thenReturn(List.of(button));
+
+		reply.editToggleRsvpActive(buttonInteractionEvent, message);
+
+		verify(message).editMessageComponents(actionRowArgumentCaptor.capture());
+
+		var buttons = actionRowArgumentCaptor.getValue().getButtons();
+		assertNotEquals(button.isDisabled(), buttons.get(0).isDisabled());
 	}
 
 	@Test
@@ -166,6 +184,15 @@ class ButtonReplyUnitTest extends TestBase {
 	}
 
 	@Test
+	void rsvpToggleDoesNotThrowExceptionIfThereAreSlotLimitsSetButNoSlots() {
+
+		var rule = SlashCommandEnum.RSVP_LIMIT_PER_SLOT.getDescription() + ": 1";
+		when(messageEmbed.getDescription()).thenReturn(rule + "\n");
+
+		assertDoesNotThrow(() -> reply.rsvpToggle(buttonInteractionEvent, message, 0));
+	}
+
+	@Test
 	void rsvpToggleSucceedsIfRemovingUserMentionWhenRsvpLimitPerPersonExceeded() {
 
 		var rule = SlashCommandEnum.RSVP_LIMIT_PER_PERSON.getDescription() + ": 0";
@@ -194,7 +221,37 @@ class ButtonReplyUnitTest extends TestBase {
 	}
 
 	@Test
-	void rsvpToggle() {
+	void rsvpToggleWithoutLimits() {
+
+		reply.rsvpToggle(buttonInteractionEvent, message, 0);
+
+		verify(buttonInteractionEvent).editMessage("RSVP state toggled for slot #1");
+		verify(messageEditCallbackAction).queue();
+		verify(message).editMessageEmbeds(any(MessageEmbed.class));
+		verify(messageEditAction).queue();
+	}
+
+	@Test
+	void rsvpToggleStayingMeetingLimits() {
+
+		var limitPerson = SlashCommandEnum.RSVP_LIMIT_PER_PERSON.getDescription() + ": 1";
+		var limitSlot = SlashCommandEnum.RSVP_LIMIT_PER_SLOT.getDescription() + ": 1";
+		when(messageEmbed.getDescription()).thenReturn(limitPerson + "\n" + limitSlot + "\n> #1");
+
+		reply.rsvpToggle(buttonInteractionEvent, message, 0);
+
+		verify(buttonInteractionEvent).editMessage("RSVP state toggled for slot #1");
+		verify(messageEditCallbackAction).queue();
+		verify(message).editMessageEmbeds(any(MessageEmbed.class));
+		verify(messageEditAction).queue();
+	}
+
+	@Test
+	void rsvpToggleStayingUnderLimits() {
+
+		var limitPerson = SlashCommandEnum.RSVP_LIMIT_PER_PERSON.getDescription() + ": 2";
+		var limitSlot = SlashCommandEnum.RSVP_LIMIT_PER_SLOT.getDescription() + ": 2";
+		when(messageEmbed.getDescription()).thenReturn(limitPerson + "\n" + limitSlot + "\n> #1");
 
 		reply.rsvpToggle(buttonInteractionEvent, message, 0);
 

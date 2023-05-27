@@ -35,16 +35,12 @@ public class SlashCommandUi {
 		SlashCommandEnum input
 	) {
 
-		var optionData = new OptionData(OptionType.INTEGER, input.getId(), input.getDescription());
-
-		optionData.setRequired(input.isRequired());
+		var optionData = new OptionData(OptionType.INTEGER, input.getId(), input.getDescription())
+			.setRequired(input.isRequired())
+			.setMinValue(input.getMinimum());
 
 		if (input.getMaximum() != null) {
 			optionData.setMaxValue(input.getMaximum());
-		}
-
-		if (input.getMinimum() != null) {
-			optionData.setMinValue(input.getMinimum());
 		}
 
 		data.addOptions(optionData);

@@ -165,18 +165,20 @@ public class ButtonReply {
 		var description = Parser.readMessageDescription(message);
 		var descriptionLines = new LinkedList<>(description.lines().toList());
 
+		var count = 0L;
 		for (String line : descriptionLines) {
 			if (Parser.isSlot(line)) {
 
 				if (slotIndex == slotIndexDestination) {
-					return Parser.splitSlotText(line).stream().filter(data -> data.contains("@")).count();
+					count = Parser.splitSlotText(line).stream().filter(data -> data.contains("@")).count();
+					break;
 				}
 
 				slotIndex++;
 			}
 		}
 
-		return 0;
+		return count;
 	}
 
 }
