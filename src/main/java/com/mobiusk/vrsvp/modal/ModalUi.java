@@ -28,7 +28,7 @@ public class ModalUi {
 	}
 
 	private static Modal buildModal(String id, ItemComponent input) {
-		return Modal.create(id, "VRSVP Edit")
+		return Modal.create(id, "VRSVP")
 			.addActionRow(input)
 			.build();
 	}
