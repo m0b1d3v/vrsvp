@@ -1,7 +1,8 @@
 # VRSVP Changelog
 
-## 2023-05-27
+## 2023-05-27 (v1.1)
 
+- Updating dependencies
 - Adding exception monitoring startup message for my peace of mind
 - Adding permission denied exception messages when bot not given necessary roles/view
 - Adding audit trail logging on deleted or limited RSVP interactions
