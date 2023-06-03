@@ -7,14 +7,18 @@ import com.mobiusk.vrsvp.command.SlashCommandListener;
 import com.mobiusk.vrsvp.button.ButtonReply;
 import com.mobiusk.vrsvp.modal.ModalListener;
 import com.mobiusk.vrsvp.modal.ModalReply;
+import com.mobiusk.vrsvp.util.Formatter;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
+import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 
 import java.util.EnumSet;
 
 @RequiredArgsConstructor
+@Slf4j
 public class Bot {
 
 	private final JDABuilder jdaBuilder;
@@ -39,6 +43,7 @@ public class Bot {
 
 		waitForDiscordConnection();
 		addEventListeners();
+		logKnownGuilds();
 		updateBotSlashCommands();
 	}
 
@@ -62,6 +67,16 @@ public class Bot {
 		jda.addEventListener(new ButtonListener(buttonReply));
 		jda.addEventListener(new SlashCommandListener(slashCommandReply));
 		jda.addEventListener(new ModalListener(modalReply));
+	}
+
+	private void logKnownGuilds() {
+
+		var guildNames = jda.getGuilds()
+			.stream()
+			.map(Guild::getName)
+			.toList();
+
+		log.info(Formatter.logMarker("guilds", guildNames), "Known guilds");
 	}
 
 	private void updateBotSlashCommands() {

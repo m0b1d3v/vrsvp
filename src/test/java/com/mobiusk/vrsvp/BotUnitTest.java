@@ -13,6 +13,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
 
+import java.util.Collections;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -37,6 +39,7 @@ class BotUnitTest extends TestBase {
 		doReturn(jda).when(jdaBuilder).build();
 
 		when(jda.updateCommands()).thenReturn(commandListUpdateAction);
+		when(jda.getGuilds()).thenReturn(Collections.emptyList());
 
 		when(commandListUpdateAction.addCommands(any(CommandData.class))).thenReturn(commandListUpdateAction);
 	}
@@ -69,6 +72,14 @@ class BotUnitTest extends TestBase {
 		verify(jda).addEventListener(any(ButtonListener.class));
 		verify(jda).addEventListener(any(SlashCommandListener.class));
 		verify(jda).addEventListener(any(ModalListener.class));
+	}
+
+	@Test
+	void knownGuildsAreLogged() {
+
+		startDiscordBot();
+
+		verify(jda).getGuilds();
 	}
 
 	@Test
