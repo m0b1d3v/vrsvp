@@ -11,7 +11,7 @@ indent_style = tab # How to handle indentations when the "tab" key is used: spac
 insert_final_newline = true # Whether newlines should end a file: true, false
 trim_trailing_whitespace = true # Whether whitespace should be trimmed: true, false
 
-[*{.yml,.yaml}] # Settings for YAML files
+[*.{md,yml,yaml}] # Settings for YAML files
 
 indent_size = 2
 indent_style = space
