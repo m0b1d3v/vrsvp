@@ -26,7 +26,7 @@ class ButtonUiUnitTest extends TestBase {
 
 		var aboutLink = buttons.get(2);
 		assertEquals(ButtonStyle.LINK, aboutLink.getStyle());
-		assertEquals("https://mobiusk.com/code/vrsvp", aboutLink.getUrl());
+		assertEquals("https://mobiusk.com/projects/vrsvp", aboutLink.getUrl());
 		assertEquals("About", aboutLink.getLabel());
 	}
 

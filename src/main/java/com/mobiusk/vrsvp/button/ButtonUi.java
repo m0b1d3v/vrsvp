@@ -19,7 +19,7 @@ public class ButtonUi {
 		return List.of(
 			Button.primary(ButtonEnum.RSVP.getId(), ButtonEnum.RSVP.getLabel()),
 			Button.secondary(ButtonEnum.EDIT.getId(), ButtonEnum.EDIT.getLabel()),
-			Button.link("https://mobiusk.com/code/vrsvp", "About")
+			Button.link("https://mobiusk.com/projects/vrsvp", "About")
 		);
 	}
 
