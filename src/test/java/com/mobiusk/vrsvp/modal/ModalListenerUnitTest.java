@@ -85,7 +85,7 @@ class ModalListenerUnitTest extends TestBase {
 		listener.onModalInteraction(modalInteractionEvent);
 
 		verify(reply).ephemeral(modalInteractionEvent, Formatter.FORM_NOT_FOUND_REPLY);
-		verify(reply, never()).createEmbedFormFromAdmin(modalInteractionEvent, "Testing");
+		verify(reply, never()).createRsvpFromAdmin(modalInteractionEvent, "Testing");
 		verify(reply, never()).editEmbedDescriptionFromAdmin(modalInteractionEvent, message, "Testing");
 	}
 
@@ -102,7 +102,7 @@ class ModalListenerUnitTest extends TestBase {
 
 		listener.onModalInteraction(modalInteractionEvent);
 
-		verify(reply).createEmbedFormFromAdmin(modalInteractionEvent, "Testing");
+		verify(reply).createRsvpFromAdmin(modalInteractionEvent, "Testing");
 		verify(reply, never()).editEmbedDescriptionFromAdmin(modalInteractionEvent, message, "Testing");
 	}
 
@@ -119,7 +119,7 @@ class ModalListenerUnitTest extends TestBase {
 
 		listener.onModalInteraction(modalInteractionEvent);
 
-		verify(reply, never()).createEmbedFormFromAdmin(modalInteractionEvent, "Testing");
+		verify(reply, never()).createRsvpFromAdmin(modalInteractionEvent, "Testing");
 		verify(reply).editEmbedDescriptionFromAdmin(modalInteractionEvent, message, "Testing");
 	}
 

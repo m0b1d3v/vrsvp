@@ -13,15 +13,6 @@ import java.util.LinkedList;
 public class EmbedUi {
 
 	/**
-	 * Create a new embed with a description from admin input.
-	 */
-	public static MessageEmbed createEmbedDescriptionFromAdmin(String description) {
-		return new EmbedBuilder()
-			.setDescription(description)
-			.build();
-	}
-
-	/**
 	 * Copy an existing message embed and replace the description for admin edits.
 	 */
 	public static MessageEmbed editEmbedDescriptionFromAdmin(@Nonnull Message message, String description) {

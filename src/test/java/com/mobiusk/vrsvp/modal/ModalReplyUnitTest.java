@@ -36,10 +36,9 @@ class ModalReplyUnitTest extends TestBase {
 	@Test
 	void createEmbedFormFromAdminAddsNecessaryComponents() {
 
-		reply.createEmbedFormFromAdmin(modalInteractionEvent, "Testing");
+		reply.createRsvpFromAdmin(modalInteractionEvent, "Testing");
 
-		verify(modalInteractionEvent).reply("");
-		verify(replyCallbackAction).addEmbeds(any(MessageEmbed.class));
+		verify(modalInteractionEvent).reply("Testing");
 		verify(replyCallbackAction).addActionRow(anyCollection());
 		verify(replyCallbackAction).queue();
 	}

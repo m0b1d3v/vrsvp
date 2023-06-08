@@ -12,9 +12,8 @@ public class ModalReply {
 	/**
 	 * Build an RSVP form everyone can see with a given number of time slot, each with an index and incremented timestamp title.
 	 */
-	public void createEmbedFormFromAdmin(@Nonnull ModalInteractionEvent event, String description) {
-		event.reply("")
-			.addEmbeds(EmbedUi.createEmbedDescriptionFromAdmin(description))
+	public void createRsvpFromAdmin(@Nonnull ModalInteractionEvent event, String description) {
+		event.reply(description)
 			.addActionRow(ButtonUi.buildRsvpActionPrompts())
 			.queue();
 	}
