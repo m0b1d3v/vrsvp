@@ -72,8 +72,8 @@ public class ButtonReply {
 	 */
 	public void rsvpInterest(@Nonnull ButtonInteractionEvent event) {
 
-		var embedDescription = Parser.readMessageDescription(event.getMessage());
-		var slots = Parser.countSlotsInText(embedDescription);
+		var description = Parser.readMessageDescription(event.getMessage());
+		var slots = Parser.countSlotsInText(description);
 		var buttonRows = ButtonUi.buildIndexedButtonActionRows(ButtonEnum.RSVP.getId(), slots);
 
 		event.reply("Use these buttons to toggle your RSVP for any slot.")

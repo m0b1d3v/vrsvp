@@ -4,6 +4,7 @@ import com.mobiusk.vrsvp.TestBase;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -16,12 +17,25 @@ class ParserUnitTest extends TestBase {
 
 	@BeforeEach
 	public void beforeEach() {
+		when(message.getContentRaw()).thenReturn("non-embed content");
 		when(message.getEmbeds()).thenReturn(List.of(messageEmbed));
 	}
 
 	@Test
 	void utilityClass() throws NoSuchMethodException {
 		assertUtilityClass(Parser.class);
+	}
+
+	@Test
+	void readsContentRawIfMessageEmbedsNotFound() {
+		when(message.getEmbeds()).thenReturn(null);
+		assertEquals("non-embed content", Parser.readMessageDescription(message));
+	}
+
+	@Test
+	void readsContentRawIfMessageEmbedsEmpty() {
+		when(message.getEmbeds()).thenReturn(Collections.emptyList());
+		assertEquals("non-embed content", Parser.readMessageDescription(message));
 	}
 
 	@Test
