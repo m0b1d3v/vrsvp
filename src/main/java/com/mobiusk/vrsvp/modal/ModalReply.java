@@ -1,11 +1,11 @@
 package com.mobiusk.vrsvp.modal;
 
 import com.mobiusk.vrsvp.button.ButtonUi;
-import com.mobiusk.vrsvp.embed.EmbedUi;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.interaction.ModalInteractionEvent;
 
 import javax.annotation.Nonnull;
+import java.util.Collections;
 
 public class ModalReply {
 
@@ -21,14 +21,15 @@ public class ModalReply {
 	/**
 	 * Edit a message by changing the description and then edit the original ephemeral message to confirm the action.
 	 */
-	public void editEmbedDescriptionFromAdmin(
+	public void editRsvpFromAdmin(
 		@Nonnull ModalInteractionEvent event,
 		@Nonnull Message message,
 		String description
 	) {
 
-		var embed = EmbedUi.editEmbedDescriptionFromAdmin(message, description);
-		message.editMessageEmbeds(embed).queue();
+		message.editMessageEmbeds(Collections.emptyList())
+			.setContent(description)
+			.queue();
 
 		event.editMessage("Description has been updated.").queue();
 	}

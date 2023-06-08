@@ -6,6 +6,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 
+import java.util.Collections;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -23,7 +24,9 @@ class ModalReplyUnitTest extends TestBase {
 	public void beforeEach() {
 
 		when(message.getEmbeds()).thenReturn(List.of(messageEmbed));
-		when(message.editMessageEmbeds(any(MessageEmbed[].class))).thenReturn(messageEditAction);
+		when(message.editMessageEmbeds(Collections.emptyList())).thenReturn(messageEditAction);
+
+		when(messageEditAction.setContent(any())).thenReturn(messageEditAction);
 
 		when(modalInteractionEvent.reply(anyString())).thenReturn(replyCallbackAction);
 		when(modalInteractionEvent.editMessage(anyString())).thenReturn(messageEditCallbackAction);
@@ -44,18 +47,19 @@ class ModalReplyUnitTest extends TestBase {
 	}
 
 	@Test
-	void editEventDescriptionFromAdminEditsMessageEmbeds() {
+	void editEventDescriptionFromAdminEditsMessageContent() {
 
-		reply.editEmbedDescriptionFromAdmin(modalInteractionEvent, message, "Testing");
+		reply.editRsvpFromAdmin(modalInteractionEvent, message, "Testing");
 
-		verify(message).editMessageEmbeds(any(MessageEmbed.class));
+		verify(message).editMessageEmbeds(Collections.emptyList());
+		verify(messageEditAction).setContent("Testing");
 		verify(messageEditAction).queue();
 	}
 
 	@Test
 	void editEventDescriptionFromAdminEditsOriginalMessage() {
 
-		reply.editEmbedDescriptionFromAdmin(modalInteractionEvent, message, "Testing");
+		reply.editRsvpFromAdmin(modalInteractionEvent, message, "Testing");
 
 		verify(modalInteractionEvent).editMessage("Description has been updated.");
 		verify(messageEditCallbackAction).queue();

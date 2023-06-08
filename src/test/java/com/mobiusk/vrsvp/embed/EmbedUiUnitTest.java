@@ -18,18 +18,6 @@ class EmbedUiUnitTest extends TestBase {
 	}
 
 	@Test
-	void editEmbedDescriptionFromAdmin() {
-
-		var embed = new EmbedBuilder().setTitle("Original Title").setDescription("Original Description").build();
-		when(message.getEmbeds()).thenReturn(List.of(embed));
-
-		var result = EmbedUi.editEmbedDescriptionFromAdmin(message, "Testing");
-
-		assertEquals(embed.getTitle(), result.getTitle());
-		assertEquals("Testing", result.getDescription());
-	}
-
-	@Test
 	void editEmbedDescriptionFromRsvpAddsUserMention() {
 		var result = toggleRsvp("> #1, <t:5:t>");
 		assertEquals("> #1, <t:5:t>, @Testing", result);

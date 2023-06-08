@@ -58,7 +58,7 @@ public class ModalListener extends ListenerAdapter {
 				return;
 			}
 
-			reply.editEmbedDescriptionFromAdmin(event, messageSource, textInput);
+			reply.editRsvpFromAdmin(event, messageSource, textInput);
 		}
 	}
 

@@ -13,18 +13,6 @@ import java.util.LinkedList;
 public class EmbedUi {
 
 	/**
-	 * Copy an existing message embed and replace the description for admin edits.
-	 */
-	public static MessageEmbed editEmbedDescriptionFromAdmin(@Nonnull Message message, String description) {
-
-		var embed = message.getEmbeds().get(0);
-
-		return new EmbedBuilder(embed)
-			.setDescription(description)
-			.build();
-	}
-
-	/**
 	 * Toggle (add or remove) a user's mention to the specified slot for the given message.
 	 */
 	public static MessageEmbed editEmbedDescriptionFromRSVP(
