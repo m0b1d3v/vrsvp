@@ -1,19 +1,17 @@
 package com.mobiusk.vrsvp.button;
 
-import com.mobiusk.vrsvp.embed.EmbedUi;
 import com.mobiusk.vrsvp.modal.ModalEnum;
 import com.mobiusk.vrsvp.modal.ModalUi;
 import com.mobiusk.vrsvp.util.Formatter;
 import com.mobiusk.vrsvp.util.Parser;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.interactions.components.ActionRow;
 
 import javax.annotation.Nonnull;
+import java.util.Collections;
 import java.util.LinkedList;
-import java.util.Objects;
 
 @Slf4j
 public class ButtonReply {
@@ -72,8 +70,8 @@ public class ButtonReply {
 	 */
 	public void rsvpInterest(@Nonnull ButtonInteractionEvent event) {
 
-		var embedDescription = Parser.readMessageDescription(event.getMessage());
-		var slots = Parser.countSlotsInText(embedDescription);
+		var description = Parser.readMessageDescription(event.getMessage());
+		var slots = Parser.countSlotsInText(description);
 		var buttonRows = ButtonUi.buildIndexedButtonActionRows(ButtonEnum.RSVP.getId(), slots);
 
 		event.reply("Use these buttons to toggle your RSVP for any slot.")
@@ -99,16 +97,18 @@ public class ButtonReply {
 		}
 
 		var userMention = event.getUser().getAsMention();
-		var editedEmbed = EmbedUi.editEmbedDescriptionFromRSVP(message, userMention, slotIndex);
+		var editedDescription = ButtonUi.editRsvpFromSignupButtonPress(message, userMention, slotIndex);
 
-		if (rsvpLimitsExceeded(message, editedEmbed, userMention, slotIndex)) {
+		if (rsvpLimitsExceeded(message, editedDescription, userMention, slotIndex)) {
 			log.info(Formatter.logMarkers(event), "RSVP declined for signup limit");
 			var errorMessage = String.format("Signup limit exceeded, cannot RSVP for slot #%d", slotIndex + 1);
 			event.editMessage(errorMessage).queue();
 			return;
 		}
 
-		message.editMessageEmbeds(editedEmbed).queue();
+		message.editMessageEmbeds(Collections.emptyList())
+			.setContent(editedDescription)
+			.queue();
 
 		var reply = String.format("RSVP state toggled for slot #%d", slotIndex + 1);
 		event.editMessage(reply).queue();
@@ -123,13 +123,12 @@ public class ButtonReply {
 
 	private boolean rsvpLimitsExceeded(
 		@Nonnull Message message,
-		MessageEmbed editedEmbed,
+		String editedDescription,
 		String userMention,
 		int slotIndex
 	) {
 
 		var originalDescription = Parser.readMessageDescription(message);
-		var editedDescription = Objects.requireNonNullElse(editedEmbed.getDescription(), "");
 
 		return editedDescription.length() > originalDescription.length()
 			&& (rsvpLimitPerPersonExceeded(message, userMention) || rsvpLimitPerSlotExceeded(message, slotIndex));

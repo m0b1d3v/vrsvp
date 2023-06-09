@@ -3,6 +3,7 @@ package com.mobiusk.vrsvp.util;
 import com.mobiusk.vrsvp.command.SlashCommandEnum;
 import lombok.experimental.UtilityClass;
 import net.dv8tion.jda.api.entities.Message;
+import org.apache.commons.collections4.CollectionUtils;
 
 import javax.annotation.Nonnull;
 import java.util.Arrays;
@@ -23,11 +24,20 @@ public class Parser {
 	private static final Pattern RSVP_LIMIT_PER_SLOT_PATTERN = buildRegexPatternForLimit(SlashCommandEnum.RSVP_LIMIT_PER_SLOT);
 
 	/**
-	 * Read the message description from the first embed, defaulting to an empty string if not found.
+	 * Read the message description from the first embed if it exists or the content if embeds don't exist.
+	 *
+	 * Message embeds have been deprecated and will be removed soon.
+	 * Defaults to an empty string if not found.
 	 */
 	public static String readMessageDescription(@Nonnull Message message) {
-		var embed = message.getEmbeds().get(0);
-		return Objects.requireNonNullElse(embed.getDescription(), "");
+
+		var result = message.getContentRaw();
+		if (CollectionUtils.isNotEmpty(message.getEmbeds())) {
+			var deprecatedEmbed = message.getEmbeds().get(0);
+			result = Objects.requireNonNullElse(deprecatedEmbed.getDescription(), "");
+		}
+
+		return result;
 	}
 
 	/**

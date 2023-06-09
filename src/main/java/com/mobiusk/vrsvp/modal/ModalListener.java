@@ -48,7 +48,7 @@ public class ModalListener extends ListenerAdapter {
 		}
 
 		if (modalEnum == ModalEnum.EVENT_CREATION) {
-			reply.createEmbedFormFromAdmin(event, textInput);
+			reply.createRsvpFromAdmin(event, textInput);
 		} else {
 
 			var messageSource = Fetcher.getEphemeralMessageSource(event.getMessage(), event.getMessageChannel());
@@ -58,7 +58,7 @@ public class ModalListener extends ListenerAdapter {
 				return;
 			}
 
-			reply.editEmbedDescriptionFromAdmin(event, messageSource, textInput);
+			reply.editRsvpFromAdmin(event, messageSource, textInput);
 		}
 	}
 

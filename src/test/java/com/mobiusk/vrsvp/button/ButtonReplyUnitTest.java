@@ -9,6 +9,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
@@ -44,9 +45,11 @@ class ButtonReplyUnitTest extends TestBase {
 		when(replyCallbackAction.addActionRow(anyCollection())).thenReturn(replyCallbackAction);
 
 		when(message.getButtonById(ButtonEnum.RSVP.getId())).thenReturn(button);
-		when(message.editMessageEmbeds(any(MessageEmbed.class))).thenReturn(messageEditAction);
+		when(message.editMessageEmbeds(Collections.emptyList())).thenReturn(messageEditAction);
 		when(message.editMessageComponents(any(ActionRow.class))).thenReturn(messageEditAction);
 		when(message.getEmbeds()).thenReturn(List.of(messageEmbed));
+
+		when(messageEditAction.setContent(any())).thenReturn(messageEditAction);
 
 		when(messageEmbed.getDescription()).thenReturn("> #1");
 	}
@@ -202,7 +205,8 @@ class ButtonReplyUnitTest extends TestBase {
 
 		verify(buttonInteractionEvent).editMessage("RSVP state toggled for slot #1");
 		verify(messageEditCallbackAction).queue();
-		verify(message).editMessageEmbeds(any(MessageEmbed.class));
+		verify(message).editMessageEmbeds(Collections.emptyList());
+		verify(messageEditAction).setContent(any());
 		verify(messageEditAction).queue();
 	}
 
@@ -216,7 +220,8 @@ class ButtonReplyUnitTest extends TestBase {
 
 		verify(buttonInteractionEvent).editMessage("RSVP state toggled for slot #2");
 		verify(messageEditCallbackAction).queue();
-		verify(message).editMessageEmbeds(any(MessageEmbed.class));
+		verify(message).editMessageEmbeds(Collections.emptyList());
+		verify(messageEditAction).setContent(any());
 		verify(messageEditAction).queue();
 	}
 
@@ -227,7 +232,8 @@ class ButtonReplyUnitTest extends TestBase {
 
 		verify(buttonInteractionEvent).editMessage("RSVP state toggled for slot #1");
 		verify(messageEditCallbackAction).queue();
-		verify(message).editMessageEmbeds(any(MessageEmbed.class));
+		verify(message).editMessageEmbeds(Collections.emptyList());
+		verify(messageEditAction).setContent(any());
 		verify(messageEditAction).queue();
 	}
 
@@ -242,7 +248,8 @@ class ButtonReplyUnitTest extends TestBase {
 
 		verify(buttonInteractionEvent).editMessage("RSVP state toggled for slot #1");
 		verify(messageEditCallbackAction).queue();
-		verify(message).editMessageEmbeds(any(MessageEmbed.class));
+		verify(message).editMessageEmbeds(Collections.emptyList());
+		verify(messageEditAction).setContent(any());
 		verify(messageEditAction).queue();
 	}
 
@@ -257,7 +264,8 @@ class ButtonReplyUnitTest extends TestBase {
 
 		verify(buttonInteractionEvent).editMessage("RSVP state toggled for slot #1");
 		verify(messageEditCallbackAction).queue();
-		verify(message).editMessageEmbeds(any(MessageEmbed.class));
+		verify(message).editMessageEmbeds(Collections.emptyList());
+		verify(messageEditAction).setContent(any());
 		verify(messageEditAction).queue();
 	}
 
