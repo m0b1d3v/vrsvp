@@ -76,7 +76,9 @@ public class Bot {
 			.map(Guild::getName)
 			.toList();
 
-		log.info(Formatter.logMarker("guilds", guildNames), "Known guilds");
+		log.atInfo().setMessage("Known guilds")
+			.addMarker(Formatter.logMarker("guilds", guildNames))
+			.log();
 	}
 
 	private void updateBotSlashCommands() {

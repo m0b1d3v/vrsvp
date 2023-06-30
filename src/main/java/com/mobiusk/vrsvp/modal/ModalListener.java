@@ -23,10 +23,10 @@ public class ModalListener extends ListenerAdapter {
 	@Override
 	public void onModalInteraction(@Nonnull ModalInteractionEvent event) {
 
-		log.info(
-			Formatter.logMarkers(event).and(Formatter.logMarker("modalId", event.getModalId())),
-			"Modal submission received"
-		);
+		log.atInfo().setMessage("Modal submission received")
+			.addMarker(Formatter.logMarkers(event))
+			.addMarker(Formatter.logMarker("modalId", event.getModalId()))
+			.log();
 
 		var actionId = event.getModalId();
 		var modalEnum = ModalEnum.getById(actionId);
