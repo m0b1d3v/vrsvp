@@ -1,11 +1,13 @@
 package com.mobiusk.vrsvp;
 
 import com.mobiusk.vrsvp.command.SlashCommandInputs;
+import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.MessageReference;
+import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.entities.channel.Channel;
 import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
@@ -13,6 +15,8 @@ import net.dv8tion.jda.api.events.interaction.GenericInteractionCreateEvent;
 import net.dv8tion.jda.api.events.interaction.ModalInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
+import net.dv8tion.jda.api.interactions.commands.Command;
+import net.dv8tion.jda.api.interactions.commands.privileges.IntegrationPrivilege;
 import net.dv8tion.jda.api.interactions.components.ActionRow;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import net.dv8tion.jda.api.interactions.modals.Modal;
@@ -31,6 +35,7 @@ import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.List;
 import java.util.function.Function;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -47,8 +52,11 @@ public abstract class TestBase {
 	@Mock protected Button button;
 	@Mock protected ButtonInteractionEvent buttonInteractionEvent;
 	@Mock protected Channel channel;
+	@Mock protected Command command;
 	@Mock protected GenericInteractionCreateEvent genericInteractionCreateEvent;
 	@Mock protected Guild guild;
+	@Mock protected IntegrationPrivilege integrationPrivilege;
+	@Mock protected JDA jda;
 	@Mock protected Member member;
 	@Mock protected Message message;
 	@Mock protected MessageChannel messageChannel;
@@ -60,7 +68,10 @@ public abstract class TestBase {
 	@Mock protected ModalInteractionEvent modalInteractionEvent;
 	@Mock protected ModalMapping modalMapping;
 	@Mock protected ReplyCallbackAction replyCallbackAction;
+	@Mock protected RestAction<List<Command>> restActionListCommands;
+	@Mock protected RestAction<List<IntegrationPrivilege>> restActionListIntegrationPrivileges;
 	@Mock protected RestAction<Message> restActionMessage;
+	@Mock protected Role role;
 	@Mock protected SlashCommandInteractionEvent slashCommandInteractionEvent;
 	@Mock protected User user;
 
