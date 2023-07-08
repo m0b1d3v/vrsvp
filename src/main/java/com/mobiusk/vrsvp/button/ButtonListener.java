@@ -26,20 +26,20 @@ public class ButtonListener extends ListenerAdapter {
 	@Override
 	public void onButtonInteraction(@Nonnull ButtonInteractionEvent event) {
 
-		log.info(
-			Formatter.logMarkers(event).and(Formatter.logMarker("button", event.getComponentId())),
-			"RSVP button received"
-		);
+		log.atInfo().setMessage("RSVP button received")
+			.addMarker(Formatter.logMarkers(event))
+			.addMarker(Formatter.logMarker("button", event.getComponentId()))
+			.log();
 
 		var buttonIdAction = getButtonInteractionAction(event);
 		var buttonIdContext = getButtonInteractionContext(event);
 
 		if (buttonIdAction.contains(ButtonEnum.EDIT.getId()) && GateKeeper.accessDenied(event)) {
 
-			log.warn(
-				Formatter.logMarkers(event).and(Formatter.logMarker("button", buttonIdAction)),
-				"RSVP edit denied"
-			);
+			log.atWarn().setMessage("RSVP edit denied")
+				.addMarker(Formatter.logMarkers(event))
+				.addMarker(Formatter.logMarker("button", buttonIdAction))
+				.log();
 
 			reply.ephemeral(event, "Access denied.");
 			return;

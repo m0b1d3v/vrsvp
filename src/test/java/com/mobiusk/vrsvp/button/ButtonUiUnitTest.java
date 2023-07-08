@@ -2,6 +2,7 @@ package com.mobiusk.vrsvp.button;
 
 import com.mobiusk.vrsvp.TestBase;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import net.dv8tion.jda.api.interactions.components.buttons.ButtonStyle;
 import org.junit.jupiter.api.Test;
@@ -25,13 +26,9 @@ class ButtonUiUnitTest extends TestBase {
 		var buttons = ButtonUi.buildRsvpActionPrompts();
 
 		assertEquals(3, buttons.size());
-		assertButtonInformation(buttons.get(0), ButtonStyle.PRIMARY, ButtonEnum.RSVP);
-		assertButtonInformation(buttons.get(1), ButtonStyle.SECONDARY, ButtonEnum.EDIT);
-
-		var aboutLink = buttons.get(2);
-		assertEquals(ButtonStyle.LINK, aboutLink.getStyle());
-		assertEquals("https://mobiusk.com/projects/vrsvp", aboutLink.getUrl());
-		assertEquals("About", aboutLink.getLabel());
+		assertButtonInformation(buttons.get(0), ButtonStyle.PRIMARY, ButtonEnum.RSVP, ButtonUi.EMOJI_RSVP);
+		assertButtonInformation(buttons.get(1), ButtonStyle.SECONDARY, ButtonEnum.EDIT, ButtonUi.EMOJI_EDIT);
+		assertButtonInformation(buttons.get(2), ButtonStyle.LINK, ButtonEnum.ABOUT, null);
 	}
 
 	@Test
@@ -40,8 +37,9 @@ class ButtonUiUnitTest extends TestBase {
 		var buttons = ButtonUi.buildEditActionPrompts();
 
 		assertEquals(2, buttons.size());
-		assertButtonInformation(buttons.get(0), ButtonStyle.PRIMARY, ButtonEnum.EDIT_EVENT_DESCRIPTION);
-		assertButtonInformation(buttons.get(1), ButtonStyle.DANGER, ButtonEnum.EDIT_EVENT_ACTIVE);
+
+		assertButtonInformation(buttons.get(0), ButtonStyle.PRIMARY, ButtonEnum.EDIT_EVENT_DESCRIPTION, null);
+		assertButtonInformation(buttons.get(1), ButtonStyle.DANGER, ButtonEnum.EDIT_EVENT_ACTIVE, null);
 	}
 
 	@Test
@@ -61,8 +59,8 @@ class ButtonUiUnitTest extends TestBase {
 		var buttonRows = ButtonUi.buildIndexedButtonActionRows(ButtonEnum.RSVP.getId(), 2);
 		var buttons = buttonRows.get(0).getButtons();
 
-		assertButtonInformation(buttons.get(0), ButtonStyle.PRIMARY, "rsvp:0", "#1");
-		assertButtonInformation(buttons.get(1), ButtonStyle.PRIMARY, "rsvp:1", "#2");
+		assertButtonInformation(buttons.get(0), ButtonStyle.PRIMARY, "rsvp:0", "#1", null);
+		assertButtonInformation(buttons.get(1), ButtonStyle.PRIMARY, "rsvp:1", "#2", null);
 	}
 
 	@Test
@@ -104,20 +102,31 @@ class ButtonUiUnitTest extends TestBase {
 
 	// Test utility method(s)
 
-	private void assertButtonInformation(Button button, ButtonStyle buttonStyle, ButtonEnum buttonEnum) {
-		assertButtonInformation(button, buttonStyle, buttonEnum.getId(), button.getLabel());
+	private void assertButtonInformation(Button button, ButtonStyle buttonStyle, ButtonEnum buttonEnum, Emoji emoji) {
+		assertButtonInformation(button, buttonStyle, buttonEnum.getId(), buttonEnum.getLabel(), emoji);
 	}
 
-	private void assertButtonInformation(Button button, ButtonStyle buttonStyle, String id, String label) {
+	private void assertButtonInformation(
+		Button button,
+		ButtonStyle buttonStyle,
+		String id,
+		String label,
+		Emoji emoji
+	) {
 
 		assertEquals(buttonStyle, button.getStyle());
-		assertEquals(id, button.getId());
 		assertEquals(label, button.getLabel());
+		assertEquals(emoji, button.getEmoji());
+
+		if (ButtonStyle.LINK.equals(buttonStyle)) {
+			assertNull(button.getId());
+			assertEquals(id, button.getUrl());
+		} else {
+			assertEquals(id, button.getId());
+			assertNull(button.getUrl());
+		}
 
 		assertEquals(5, button.getMaxPerRow());
-
-		assertNull(button.getUrl());
-		assertNull(button.getEmoji());
 	}
 
 	private String toggleRsvp(String slotValue) {

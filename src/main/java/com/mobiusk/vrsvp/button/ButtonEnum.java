@@ -7,7 +7,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum ButtonEnum {
 
-	EDIT("edit", "Edit"),
+	ABOUT("https://mobiusk.com/projects/vrsvp", "About"),
+	EDIT("edit", "Edit Event"),
 	EDIT_EVENT_ACTIVE("edit-toggle-rsvp-active", "Toggle RSVP Active"),
 	EDIT_EVENT_DESCRIPTION("edit-event-description", "Edit Description"),
 	RSVP("rsvp", "RSVP"),

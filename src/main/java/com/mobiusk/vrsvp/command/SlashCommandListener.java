@@ -23,10 +23,10 @@ public class SlashCommandListener extends ListenerAdapter {
 
 		if ( ! SlashCommandUi.INVOCATION.equals(event.getName())) {
 
-			log.warn(
-				Formatter.logMarkers(event).and(Formatter.logMarker("eventName", event.getName())),
-				"Unrecognized slash command received"
-			);
+			log.atWarn().setMessage("Unrecognized slash command received")
+				.addMarker(Formatter.logMarkers(event))
+				.addMarker(Formatter.logMarker("eventName", event.getName()))
+				.log();
 
 			return;
 		}
@@ -43,10 +43,10 @@ public class SlashCommandListener extends ListenerAdapter {
 		inputs.setRsvpLimitPerSlot(getSlashCommandInput(event, SlashCommandEnum.RSVP_LIMIT_PER_SLOT));
 		inputs.setRsvpLimitPerPerson(getSlashCommandInput(event, SlashCommandEnum.RSVP_LIMIT_PER_PERSON));
 
-		log.info(
-			Formatter.logMarkers(event).and(Formatter.logMarker("inputs", inputs)),
-			"Slash command received"
-		);
+		log.atInfo().setMessage("Slash command received")
+			.addMarker(Formatter.logMarkers(event))
+			.addMarker(Formatter.logMarker("inputs", inputs))
+			.log();
 
 		reply.rsvpCreation(event, inputs);
 	}
