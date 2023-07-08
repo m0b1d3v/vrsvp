@@ -3,6 +3,7 @@ package com.mobiusk.vrsvp.button;
 import com.mobiusk.vrsvp.util.Parser;
 import lombok.experimental.UtilityClass;
 import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.interactions.components.ActionRow;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 
@@ -13,6 +14,9 @@ import java.util.List;
 @UtilityClass
 public class ButtonUi {
 
+	public static final Emoji EMOJI_RSVP = Emoji.fromUnicode("\uD83D\uDCDD"); // :pencil:
+	public static final Emoji EMOJI_EDIT = Emoji.fromUnicode("\uD83D\uDD12"); // :lock:
+
 	/**
 	 * Builds a list of buttons shown at the bottom of an RSVP form for anyone to use.
 	 *
@@ -20,9 +24,9 @@ public class ButtonUi {
 	 */
 	public static List<Button> buildRsvpActionPrompts() {
 		return List.of(
-			Button.primary(ButtonEnum.RSVP.getId(), ButtonEnum.RSVP.getLabel()),
-			Button.secondary(ButtonEnum.EDIT.getId(), ButtonEnum.EDIT.getLabel()),
-			Button.link("https://mobiusk.com/projects/vrsvp", "About")
+			Button.primary(ButtonEnum.RSVP.getId(), ButtonEnum.RSVP.getLabel()).withEmoji(EMOJI_RSVP),
+			Button.secondary(ButtonEnum.EDIT.getId(), ButtonEnum.EDIT.getLabel()).withEmoji(EMOJI_EDIT),
+			Button.link(ButtonEnum.ABOUT.getId(), ButtonEnum.ABOUT.getLabel())
 		);
 	}
 
