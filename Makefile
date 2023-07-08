@@ -36,3 +36,4 @@ updates:
 
 transfer:
 	scp build/distributions/*.zip projects:/srv/vrsvp/private/
+	ssh projects 'cd /srv/vrsvp/private && unzip *.zip && rm *.zip'
