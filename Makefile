@@ -35,4 +35,4 @@ updates:
 	./gradlew dependencyUpdates
 
 transfer:
-	scp build/distributions/*.zip projects:~/vrsvp
+	scp build/distributions/*.zip projects:/srv/vrsvp/private/
