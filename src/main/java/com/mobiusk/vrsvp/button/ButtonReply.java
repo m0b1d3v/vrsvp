@@ -106,12 +106,24 @@ public class ButtonReply {
 			return;
 		}
 
-		message.editMessageEmbeds(Collections.emptyList())
-			.setContent(editedDescription)
-			.queue();
+		try {
 
-		var reply = String.format("RSVP state toggled for slot #%d", slotIndex + 1);
-		event.editMessage(reply).queue();
+			message.editMessageEmbeds(Collections.emptyList())
+				.setContent(editedDescription)
+				.queue();
+
+			var reply = String.format("RSVP state toggled for slot #%d", slotIndex + 1);
+			event.editMessage(reply).queue();
+
+		} catch (IllegalArgumentException e) {
+
+			var reply = """
+				VRSVP has hit the Discord message length limit when trying to RSVP.
+				Please contact the event runner to see if they can free up some space in the event description.
+				""";
+
+			event.editMessage(reply).queue();
+		}
 	}
 
 	/**

@@ -2,6 +2,7 @@ package com.mobiusk.vrsvp.button;
 
 import com.mobiusk.vrsvp.TestBase;
 import com.mobiusk.vrsvp.command.SlashCommandEnum;
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.interactions.components.ActionRow;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
@@ -193,6 +194,22 @@ class ButtonReplyUnitTest extends TestBase {
 		when(messageEmbed.getDescription()).thenReturn(rule + "\n");
 
 		assertDoesNotThrow(() -> reply.rsvpToggle(buttonInteractionEvent, message, 0));
+	}
+
+	@Test
+	void rsvpToggleFailsIfSignupWouldPutMessageOverContentLengthLimits() {
+
+		var description = "> #1";
+		var charactersNeededToFillUpDescription = Message.MAX_CONTENT_LENGTH - description.length();
+		description = generateString(charactersNeededToFillUpDescription) + description;
+		when(messageEmbed.getDescription()).thenReturn(description);
+		when(messageEditAction.setContent(any())).thenThrow(new IllegalArgumentException());
+
+		reply.rsvpToggle(buttonInteractionEvent, message, 1);
+
+		verify(messageEditAction).setContent(any());
+		verify(messageEditAction, never()).queue();
+		verify(messageEditCallbackAction).queue();
 	}
 
 	@Test

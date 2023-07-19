@@ -104,4 +104,17 @@ public abstract class TestBase {
         assertEquals("This is a utility class and cannot be instantiated", e2.getMessage());
     }
 
+	protected String generateString(int length) {
+
+		var stringBuilder = new StringBuilder(length);
+
+		for (var i = 0; i < length; i++) {
+			var alphabetIndex = i % 26;
+			var randomCharacter = (char) ('a' + alphabetIndex);
+			stringBuilder.append(randomCharacter);
+		}
+
+		return stringBuilder.toString();
+	}
+
 }
