@@ -1,6 +1,7 @@
 package com.mobiusk.vrsvp.modal;
 
 import com.mobiusk.vrsvp.TestBase;
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.interactions.components.text.TextInputStyle;
 import net.dv8tion.jda.internal.interactions.component.TextInputImpl;
 import org.junit.jupiter.api.Test;
@@ -34,6 +35,7 @@ class ModalUiUnitTest extends TestBase {
 		assertEquals(ModalEnum.EVENT_DESCRIPTION.getLabel(), textInput.getLabel());
 		assertEquals(ModalEnum.EVENT_DESCRIPTION.getPlaceholder(), textInput.getPlaceHolder());
 		assertEquals(TextInputStyle.PARAGRAPH, textInput.getStyle());
+		assertEquals(Message.MAX_CONTENT_LENGTH, textInput.getMaxLength());
 		assertEquals("Testing", textInput.getValue());
 	}
 

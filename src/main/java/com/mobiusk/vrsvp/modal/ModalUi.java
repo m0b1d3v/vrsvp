@@ -1,6 +1,7 @@
 package com.mobiusk.vrsvp.modal;
 
 import lombok.experimental.UtilityClass;
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.interactions.components.ItemComponent;
 import net.dv8tion.jda.api.interactions.components.text.TextInput;
 import net.dv8tion.jda.api.interactions.components.text.TextInputStyle;
@@ -22,6 +23,7 @@ public class ModalUi {
 
 	private static TextInput buildTextInput(String id, ModalEnum modalEnum, String existingText) {
 		return TextInput.create(id, modalEnum.getLabel(), TextInputStyle.PARAGRAPH)
+			.setMaxLength(Message.MAX_CONTENT_LENGTH)
 			.setPlaceholder(modalEnum.getPlaceholder())
 			.setValue(existingText)
 			.build();
