@@ -10,6 +10,7 @@ import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import javax.annotation.Nonnull;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.function.Predicate;
 
 @UtilityClass
 public class ButtonUi {
@@ -97,9 +98,10 @@ public class ButtonUi {
 
 		var userMentions = Parser.splitSlotText(input);
 
-		var userAlreadySignedUp = userMentions.contains(userMention);
-		if (userAlreadySignedUp) {
-			userMentions.removeIf(existingMention -> existingMention.equals(userMention));
+		Predicate<String> mentionMatchPredicate = (String existingMention) -> existingMention.contains(userMention);
+
+		if (userMentions.stream().anyMatch(mentionMatchPredicate)) {
+			userMentions.removeIf(mentionMatchPredicate);
 		} else {
 			userMentions.add(userMention);
 		}

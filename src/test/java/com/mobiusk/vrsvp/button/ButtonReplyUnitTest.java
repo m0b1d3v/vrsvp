@@ -255,6 +255,32 @@ class ButtonReplyUnitTest extends TestBase {
 	}
 
 	@Test
+	void rsvpToggleOnNonExistentSlot() {
+
+		when(messageEmbed.getDescription()).thenReturn(null);
+
+		reply.rsvpToggle(buttonInteractionEvent, message, 1);
+
+		verify(buttonInteractionEvent).editMessage("RSVP state toggled for slot #2");
+		verify(messageEditCallbackAction).queue();
+		verify(messageEditAction).setContent("");
+		verify(messageEditAction).queue();
+	}
+
+	@Test
+	void rsvpToggleRemoveFromSlotWhenAdditionalInformationAdded() {
+
+		when(messageEmbed.getDescription()).thenReturn("> #1, (added text) @Testing");
+
+		reply.rsvpToggle(buttonInteractionEvent, message, 0);
+
+		verify(buttonInteractionEvent).editMessage("RSVP state toggled for slot #1");
+		verify(messageEditCallbackAction).queue();
+		verify(messageEditAction).setContent("> #1");
+		verify(messageEditAction).queue();
+	}
+
+	@Test
 	void rsvpToggleStayingMeetingLimits() {
 
 		var limitPerson = SlashCommandEnum.RSVP_LIMIT_PER_PERSON.getDescription() + ": 1";
