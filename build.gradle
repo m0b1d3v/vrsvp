@@ -6,9 +6,9 @@ plugins {
 	id 'jacoco'
 
 	id 'com.github.ben-manes.versions' version '0.47.0'
-	id 'io.freefair.lombok' version '8.1.0'
-	id 'org.owasp.dependencycheck' version '8.3.1'
-	id 'org.sonarqube' version '4.3.0.3225'
+	id 'io.freefair.lombok' version '8.3'
+	id 'org.owasp.dependencycheck' version '8.4.0'
+	id 'org.sonarqube' version '4.3.1.3277'
 }
 
 repositories {
@@ -31,23 +31,23 @@ application {
 dependencies {
 
 	// Discord bot
-	implementation("net.dv8tion:JDA:5.0.0-beta.12") {
+	implementation("net.dv8tion:JDA:5.0.0-beta.13") {
 		exclude module: 'opus-java'
 	}
 
 	// Logging
-	implementation 'ch.qos.logback:logback-classic:1.4.8'
+	implementation 'ch.qos.logback:logback-classic:1.4.11'
 
 	// Used for JSON formatting of log messages
 	// As of logback-classic:1.4.8 it includes a native JSON encoder, but it is not configurable for our purposes
 	implementation 'net.logstash.logback:logstash-logback-encoder:7.4'
 
 	// Exception monitoring
-	implementation 'io.sentry:sentry:6.27.0'
+	implementation 'io.sentry:sentry:6.28.0'
 
 	// Unit tests
 	testImplementation 'org.junit.jupiter:junit-jupiter:5.10.0'
-	testImplementation 'org.mockito:mockito-junit-jupiter:5.4.0'
+	testImplementation 'org.mockito:mockito-junit-jupiter:5.5.0'
 }
 
 dependencyCheck {
