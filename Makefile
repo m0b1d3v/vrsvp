@@ -7,6 +7,15 @@ build:
 buildToolUpdate:
 	./gradlew wrapper --gradle-version latest
 
+checkDependencies:
+	./gradlew dependencyUpdates
+
+checkSource: clean test
+	./gradlew sonar
+
+checkVulnerabilities:
+	./gradlew dependencyCheckAnalyze
+
 clean:
 	./gradlew clean
 
@@ -27,15 +36,6 @@ testI:
 
 testU:
 	./gradlew test --tests '*UnitTest'
-
-owasp:
-	./gradlew dependencyCheckAnalyze
-
-sonar: clean test
-	./gradlew sonar
-
-updates:
-	./gradlew dependencyUpdates
 
 transfer:
 	scp build/distributions/*.zip projects:/srv/vrsvp/private/
