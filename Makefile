@@ -4,6 +4,9 @@ all:
 build:
 	./gradlew assembleDist
 
+buildToolUpdate:
+	./gradlew wrapper --gradle-version latest
+
 clean:
 	./gradlew clean
 
