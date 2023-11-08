@@ -7,11 +7,11 @@ build:
 buildToolUpdate:
 	./gradlew wrapper --gradle-version latest
 
-checkDependencies:
-	./gradlew dependencyUpdates
-
 checkSource: clean test
 	./gradlew sonar
+
+checkUpdates:
+	./gradlew dependencyUpdates
 
 checkVulnerabilities:
 	./gradlew dependencyCheckAnalyze
