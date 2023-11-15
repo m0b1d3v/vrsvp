@@ -8,7 +8,7 @@ This is a Discord bot for a virtual RSVP system for Discord-based communities.
 Server administrators or permitted individuals can create RSVP signups, edit event descriptions, and set signup limits.
 Server members can then RSVP for certain times of the event.
 
-A photo gallery of examples can be seen [here](https://adobe.ly/3spl8He).
+A demonstration video can be seen [here](https://cdn.m0b1.dev/vrsvp/demonstration.mp4).
 
 ## Adding to your server
 
@@ -42,8 +42,6 @@ Any line that starts with this is a slot: `> #`.
 By default, only server administrators can create or edit events.
 Other individuals can be granted these powers through the Discord Privilege system.
 To access this go to Server Settings > Integrations > VRSVP > Manage > Commands > /vrsvp.
-
-A photo gallery walking through these steps can be seen [here](https://adobe.ly/3splfCE).
 
 ## Discord limitations
 
