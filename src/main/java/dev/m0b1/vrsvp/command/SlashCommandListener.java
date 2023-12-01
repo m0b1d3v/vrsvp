@@ -32,7 +32,7 @@ public class SlashCommandListener extends ListenerAdapter {
 				.message("Unrecognized slash command received")
 				.event(event)
 				.markers(Map.of("eventName", event.getName()))
-			);;
+			);
 
 			return;
 		}
