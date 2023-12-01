@@ -57,3 +57,13 @@ If you need more, please get in contact with me and we'll work something out.
 ## Extra information
 
 Project updates can be found in the [change log](README-CHANGELOG.md).
+
+## Favicon
+
+The favicon was generated from [favicon.io](https://favicon.io/emoji-favicons/envelope-with-arrow).
+
+The following information was provided from the generator:
+- Graphics Title: 1f4e9.svg
+- Graphics Author: Copyright 2020 Twitter, Inc and other contributors (https://github.com/twitter/twemoji)
+- Graphics Source: https://github.com/twitter/twemoji/blob/master/assets/svg/1f4e9.svg
+- Graphics License: CC-BY 4.0 (https://creativecommons.org/licenses/by/4.0/)
