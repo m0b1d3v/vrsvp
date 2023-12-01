@@ -2,6 +2,11 @@
 
 Most recent entries are first.
 
+## 2023-12-01 (v1.5)
+
+- Updated JDK from 17 to 21
+- Updated "About" link to point to new domain
+
 ## 2023-07-18 (v1.4)
 
 - Events are now limited to 2,000 characters

@@ -15,8 +15,8 @@ repositories {
 	mavenCentral()
 }
 
-version = '1.4'
 group = 'dev.m0b1.vrsvp'
+version = '1.5'
 description = 'Virtual RSVP system for Discord-based communities.'
 
 java {
