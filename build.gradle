@@ -15,8 +15,8 @@ repositories {
 	mavenCentral()
 }
 
-group = 'com.mobiusk.vrsvp'
 version = '1.4'
+group = 'dev.m0b1.vrsvp'
 description = 'Virtual RSVP system for Discord-based communities.'
 
 java {
@@ -25,7 +25,7 @@ java {
 }
 
 application {
-	mainClass.set('com.mobiusk.vrsvp.Main')
+	mainClass.set('dev.m0b1.vrsvp.Main')
 }
 
 dependencies {
@@ -83,7 +83,8 @@ jacocoTestReport {
 sonarqube {
 	properties {
 		property('sonar.host.url', 'https://sonarcloud.io')
-		property('sonar.organization', 'mobiusk')
+		property('sonar.organization', 'm0b1')
 		property('sonar.projectKey', 'mobiusk_vrsvp')
+		property('sonar.gradle.skipCompile', 'true')
 	}
 }
