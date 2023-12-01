@@ -1,18 +1,22 @@
 package dev.m0b1.vrsvp.command;
 
-import dev.m0b1.vrsvp.util.Formatter;
+import dev.m0b1.vrsvp.logging.LogData;
+import dev.m0b1.vrsvp.logging.ServiceLog;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import org.slf4j.event.Level;
 
 import javax.annotation.Nonnull;
+import java.util.Map;
 
 @RequiredArgsConstructor
 @Slf4j
 public class SlashCommandListener extends ListenerAdapter {
 
 	// Class constructor field(s)
+	private final ServiceLog serviceLog;
 	private final SlashCommandReply reply;
 
 	/**
@@ -23,10 +27,12 @@ public class SlashCommandListener extends ListenerAdapter {
 
 		if ( ! SlashCommandUi.INVOCATION.equals(event.getName())) {
 
-			log.atWarn().setMessage("Unrecognized slash command received")
-				.addMarker(Formatter.logMarkers(event))
-				.addMarker(Formatter.logMarker("eventName", event.getName()))
-				.log();
+			serviceLog.run(LogData.builder()
+				.level(Level.WARN)
+				.message("Unrecognized slash command received")
+				.event(event)
+				.markers(Map.of("eventName", event.getName()))
+			);;
 
 			return;
 		}
@@ -43,10 +49,12 @@ public class SlashCommandListener extends ListenerAdapter {
 		inputs.setRsvpLimitPerSlot(getSlashCommandInput(event, SlashCommandEnum.RSVP_LIMIT_PER_SLOT));
 		inputs.setRsvpLimitPerPerson(getSlashCommandInput(event, SlashCommandEnum.RSVP_LIMIT_PER_PERSON));
 
-		log.atInfo().setMessage("Slash command received")
-			.addMarker(Formatter.logMarkers(event))
-			.addMarker(Formatter.logMarker("inputs", inputs))
-			.log();
+		serviceLog.run(LogData.builder()
+			.level(Level.INFO)
+			.message("Slash command received")
+			.event(event)
+			.markers(Map.of("inputs", inputs))
+		);
 
 		reply.rsvpCreation(event, inputs);
 	}

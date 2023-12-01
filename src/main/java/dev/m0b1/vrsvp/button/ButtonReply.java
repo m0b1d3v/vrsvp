@@ -1,20 +1,26 @@
 package dev.m0b1.vrsvp.button;
 
+import dev.m0b1.vrsvp.logging.LogData;
+import dev.m0b1.vrsvp.logging.ServiceLog;
 import dev.m0b1.vrsvp.modal.ModalEnum;
 import dev.m0b1.vrsvp.modal.ModalUi;
-import dev.m0b1.vrsvp.util.Formatter;
 import dev.m0b1.vrsvp.util.Parser;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.interactions.components.ActionRow;
+import org.slf4j.event.Level;
 
 import javax.annotation.Nonnull;
 import java.util.Collections;
 import java.util.LinkedList;
 
+@RequiredArgsConstructor
 @Slf4j
 public class ButtonReply {
+
+	private final ServiceLog serviceLog;
 
 	/**
 	 * Replies with an ephemeral list of buttons admins can click to start editing part of an RSVP form.
@@ -91,7 +97,13 @@ public class ButtonReply {
 
 		var rsvpButton = message.getButtonById(ButtonEnum.RSVP.getId());
 		if (rsvpButton == null || rsvpButton.isDisabled()) {
-			log.warn(Formatter.logMarkers(event), "RSVP declined for disabled event");
+
+			serviceLog.run(LogData.builder()
+				.level(Level.WARN)
+				.message("RSVP declined for disabled event")
+				.event(event)
+			);
+
 			event.editMessage("RSVP has been disabled for this event.").queue();
 			return;
 		}
@@ -100,7 +112,13 @@ public class ButtonReply {
 		var editedDescription = ButtonUi.editRsvpFromSignupButtonPress(message, userMention, slotIndex);
 
 		if (rsvpLimitsExceeded(message, editedDescription, userMention, slotIndex)) {
-			log.info(Formatter.logMarkers(event), "RSVP declined for signup limit");
+
+			serviceLog.run(LogData.builder()
+				.level(Level.INFO)
+				.message("RSVP declined for signup limit")
+				.event(event)
+			);
+
 			var errorMessage = String.format("Signup limit exceeded, cannot RSVP for slot #%d", slotIndex + 1);
 			event.editMessage(errorMessage).queue();
 			return;

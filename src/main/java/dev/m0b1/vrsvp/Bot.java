@@ -5,23 +5,27 @@ import dev.m0b1.vrsvp.command.SlashCommandUi;
 import dev.m0b1.vrsvp.button.ButtonListener;
 import dev.m0b1.vrsvp.command.SlashCommandListener;
 import dev.m0b1.vrsvp.button.ButtonReply;
+import dev.m0b1.vrsvp.logging.LogData;
+import dev.m0b1.vrsvp.logging.ServiceLog;
 import dev.m0b1.vrsvp.modal.ModalListener;
 import dev.m0b1.vrsvp.modal.ModalReply;
-import dev.m0b1.vrsvp.util.Formatter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.requests.GatewayIntent;
+import org.slf4j.event.Level;
 
 import java.util.EnumSet;
+import java.util.Map;
 
 @RequiredArgsConstructor
 @Slf4j
 public class Bot {
 
 	private final JDABuilder jdaBuilder;
+	private final ServiceLog serviceLog;
 
 	private JDA jda;
 
@@ -60,13 +64,13 @@ public class Bot {
 	 */
 	private void addEventListeners() {
 
-		var buttonReply = new ButtonReply();
+		var buttonReply = new ButtonReply(serviceLog);
 		var slashCommandReply = new SlashCommandReply();
 		var modalReply = new ModalReply();
 
-		jda.addEventListener(new ButtonListener(buttonReply));
-		jda.addEventListener(new SlashCommandListener(slashCommandReply));
-		jda.addEventListener(new ModalListener(modalReply));
+		jda.addEventListener(new ButtonListener(buttonReply, serviceLog));
+		jda.addEventListener(new SlashCommandListener(serviceLog, slashCommandReply));
+		jda.addEventListener(new ModalListener(modalReply, serviceLog));
 	}
 
 	private void logKnownGuilds() {
@@ -76,9 +80,11 @@ public class Bot {
 			.map(Guild::getName)
 			.toList();
 
-		log.atInfo().setMessage("Known guilds")
-			.addMarker(Formatter.logMarker("guilds", guildNames))
-			.log();
+		serviceLog.run(LogData.builder()
+			.level(Level.INFO)
+			.message("Known guilds")
+			.markers(Map.of("guilds", guildNames))
+		);
 	}
 
 	private void updateBotSlashCommands() {

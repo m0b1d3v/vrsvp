@@ -1,5 +1,7 @@
 package dev.m0b1.vrsvp.modal;
 
+import dev.m0b1.vrsvp.logging.LogData;
+import dev.m0b1.vrsvp.logging.ServiceLog;
 import dev.m0b1.vrsvp.util.Fetcher;
 import dev.m0b1.vrsvp.util.Formatter;
 import dev.m0b1.vrsvp.util.GateKeeper;
@@ -7,8 +9,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.events.interaction.ModalInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import org.slf4j.event.Level;
 
 import javax.annotation.Nonnull;
+import java.util.Map;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -16,6 +20,7 @@ public class ModalListener extends ListenerAdapter {
 
 	// Class constructor field(s)
 	private final ModalReply reply;
+	private final ServiceLog serviceLog;
 
 	/**
 	 * Gather all text input from modals and direct it as needed based on the input field ID.
@@ -23,10 +28,12 @@ public class ModalListener extends ListenerAdapter {
 	@Override
 	public void onModalInteraction(@Nonnull ModalInteractionEvent event) {
 
-		log.atInfo().setMessage("Modal submission received")
-			.addMarker(Formatter.logMarkers(event))
-			.addMarker(Formatter.logMarker("modalId", event.getModalId()))
-			.log();
+		serviceLog.run(LogData.builder()
+			.level(Level.INFO)
+			.message("Modal submission received")
+			.event(event)
+			.markers(Map.of("modalId", event.getModalId()))
+		);
 
 		var actionId = event.getModalId();
 		var modalEnum = ModalEnum.getById(actionId);
@@ -36,7 +43,13 @@ public class ModalListener extends ListenerAdapter {
 		}
 
 		if (GateKeeper.accessDenied(event)) {
-			log.warn(Formatter.logMarkers(event), "Modal submission denied");
+
+			serviceLog.run(LogData.builder()
+				.level(Level.WARN)
+				.message("Modal submission denied")
+				.event(event)
+			);
+
 			reply.ephemeral(event, "Access denied.");
 			return;
 		}
@@ -53,7 +66,13 @@ public class ModalListener extends ListenerAdapter {
 
 			var messageSource = Fetcher.getEphemeralMessageSource(event.getMessage(), event.getMessageChannel());
 			if (messageSource == null) {
-				log.warn(Formatter.logMarkers(event), "Message source not found");
+
+				serviceLog.run(LogData.builder()
+					.level(Level.WARN)
+					.message("Message source not found")
+					.event(event)
+				);
+
 				reply.ephemeral(event, Formatter.FORM_NOT_FOUND_REPLY);
 				return;
 			}
