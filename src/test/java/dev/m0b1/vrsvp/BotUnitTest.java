@@ -2,6 +2,7 @@ package dev.m0b1.vrsvp;
 
 import dev.m0b1.vrsvp.button.ButtonListener;
 import dev.m0b1.vrsvp.command.SlashCommandListener;
+import dev.m0b1.vrsvp.logging.ServiceLog;
 import dev.m0b1.vrsvp.modal.ModalListener;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
@@ -29,6 +30,8 @@ class BotUnitTest extends TestBase {
 	@InjectMocks private Bot bot;
 
 	@Spy private JDABuilder jdaBuilder = Bot.create("Testing");
+
+	@Mock private ServiceLog serviceLog;
 
 	@Mock private JDA jda;
 	@Mock private CommandListUpdateAction commandListUpdateAction;

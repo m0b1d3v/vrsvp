@@ -1,6 +1,7 @@
 package dev.m0b1.vrsvp.command;
 
 import dev.m0b1.vrsvp.TestBase;
+import dev.m0b1.vrsvp.logging.ServiceLog;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -21,6 +22,8 @@ import static org.mockito.Mockito.when;
 class SlashCommandListenerUnitTest extends TestBase {
 
 	@InjectMocks private SlashCommandListener listener;
+
+	@Mock private ServiceLog serviceLog;
 
 	@Mock private SlashCommandReply reply;
 

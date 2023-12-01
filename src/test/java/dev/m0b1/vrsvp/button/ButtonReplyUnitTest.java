@@ -2,6 +2,7 @@ package dev.m0b1.vrsvp.button;
 
 import dev.m0b1.vrsvp.TestBase;
 import dev.m0b1.vrsvp.command.SlashCommandEnum;
+import dev.m0b1.vrsvp.logging.ServiceLog;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.interactions.components.ActionRow;
@@ -9,6 +10,7 @@ import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 
 import java.util.Collections;
 import java.util.List;
@@ -26,6 +28,8 @@ import static org.mockito.Mockito.when;
 class ButtonReplyUnitTest extends TestBase {
 
 	@InjectMocks private ButtonReply reply;
+
+	@Mock private ServiceLog serviceLog;
 
 	@BeforeEach
 	public void beforeEach() {
