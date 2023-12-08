@@ -119,7 +119,7 @@ public class ButtonReply {
 				.event(event)
 			);
 
-			var errorMessage = String.format("Signup limit exceeded, cannot RSVP for slot #%d", slotIndex + 1);
+			var errorMessage = STR."Signup limit exceeded, cannot RSVP for slot #\{slotIndex + 1}";
 			event.editMessage(errorMessage).queue();
 			return;
 		}
@@ -130,7 +130,7 @@ public class ButtonReply {
 				.setContent(editedDescription)
 				.queue();
 
-			var reply = String.format("RSVP state toggled for slot #%d", slotIndex + 1);
+			var reply = STR."RSVP state toggled for slot #\{slotIndex + 1}";
 			event.editMessage(reply).queue();
 
 		} catch (IllegalArgumentException e) {

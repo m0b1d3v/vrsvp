@@ -30,18 +30,19 @@ public class SlashCommandReply {
 	private String buildDescription(@Nonnull SlashCommandInputs inputs) {
 
 		var slotDurationInSeconds = inputs.getDurationInMinutes() * 60;
+		var startTimestamp = inputs.getStartTimestamp();
 
 		var description = new LinkedList<String>();
 		description.add("**New Event**\n");
-		description.add(String.format("- Starts <t:%d:R> on <t:%d:F>", inputs.getStartTimestamp(), inputs.getStartTimestamp()));
-		description.add(String.format("- Each slot is %d minutes long", inputs.getDurationInMinutes()));
+		description.add(STR."- Starts <t:\{startTimestamp}:R> on <t:\{startTimestamp}:F>");
+		description.add(STR."- Each slot is \{inputs.getDurationInMinutes()} minutes long");
 		description.add(buildRsvpLimitAddendum(SlashCommandEnum.RSVP_LIMIT_PER_SLOT, inputs.getRsvpLimitPerSlot()));
 		description.add(buildRsvpLimitAddendum(SlashCommandEnum.RSVP_LIMIT_PER_PERSON, inputs.getRsvpLimitPerPerson()));
 		description.add("");
 
 		for (var slotIndex = 0; slotIndex < inputs.getSlots(); slotIndex++) {
-			var slotTimestamp = inputs.getStartTimestamp() + (slotDurationInSeconds * slotIndex);
-			var line = String.format("> #%d%s<t:%d:t>", slotIndex + 1, Parser.SIGNUP_DELIMITER, slotTimestamp);
+			var slotTimestamp = startTimestamp + (slotDurationInSeconds * slotIndex);
+			var line = STR."> #\{slotIndex + 1}\{Parser.SIGNUP_DELIMITER}<t:\{slotTimestamp}:t>";
 			description.add(line);
 		}
 
@@ -53,7 +54,7 @@ public class SlashCommandReply {
 	private String buildRsvpLimitAddendum(SlashCommandEnum slashCommandEnum, Integer limit) {
 
 		if (limit != null) {
-			return String.format("- %s: %d", slashCommandEnum.getDescription(), limit);
+			return STR."- \{slashCommandEnum.getDescription()}: \{limit}";
 		}
 
 		return null;

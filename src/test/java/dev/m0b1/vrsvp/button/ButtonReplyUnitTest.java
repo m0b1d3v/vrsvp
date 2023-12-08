@@ -168,8 +168,8 @@ class ButtonReplyUnitTest extends TestBase {
 	@Test
 	void rsvpToggleFailsIfAddingUserMentionAndRsvpLimitPerPersonExceededWithoutEditingDescription() {
 
-		var rule = SlashCommandEnum.RSVP_LIMIT_PER_PERSON.getDescription() + ": 0";
-		when(messageEmbed.getDescription()).thenReturn(rule + "\n> #1");
+		var rule = STR."\{SlashCommandEnum.RSVP_LIMIT_PER_PERSON.getDescription()}: 0";
+		when(messageEmbed.getDescription()).thenReturn(STR."\{rule}\n> #1");
 
 		reply.rsvpToggle(buttonInteractionEvent, message, 0);
 
@@ -181,8 +181,8 @@ class ButtonReplyUnitTest extends TestBase {
 	@Test
 	void rsvpToggleFailsIfAddingUserMentionAndRsvpLimitPerSlotExceededWithoutEditingDescription() {
 
-		var rule = SlashCommandEnum.RSVP_LIMIT_PER_SLOT.getDescription() + ": 0";
-		when(messageEmbed.getDescription()).thenReturn(rule + "\n> #1\n> #2");
+		var rule = STR."\{SlashCommandEnum.RSVP_LIMIT_PER_SLOT.getDescription()}: 0";
+		when(messageEmbed.getDescription()).thenReturn(STR."\{rule}\n> #1\n> #2");
 
 		reply.rsvpToggle(buttonInteractionEvent, message, 1);
 
@@ -194,8 +194,8 @@ class ButtonReplyUnitTest extends TestBase {
 	@Test
 	void rsvpToggleDoesNotThrowExceptionIfThereAreSlotLimitsSetButNoSlots() {
 
-		var rule = SlashCommandEnum.RSVP_LIMIT_PER_SLOT.getDescription() + ": 1";
-		when(messageEmbed.getDescription()).thenReturn(rule + "\n");
+		var rule = STR."\{SlashCommandEnum.RSVP_LIMIT_PER_SLOT.getDescription()}: 1";
+		when(messageEmbed.getDescription()).thenReturn(STR."\{rule}\n");
 
 		assertDoesNotThrow(() -> reply.rsvpToggle(buttonInteractionEvent, message, 0));
 	}
@@ -219,8 +219,8 @@ class ButtonReplyUnitTest extends TestBase {
 	@Test
 	void rsvpToggleSucceedsIfRemovingUserMentionWhenRsvpLimitPerPersonExceeded() {
 
-		var rule = SlashCommandEnum.RSVP_LIMIT_PER_PERSON.getDescription() + ": 0";
-		when(messageEmbed.getDescription()).thenReturn(rule + "\n> #1, @Testing");
+		var rule = STR."\{SlashCommandEnum.RSVP_LIMIT_PER_PERSON.getDescription()}: 0";
+		when(messageEmbed.getDescription()).thenReturn(STR."\{rule}\n> #1, @Testing");
 
 		reply.rsvpToggle(buttonInteractionEvent, message, 0);
 
@@ -234,8 +234,8 @@ class ButtonReplyUnitTest extends TestBase {
 	@Test
 	void rsvpToggleSucceedsIfRemovingUserMentionWhenRsvpLimitPerSlotExceeded() {
 
-		var rule = SlashCommandEnum.RSVP_LIMIT_PER_SLOT.getDescription() + ": 0";
-		when(messageEmbed.getDescription()).thenReturn(rule + "\n> #1\n> #2, @Testing");
+		var rule = STR."\{SlashCommandEnum.RSVP_LIMIT_PER_SLOT.getDescription()}: 0";
+		when(messageEmbed.getDescription()).thenReturn(STR."\{rule}\n> #1\n> #2, @Testing");
 
 		reply.rsvpToggle(buttonInteractionEvent, message, 1);
 
@@ -287,9 +287,9 @@ class ButtonReplyUnitTest extends TestBase {
 	@Test
 	void rsvpToggleStayingMeetingLimits() {
 
-		var limitPerson = SlashCommandEnum.RSVP_LIMIT_PER_PERSON.getDescription() + ": 1";
-		var limitSlot = SlashCommandEnum.RSVP_LIMIT_PER_SLOT.getDescription() + ": 1";
-		when(messageEmbed.getDescription()).thenReturn(limitPerson + "\n" + limitSlot + "\n> #1");
+		var limitPerson = STR."\{SlashCommandEnum.RSVP_LIMIT_PER_PERSON.getDescription()}: 1";
+		var limitSlot = STR."\{SlashCommandEnum.RSVP_LIMIT_PER_SLOT.getDescription()}: 1";
+		when(messageEmbed.getDescription()).thenReturn(STR."\{limitPerson}\n\{limitSlot}\n> #1");
 
 		reply.rsvpToggle(buttonInteractionEvent, message, 0);
 
@@ -303,9 +303,9 @@ class ButtonReplyUnitTest extends TestBase {
 	@Test
 	void rsvpToggleStayingUnderLimits() {
 
-		var limitPerson = SlashCommandEnum.RSVP_LIMIT_PER_PERSON.getDescription() + ": 2";
-		var limitSlot = SlashCommandEnum.RSVP_LIMIT_PER_SLOT.getDescription() + ": 2";
-		when(messageEmbed.getDescription()).thenReturn(limitPerson + "\n" + limitSlot + "\n> #1");
+		var limitPerson = STR."\{SlashCommandEnum.RSVP_LIMIT_PER_PERSON.getDescription()}: 2";
+		var limitSlot = STR."\{SlashCommandEnum.RSVP_LIMIT_PER_SLOT.getDescription()}: 2";
+		when(messageEmbed.getDescription()).thenReturn(STR."\{limitPerson}\n\{limitSlot}\n> #1");
 
 		reply.rsvpToggle(buttonInteractionEvent, message, 0);
 

@@ -43,7 +43,7 @@ public class ServiceDiscord {
 
 	private String formatContent(Map<String, Object> data) {
 		var result = Json.write(data, "Discord data not recognized");
-		return String.format("```json%n%s%n```", result);
+		return STR."```json%n\{result}%n```";
 	}
 
 	private String formatBody(String content) {

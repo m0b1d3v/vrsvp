@@ -78,7 +78,8 @@ public class Parser {
 	}
 
 	private static Pattern buildRegexPatternForLimit(SlashCommandEnum slashCommandEnum) {
-		return Pattern.compile(slashCommandEnum.getDescription() + ": (\\d+)");
+		var regex = STR."\{slashCommandEnum.getDescription()}: (\\d+)";
+		return Pattern.compile(regex);
 	}
 
 	private static Integer runRegexPatternToFindNumberInText(Pattern pattern, String text) {
