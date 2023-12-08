@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.events.interaction.GenericInteractionCreateEvent;
 import net.logstash.logback.marker.LogstashMarker;
 import org.apache.commons.collections4.MapUtils;
+import org.springframework.stereotype.Service;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -12,6 +13,7 @@ import java.util.Map;
 import static net.logstash.logback.marker.Markers.append;
 
 @RequiredArgsConstructor
+@Service
 @Slf4j
 public class ServiceLog {
 

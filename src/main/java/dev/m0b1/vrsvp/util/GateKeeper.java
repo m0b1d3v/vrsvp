@@ -7,7 +7,7 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.events.interaction.GenericInteractionCreateEvent;
 import net.dv8tion.jda.api.interactions.commands.privileges.IntegrationPrivilege;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -52,7 +52,7 @@ public class GateKeeper {
 
 		guild.getJDA()
 			.retrieveCommands()
-			.onErrorMap(exception -> Collections.emptyList())
+			.onErrorMap(_ -> Collections.emptyList())
 			.complete()
 			.stream()
 			.filter(c -> "vrsvp".equals(c.getName()))
@@ -61,7 +61,7 @@ public class GateKeeper {
 
 				// Errors almost every single time, because most servers don't have command integration privileges set
 				var privileges = command.retrievePrivileges(guild)
-					.onErrorMap(exception -> Collections.emptyList())
+					.onErrorMap(_ -> Collections.emptyList())
 					.complete();
 
 				result.addAll(privileges);

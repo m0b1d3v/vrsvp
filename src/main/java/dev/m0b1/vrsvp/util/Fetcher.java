@@ -6,7 +6,7 @@ import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
 import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 
 @UtilityClass
 @Slf4j

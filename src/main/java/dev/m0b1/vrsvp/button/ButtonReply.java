@@ -5,18 +5,20 @@ import dev.m0b1.vrsvp.logging.ServiceLog;
 import dev.m0b1.vrsvp.modal.ModalEnum;
 import dev.m0b1.vrsvp.modal.ModalUi;
 import dev.m0b1.vrsvp.util.Parser;
+import jakarta.annotation.Nonnull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.interactions.components.ActionRow;
 import org.slf4j.event.Level;
+import org.springframework.stereotype.Service;
 
-import javax.annotation.Nonnull;
 import java.util.Collections;
 import java.util.LinkedList;
 
 @RequiredArgsConstructor
+@Service
 @Slf4j
 public class ButtonReply {
 
@@ -119,7 +121,7 @@ public class ButtonReply {
 				.event(event)
 			);
 
-			var errorMessage = String.format("Signup limit exceeded, cannot RSVP for slot #%d", slotIndex + 1);
+			var errorMessage = STR."Signup limit exceeded, cannot RSVP for slot #\{slotIndex + 1}";
 			event.editMessage(errorMessage).queue();
 			return;
 		}
@@ -130,7 +132,7 @@ public class ButtonReply {
 				.setContent(editedDescription)
 				.queue();
 
-			var reply = String.format("RSVP state toggled for slot #%d", slotIndex + 1);
+			var reply = STR."RSVP state toggled for slot #\{slotIndex + 1}";
 			event.editMessage(reply).queue();
 
 		} catch (IllegalArgumentException e) {

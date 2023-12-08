@@ -4,24 +4,17 @@ import dev.m0b1.vrsvp.button.ButtonListener;
 import dev.m0b1.vrsvp.command.SlashCommandListener;
 import dev.m0b1.vrsvp.logging.ServiceLog;
 import dev.m0b1.vrsvp.modal.ModalListener;
-import net.dv8tion.jda.api.JDA;
-import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.requests.restaction.CommandListUpdateAction;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Spy;
 
 import java.util.Collections;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doCallRealMethod;
-import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -29,17 +22,15 @@ class BotUnitTest extends TestBase {
 
 	@InjectMocks private Bot bot;
 
-	@Spy private JDABuilder jdaBuilder = Bot.create("Testing");
-
+	@Mock private ButtonListener buttonListener;
+	@Mock private ModalListener modalListener;
 	@Mock private ServiceLog serviceLog;
+	@Mock private SlashCommandListener slashCommandListener;
 
-	@Mock private JDA jda;
 	@Mock private CommandListUpdateAction commandListUpdateAction;
 
 	@BeforeEach
 	public void beforeEach() {
-
-		doReturn(jda).when(jdaBuilder).build();
 
 		when(jda.updateCommands()).thenReturn(commandListUpdateAction);
 		when(jda.getGuilds()).thenReturn(Collections.emptyList());
@@ -48,22 +39,10 @@ class BotUnitTest extends TestBase {
 	}
 
 	@Test
-	void startingDiscordBotWithoutTokenThrowsException() {
-
-		// In direct contradiction to what we set up in beforeEach for other tests, check this edge case
-		doCallRealMethod().when(jdaBuilder).build();
-
-		jdaBuilder.setToken(null);
-		var ex = assertThrows(IllegalArgumentException.class, () -> bot.start());
-		assertEquals("Token may not be null", ex.getMessage());
-	}
-
-	@Test
 	void startingDiscordBotWaitsForItToBeReady() throws InterruptedException {
 
 		startDiscordBot();
 
-		verify(jdaBuilder).build();
 		verify(jda).awaitReady();
 	}
 
@@ -99,7 +78,7 @@ class BotUnitTest extends TestBase {
 
 	private void startDiscordBot() {
 		try {
-			bot.start();
+			bot.postConstruct();
 		} catch (InterruptedException e) {
 			fail("Discord bot should have started without interruption for this test case", e);
 		}

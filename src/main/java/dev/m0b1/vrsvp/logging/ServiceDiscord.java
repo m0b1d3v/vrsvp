@@ -1,8 +1,10 @@
 package dev.m0b1.vrsvp.logging;
 
+import dev.m0b1.vrsvp.properties.Properties;
 import dev.m0b1.vrsvp.util.Json;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -15,17 +17,22 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 @RequiredArgsConstructor
+@Service
 @Slf4j
 public class ServiceDiscord {
 
 	private static final HttpClient HTTP_CLIENT = HttpClient.newHttpClient();
-	private static final String DISCORD_WEBHOOK_AVATAR = System.getenv("VRSVP_DISCORD_WEBHOOK_AVATAR");
-	private static final String DISCORD_WEBHOOK_DESTINATION = System.getenv("VRSVP_DISCORD_WEBHOOK_DESTINATION");
+
+	private final Properties properties;
 
 	public void run(Map<String, Object> data) {
 
-		if (DISCORD_WEBHOOK_AVATAR != null && ! DISCORD_WEBHOOK_AVATAR.isBlank()
-			&& DISCORD_WEBHOOK_DESTINATION != null && ! DISCORD_WEBHOOK_DESTINATION.isBlank()
+		var webhook = properties.getWebhook();
+		var avatar = webhook.getAvatar();
+		var destination = webhook.getDestination();
+
+		if (avatar != null && ! avatar.isBlank()
+			&& destination != null && ! destination.isBlank()
 		) {
 			try {
 
@@ -43,7 +50,7 @@ public class ServiceDiscord {
 
 	private String formatContent(Map<String, Object> data) {
 		var result = Json.write(data, "Discord data not recognized");
-		return String.format("```json%n%s%n```", result);
+		return STR."```json%n\{result}%n```";
 	}
 
 	private String formatBody(String content) {
@@ -51,14 +58,14 @@ public class ServiceDiscord {
 		var source = new LinkedHashMap<String, Object>();
 		source.put("content", content);
 		source.put("username", "VRSVP");
-		source.put("avatar_url", DISCORD_WEBHOOK_AVATAR);
+		source.put("avatar_url", properties.getWebhook().getAvatar());
 
 		return Json.write(source, "Log data not recognized");
 	}
 
 	private HttpRequest buildHttpRequest(String body) throws URISyntaxException {
 
-		var uri = new URI(DISCORD_WEBHOOK_DESTINATION);
+		var uri = new URI(properties.getWebhook().getDestination());
 
 		return HttpRequest.newBuilder()
 			.uri(uri)

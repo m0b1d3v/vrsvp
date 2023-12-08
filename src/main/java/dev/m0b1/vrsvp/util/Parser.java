@@ -5,7 +5,7 @@ import lombok.experimental.UtilityClass;
 import net.dv8tion.jda.api.entities.Message;
 import org.apache.commons.collections4.CollectionUtils;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -33,7 +33,7 @@ public class Parser {
 
 		var result = message.getContentRaw();
 		if (CollectionUtils.isNotEmpty(message.getEmbeds())) {
-			var deprecatedEmbed = message.getEmbeds().get(0);
+			var deprecatedEmbed = message.getEmbeds().getFirst();
 			result = Objects.requireNonNullElse(deprecatedEmbed.getDescription(), "");
 		}
 
@@ -78,7 +78,8 @@ public class Parser {
 	}
 
 	private static Pattern buildRegexPatternForLimit(SlashCommandEnum slashCommandEnum) {
-		return Pattern.compile(slashCommandEnum.getDescription() + ": (\\d+)");
+		var regex = STR."\{slashCommandEnum.getDescription()}: (\\d+)";
+		return Pattern.compile(regex);
 	}
 
 	private static Integer runRegexPatternToFindNumberInText(Pattern pattern, String text) {

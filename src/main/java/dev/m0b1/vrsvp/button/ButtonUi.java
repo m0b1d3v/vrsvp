@@ -7,7 +7,7 @@ import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.interactions.components.ActionRow;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Predicate;
@@ -52,8 +52,8 @@ public class ButtonUi {
 
 		for (var buttonIndex = 0; buttonIndex < buttonCount; buttonIndex++) {
 
-			var id = String.format("%s:%d", actionId, buttonIndex);
-			var label = String.format("#%d", buttonIndex + 1);
+			var id = STR."\{actionId}:\{buttonIndex}";
+			var label = STR."#\{buttonIndex + 1}";
 
 			buttons.add(Button.primary(id, label));
 		}
