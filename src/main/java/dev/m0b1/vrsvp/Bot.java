@@ -16,11 +16,13 @@ import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import org.slf4j.event.Level;
+import org.springframework.stereotype.Service;
 
 import java.util.EnumSet;
 import java.util.Map;
 
 @RequiredArgsConstructor
+@Service
 @Slf4j
 public class Bot {
 

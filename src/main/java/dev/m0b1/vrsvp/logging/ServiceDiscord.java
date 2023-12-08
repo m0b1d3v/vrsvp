@@ -3,6 +3,7 @@ package dev.m0b1.vrsvp.logging;
 import dev.m0b1.vrsvp.util.Json;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -15,6 +16,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 @RequiredArgsConstructor
+@Service
 @Slf4j
 public class ServiceDiscord {
 

@@ -5,12 +5,14 @@ import dev.m0b1.vrsvp.modal.ModalUi;
 import dev.m0b1.vrsvp.util.Parser;
 import lombok.RequiredArgsConstructor;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import org.springframework.stereotype.Service;
 
 import jakarta.annotation.Nonnull;
 import java.util.LinkedList;
 import java.util.Objects;
 
 @RequiredArgsConstructor
+@Service
 public class SlashCommandReply {
 
 	/**

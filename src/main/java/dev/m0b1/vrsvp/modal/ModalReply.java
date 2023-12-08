@@ -3,10 +3,12 @@ package dev.m0b1.vrsvp.modal;
 import dev.m0b1.vrsvp.button.ButtonUi;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.interaction.ModalInteractionEvent;
+import org.springframework.stereotype.Service;
 
 import jakarta.annotation.Nonnull;
 import java.util.Collections;
 
+@Service
 public class ModalReply {
 
 	/**

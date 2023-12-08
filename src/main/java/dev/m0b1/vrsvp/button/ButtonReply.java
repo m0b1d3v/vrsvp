@@ -12,11 +12,13 @@ import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.interactions.components.ActionRow;
 import org.slf4j.event.Level;
+import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.LinkedList;
 
 @RequiredArgsConstructor
+@Service
 @Slf4j
 public class ButtonReply {
 
