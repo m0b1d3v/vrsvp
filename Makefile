@@ -1,5 +1,5 @@
 all:
-	cat Makefile
+	cat --number Makefile
 
 build:
 	./gradlew assembleBootDist
@@ -7,20 +7,17 @@ build:
 buildToolUpdate:
 	./gradlew wrapper --gradle-version latest
 
+checkDependencies:
+	./gradlew dependencyUpdates
+
 checkSource: clean test
 	./gradlew sonar
-
-checkUpdates:
-	./gradlew dependencyUpdates
 
 checkVulnerabilities:
 	./gradlew dependencyCheckAnalyze
 
 clean:
 	./gradlew clean
-
-javadoc:
-	./gradlew javadoc
 
 run:
 	./gradlew run
