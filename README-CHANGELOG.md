@@ -2,6 +2,11 @@
 
 Most recent entries are first.
 
+# 2023-12-08 (v1.6)
+
+- Implemented Spring framework for dependency injection
+- Added health check endpoint for monitoring
+
 ## 2023-12-01 (v1.5)
 
 - Updated JDK from 17 to 21
