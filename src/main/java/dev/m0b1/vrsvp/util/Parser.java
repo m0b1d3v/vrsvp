@@ -5,7 +5,7 @@ import lombok.experimental.UtilityClass;
 import net.dv8tion.jda.api.entities.Message;
 import org.apache.commons.collections4.CollectionUtils;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;

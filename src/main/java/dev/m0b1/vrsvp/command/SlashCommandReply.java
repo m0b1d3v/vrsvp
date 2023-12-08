@@ -6,7 +6,7 @@ import dev.m0b1.vrsvp.util.Parser;
 import lombok.RequiredArgsConstructor;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.LinkedList;
 import java.util.Objects;
 

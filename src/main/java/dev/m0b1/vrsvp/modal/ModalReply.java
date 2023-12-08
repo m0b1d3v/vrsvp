@@ -4,7 +4,7 @@ import dev.m0b1.vrsvp.button.ButtonUi;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.interaction.ModalInteractionEvent;
 
-import javax.annotation.Nonnull;
+import jakarta.annotation.Nonnull;
 import java.util.Collections;
 
 public class ModalReply {

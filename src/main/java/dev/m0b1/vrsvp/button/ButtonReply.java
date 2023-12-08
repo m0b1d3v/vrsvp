@@ -5,6 +5,7 @@ import dev.m0b1.vrsvp.logging.ServiceLog;
 import dev.m0b1.vrsvp.modal.ModalEnum;
 import dev.m0b1.vrsvp.modal.ModalUi;
 import dev.m0b1.vrsvp.util.Parser;
+import jakarta.annotation.Nonnull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.entities.Message;
@@ -12,7 +13,6 @@ import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.interactions.components.ActionRow;
 import org.slf4j.event.Level;
 
-import javax.annotation.Nonnull;
 import java.util.Collections;
 import java.util.LinkedList;
 
