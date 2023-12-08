@@ -1,0 +1,18 @@
+application:
+  discord:
+    botSecretToken:
+    webhook:
+      avatar:
+      destination:
+
+sentry:
+  dsn:
+
+server:
+  error:
+    whitelabel:
+      enabled: false
+
+spring:
+  main:
+    banner-mode: off
