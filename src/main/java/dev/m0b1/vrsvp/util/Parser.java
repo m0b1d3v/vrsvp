@@ -33,7 +33,7 @@ public class Parser {
 
 		var result = message.getContentRaw();
 		if (CollectionUtils.isNotEmpty(message.getEmbeds())) {
-			var deprecatedEmbed = message.getEmbeds().get(0);
+			var deprecatedEmbed = message.getEmbeds().getFirst();
 			result = Objects.requireNonNullElse(deprecatedEmbed.getDescription(), "");
 		}
 
