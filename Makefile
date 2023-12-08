@@ -2,7 +2,7 @@ all:
 	cat Makefile
 
 build:
-	./gradlew assembleDist
+	./gradlew assembleBootDist
 
 buildToolUpdate:
 	./gradlew wrapper --gradle-version latest

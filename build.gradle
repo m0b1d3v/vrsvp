@@ -5,14 +5,13 @@ plugins {
 	id 'application'
 	id 'jacoco'
 
-	id 'com.github.ben-manes.versions' version '0.50.0'
-	id 'io.freefair.lombok' version '8.4'
-	id 'org.owasp.dependencycheck' version '9.0.2'
-	id 'org.sonarqube' version '4.4.1.3373'
-}
-
-repositories {
-	mavenCentral()
+	id 'com.github.ben-manes.versions' version '0.50.0' // Dependency update checks
+	id 'io.freefair.lombok' version '8.4' // Boilerplate reduction
+	id 'io.sentry.jvm.gradle' version '4.0.0' // Exception monitoring
+	id 'io.spring.dependency-management' version '1.1.4' // Transitive/exclusion dependency management
+	id 'org.owasp.dependencycheck' version '9.0.3' // Dependency vulnerability checks
+	id 'org.sonarqube' version '4.4.1.3373' // Source code analysis
+	id 'org.springframework.boot' version '3.2.0' // Framework
 }
 
 group = 'dev.m0b1.vrsvp'
@@ -21,33 +20,47 @@ description = 'Virtual RSVP system for Discord-based communities.'
 
 java {
 	sourceCompatibility = JavaVersion.VERSION_21
-	targetCompatibility = JavaVersion.VERSION_21
 }
 
-application {
-	mainClass.set('dev.m0b1.vrsvp.Main')
+repositories {
+	mavenCentral()
+}
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+tasks.withType(JavaCompile).each {
+	it.options.compilerArgs.add('--enable-preview')
 }
 
 dependencies {
+
+	// Resource file inspections for editors
+	annotationProcessor('org.springframework.boot:spring-boot-configuration-processor')
+
+	// Disable template caching, automatic restart, live reload
+	developmentOnly('org.springframework.boot:spring-boot-devtools')
 
 	// Discord bot
 	implementation("net.dv8tion:JDA:5.0.0-beta.18") {
 		exclude module: 'opus-java'
 	}
 
-	// Logging
-	implementation 'ch.qos.logback:logback-classic:1.4.11'
-
 	// Used for JSON formatting of log messages
 	// As of logback-classic:1.4.8 it includes a native JSON encoder, but it is not configurable for our purposes
-	implementation 'net.logstash.logback:logstash-logback-encoder:7.4'
+	implementation('net.logstash.logback:logstash-logback-encoder:7.4')
 
-	// Exception monitoring
-	implementation 'io.sentry:sentry:7.0.0'
+	// Framework
+	implementation('org.springframework.boot:spring-boot-starter-actuator')
+	implementation('org.springframework.boot:spring-boot-starter-validation')
+	implementation('org.springframework.boot:spring-boot-starter-web')
 
-	// Unit tests
-	testImplementation 'org.junit.jupiter:junit-jupiter:5.10.1'
-	testImplementation 'org.mockito:mockito-junit-jupiter:5.7.0'
+	// Testing
+	testImplementation('org.springframework.boot:spring-boot-starter-test')
+
 }
 
 dependencyCheck {
@@ -57,6 +70,8 @@ dependencyCheck {
 }
 
 test {
+
+	jvmArgs(['--enable-preview'])
 
 	useJUnitPlatform()
 
