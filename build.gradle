@@ -6,12 +6,12 @@ plugins {
 	id 'jacoco'
 
 	id 'com.github.ben-manes.versions' version '0.51.0' // Dependency update checks
-	id 'io.freefair.lombok' version '8.4' // Boilerplate reduction
-	id 'io.sentry.jvm.gradle' version '4.2.0' // Exception monitoring
+	id 'io.freefair.lombok' version '8.6' // Boilerplate reduction
+	id 'io.sentry.jvm.gradle' version '4.3.1' // Exception monitoring
 	id 'io.spring.dependency-management' version '1.1.4' // Transitive/exclusion dependency management
 	id 'org.owasp.dependencycheck' version '9.0.9' // Dependency vulnerability checks
 	id 'org.sonarqube' version '4.4.1.3373' // Source code analysis
-	id 'org.springframework.boot' version '3.2.2' // Framework
+	id 'org.springframework.boot' version '3.2.3' // Framework
 }
 
 group = 'dev.m0b1.vrsvp'
