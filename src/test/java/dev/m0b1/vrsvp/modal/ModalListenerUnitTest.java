@@ -2,7 +2,7 @@ package dev.m0b1.vrsvp.modal;
 
 import dev.m0b1.vrsvp.TestBase;
 import dev.m0b1.vrsvp.logging.ServiceLog;
-import dev.m0b1.vrsvp.util.Formatter;
+import dev.m0b1.vrsvp.properties.Properties;
 import net.dv8tion.jda.api.Permission;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -87,7 +87,7 @@ class ModalListenerUnitTest extends TestBase {
 
 		listener.onModalInteraction(modalInteractionEvent);
 
-		verify(reply).ephemeral(modalInteractionEvent, Formatter.FORM_NOT_FOUND_REPLY);
+		verify(reply).ephemeral(modalInteractionEvent, Properties.FORM_NOT_FOUND_REPLY);
 		verify(reply, never()).createRsvpFromAdmin(modalInteractionEvent, "Testing");
 		verify(reply, never()).editRsvpFromAdmin(modalInteractionEvent, message, "Testing");
 	}

@@ -2,8 +2,8 @@ package dev.m0b1.vrsvp.modal;
 
 import dev.m0b1.vrsvp.logging.LogData;
 import dev.m0b1.vrsvp.logging.ServiceLog;
+import dev.m0b1.vrsvp.properties.Properties;
 import dev.m0b1.vrsvp.util.Fetcher;
-import dev.m0b1.vrsvp.util.Formatter;
 import dev.m0b1.vrsvp.util.GateKeeper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -75,7 +75,7 @@ public class ModalListener extends ListenerAdapter {
 					.event(event)
 				);
 
-				reply.ephemeral(event, Formatter.FORM_NOT_FOUND_REPLY);
+				reply.ephemeral(event, Properties.FORM_NOT_FOUND_REPLY);
 				return;
 			}
 

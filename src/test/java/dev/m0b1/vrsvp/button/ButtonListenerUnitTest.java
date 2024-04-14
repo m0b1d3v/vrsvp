@@ -2,7 +2,7 @@ package dev.m0b1.vrsvp.button;
 
 import dev.m0b1.vrsvp.TestBase;
 import dev.m0b1.vrsvp.logging.ServiceLog;
-import dev.m0b1.vrsvp.util.Formatter;
+import dev.m0b1.vrsvp.properties.Properties;
 import net.dv8tion.jda.api.Permission;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -86,7 +86,7 @@ class ButtonListenerUnitTest extends TestBase {
 
 		listener.onButtonInteraction(buttonInteractionEvent);
 
-		verify(reply).ephemeral(buttonInteractionEvent, Formatter.FORM_NOT_FOUND_REPLY);
+		verify(reply).ephemeral(buttonInteractionEvent, Properties.FORM_NOT_FOUND_REPLY);
 		assertNoRsvpChangesMade();
 	}
 
@@ -98,7 +98,7 @@ class ButtonListenerUnitTest extends TestBase {
 
 		listener.onButtonInteraction(buttonInteractionEvent);
 
-		verify(reply).ephemeral(buttonInteractionEvent, Formatter.FORM_NOT_FOUND_REPLY);
+		verify(reply).ephemeral(buttonInteractionEvent, Properties.FORM_NOT_FOUND_REPLY);
 		assertNoRsvpChangesMade();
 	}
 
@@ -110,7 +110,7 @@ class ButtonListenerUnitTest extends TestBase {
 
 		listener.onButtonInteraction(buttonInteractionEvent);
 
-		verify(reply).ephemeral(buttonInteractionEvent, Formatter.FORM_NOT_FOUND_REPLY);
+		verify(reply).ephemeral(buttonInteractionEvent, Properties.FORM_NOT_FOUND_REPLY);
 		assertNoRsvpChangesMade();
 	}
 

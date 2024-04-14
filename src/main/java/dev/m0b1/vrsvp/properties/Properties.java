@@ -10,6 +10,8 @@ import org.springframework.stereotype.Component;
 @Data
 public class Properties {
 
+	public static final String FORM_NOT_FOUND_REPLY = "Cannot find event post. Was it deleted? Does the bot have read permissions?";
+
 	@NotEmpty
 	private String botSecretToken;
 
