@@ -15,6 +15,6 @@ public class Properties {
 	@NotEmpty
 	private String botSecretToken;
 
-	private PropertiesWebhook webhook;
+	private String logWebhook;
 
 }
