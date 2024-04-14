@@ -1,7 +1,6 @@
 package dev.m0b1.vrsvp.modal;
 
 import dev.m0b1.vrsvp.TestBase;
-import dev.m0b1.vrsvp.logging.ServiceLog;
 import dev.m0b1.vrsvp.properties.Properties;
 import net.dv8tion.jda.api.Permission;
 import org.junit.jupiter.api.BeforeEach;
@@ -22,8 +21,6 @@ class ModalListenerUnitTest extends TestBase {
 	@InjectMocks private ModalListener listener;
 
 	@Mock private ModalReply reply;
-
-	@Mock private ServiceLog serviceLog;
 
 	private static final List<ModalEnum> VALID_MODAL_ENUMS = List.of(ModalEnum.EVENT_CREATION, ModalEnum.EVENT_DESCRIPTION);
 

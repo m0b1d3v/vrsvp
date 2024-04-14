@@ -49,10 +49,6 @@ dependencies {
 		exclude module: 'opus-java'
 	}
 
-	// Used for JSON formatting of log messages
-	// As of logback-classic:1.4.8 it includes a native JSON encoder, but it is not configurable for our purposes
-	implementation('net.logstash.logback:logstash-logback-encoder:7.4')
-
 	// Framework
 	implementation('org.springframework.boot:spring-boot-starter-actuator')
 	implementation('org.springframework.boot:spring-boot-starter-validation')

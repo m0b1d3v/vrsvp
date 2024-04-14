@@ -1,7 +1,6 @@
 package dev.m0b1.vrsvp.button;
 
-import dev.m0b1.vrsvp.logging.LogData;
-import dev.m0b1.vrsvp.logging.ServiceLog;
+import dev.m0b1.vrsvp.util.Mdc;
 import dev.m0b1.vrsvp.properties.Properties;
 import dev.m0b1.vrsvp.util.Fetcher;
 import dev.m0b1.vrsvp.util.GateKeeper;
@@ -10,11 +9,9 @@ import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import org.slf4j.event.Level;
 import org.springframework.stereotype.Service;
 
 import jakarta.annotation.Nonnull;
-import java.util.Map;
 
 @RequiredArgsConstructor
 @Service
@@ -23,7 +20,6 @@ public class ButtonListener extends ListenerAdapter {
 
 	// Class constructor field(s)
 	private final ButtonReply reply;
-	private final ServiceLog serviceLog;
 
 	/**
 	 * Direct all button presses from bot messages based on the button ID.
@@ -33,24 +29,22 @@ public class ButtonListener extends ListenerAdapter {
 	@Override
 	public void onButtonInteraction(@Nonnull ButtonInteractionEvent event) {
 
-		serviceLog.run(LogData.builder()
-			.level(Level.INFO)
-			.message("RSVP button received")
-			.event(event)
-			.markers(Map.of("button", event.getComponentId()))
-		);
+		Mdc.put(event);
+
+		log.atInfo()
+			.setMessage("RSVP button received")
+			.addKeyValue("button", event.getComponentId())
+			.log();
 
 		var buttonIdAction = getButtonInteractionAction(event);
 		var buttonIdContext = getButtonInteractionContext(event);
 
 		if (buttonIdAction.contains(ButtonEnum.EDIT.getId()) && GateKeeper.accessDenied(event)) {
 
-			serviceLog.run(LogData.builder()
-				.level(Level.WARN)
-				.message("RSVP edit denied")
-				.event(event)
-				.markers(Map.of("button", buttonIdAction))
-			);
+			log.atWarn()
+				.setMessage("RSVP edit denied")
+				.addKeyValue("button", buttonIdAction)
+				.log();
 
 			reply.ephemeral(event, "Access denied.");
 			return;
@@ -121,11 +115,7 @@ public class ButtonListener extends ListenerAdapter {
 		var rsvp = Fetcher.getEphemeralMessageSource(event.getMessage(), event.getMessageChannel());
 		if (rsvp == null) {
 
-			serviceLog.run(LogData.builder()
-				.level(Level.WARN)
-				.message("Message source not found")
-				.event(event)
-			);
+			log.warn("Message source not found");
 
 			reply.ephemeral(event, Properties.FORM_NOT_FOUND_REPLY);
 		}

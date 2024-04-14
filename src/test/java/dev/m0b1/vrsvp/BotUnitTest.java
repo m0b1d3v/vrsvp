@@ -2,7 +2,6 @@ package dev.m0b1.vrsvp;
 
 import dev.m0b1.vrsvp.button.ButtonListener;
 import dev.m0b1.vrsvp.command.SlashCommandListener;
-import dev.m0b1.vrsvp.logging.ServiceLog;
 import dev.m0b1.vrsvp.modal.ModalListener;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.requests.restaction.CommandListUpdateAction;
@@ -24,7 +23,6 @@ class BotUnitTest extends TestBase {
 
 	@Mock private ButtonListener buttonListener;
 	@Mock private ModalListener modalListener;
-	@Mock private ServiceLog serviceLog;
 	@Mock private SlashCommandListener slashCommandListener;
 
 	@Mock private CommandListUpdateAction commandListUpdateAction;

@@ -1,18 +1,18 @@
 <configuration>
 
-    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
-		<encoder class="net.logstash.logback.encoder.LogstashEncoder">
-			<fieldNames>
-				<!-- https://github.com/logfellow/logstash-logback-encoder#loggingevent-fields -->
-				<levelValue>[ignore]</levelValue>
-				<timestamp>timestamp</timestamp>
-				<version>[ignore]</version>
-			</fieldNames>
+	<include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+
+    <appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+			<!-- Keywords at https://logback.qos.ch/manual/layouts.html#conversionWord -->
+			<pattern>
+				%date{ISO8601} %clr(%5p) [%15.15t] %clr(%-40.40logger{39}){cyan} [%mdc] {%kvp} %m%n%wEx
+			</pattern>
 		</encoder>
     </appender>
 
     <root level="info">
-        <appender-ref ref="STDOUT"/>
+        <appender-ref ref="stdout"/>
     </root>
 
 </configuration>

@@ -1,7 +1,6 @@
 package dev.m0b1.vrsvp.button;
 
 import dev.m0b1.vrsvp.TestBase;
-import dev.m0b1.vrsvp.logging.ServiceLog;
 import dev.m0b1.vrsvp.properties.Properties;
 import net.dv8tion.jda.api.Permission;
 import org.junit.jupiter.api.BeforeEach;
@@ -23,8 +22,6 @@ class ButtonListenerUnitTest extends TestBase {
 	@InjectMocks private ButtonListener listener;
 
 	@Mock private ButtonReply reply;
-
-	@Mock private ServiceLog serviceLog;
 
 	@BeforeEach
 	public void beforeEach() {

@@ -1,7 +1,6 @@
 package dev.m0b1.vrsvp.modal;
 
-import dev.m0b1.vrsvp.logging.LogData;
-import dev.m0b1.vrsvp.logging.ServiceLog;
+import dev.m0b1.vrsvp.util.Mdc;
 import dev.m0b1.vrsvp.properties.Properties;
 import dev.m0b1.vrsvp.util.Fetcher;
 import dev.m0b1.vrsvp.util.GateKeeper;
@@ -9,11 +8,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.events.interaction.ModalInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import org.slf4j.event.Level;
 import org.springframework.stereotype.Service;
 
 import jakarta.annotation.Nonnull;
-import java.util.Map;
 
 @RequiredArgsConstructor
 @Service
@@ -22,7 +19,6 @@ public class ModalListener extends ListenerAdapter {
 
 	// Class constructor field(s)
 	private final ModalReply reply;
-	private final ServiceLog serviceLog;
 
 	/**
 	 * Gather all text input from modals and direct it as needed based on the input field ID.
@@ -30,12 +26,12 @@ public class ModalListener extends ListenerAdapter {
 	@Override
 	public void onModalInteraction(@Nonnull ModalInteractionEvent event) {
 
-		serviceLog.run(LogData.builder()
-			.level(Level.INFO)
-			.message("Modal submission received")
-			.event(event)
-			.markers(Map.of("modalId", event.getModalId()))
-		);
+		Mdc.put(event);
+
+		log.atInfo()
+			.setMessage("Modal submission received")
+			.addKeyValue("modalId", event.getModalId())
+			.log();
 
 		var actionId = event.getModalId();
 		var modalEnum = ModalEnum.getById(actionId);
@@ -46,11 +42,7 @@ public class ModalListener extends ListenerAdapter {
 
 		if (GateKeeper.accessDenied(event)) {
 
-			serviceLog.run(LogData.builder()
-				.level(Level.WARN)
-				.message("Modal submission denied")
-				.event(event)
-			);
+			log.warn("Modal submission denied");
 
 			reply.ephemeral(event, "Access denied.");
 			return;
@@ -69,11 +61,7 @@ public class ModalListener extends ListenerAdapter {
 			var messageSource = Fetcher.getEphemeralMessageSource(event.getMessage(), event.getMessageChannel());
 			if (messageSource == null) {
 
-				serviceLog.run(LogData.builder()
-					.level(Level.WARN)
-					.message("Message source not found")
-					.event(event)
-				);
+				log.warn("Message source not found");
 
 				reply.ephemeral(event, Properties.FORM_NOT_FOUND_REPLY);
 				return;
