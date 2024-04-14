@@ -6,11 +6,6 @@ application:
 sentry:
   dsn: # Intentionally left empty
 
-server:
-  error:
-    whitelabel:
-      enabled: false
-
 spring:
   main:
     banner-mode: off
