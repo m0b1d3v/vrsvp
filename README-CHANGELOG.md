@@ -2,7 +2,13 @@
 
 Most recent entries are first.
 
-# 2023-12-08 (v1.6)
+## 2024-04-14 (v1.7)
+
+- Application can no longer start without a bot token
+- Removed library used for logging format to reduce code dependencies
+- Fixed exception when displaying error page to HTTP requests
+
+## 2023-12-08 (v1.6)
 
 - Implemented Spring framework for dependency injection
 - Added health check endpoint for monitoring
