@@ -26,6 +26,7 @@
 
     <root level="info">
         <appender-ref ref="stdout"/>
+		<appender-ref ref="webhook"/>
     </root>
 
 </configuration>
