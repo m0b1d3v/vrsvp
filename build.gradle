@@ -19,7 +19,13 @@ version = '1.6'
 description = 'Virtual RSVP system for Discord-based communities.'
 
 java {
-	sourceCompatibility = JavaVersion.VERSION_21
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(21)
+	}
+}
+
+application {
+	mainClass = 'dev.m0b1.vrsvp.Main'
 }
 
 repositories {
