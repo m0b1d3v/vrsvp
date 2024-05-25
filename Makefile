@@ -1,38 +1,40 @@
+gradle = cd development && ./gradlew
+
 all:
 	cat --number Makefile
 
 build:
-	./gradlew assembleBootDist
+	$(gradle) assembleBootDist
 
 buildToolUpdate:
-	./gradlew wrapper --gradle-version latest
+	$(gradle) wrapper --gradle-version latest
 
 checkDependencies:
-	./gradlew dependencyUpdates
+	$(gradle) dependencyUpdates
 
 checkSource: clean test
-	./gradlew sonar
+	$(gradle) sonar
 
 checkVulnerabilities:
-	./gradlew dependencyCheckAnalyze
+	$(gradle) dependencyCheckAnalyze
 
 clean:
-	./gradlew clean
+	$(gradle) clean
 
 run:
-	./gradlew run
+	$(gradle) run
 
 tasks:
-	./gradlew tasks
+	$(gradle) tasks
 
 test:
-	./gradlew test
+	$(gradle) test
 
 testI:
-	./gradlew test --tests '*IntegrationTest'
+	$(gradle) test --tests '*IntegrationTest'
 
 testU:
-	./gradlew test --tests '*UnitTest'
+	$(gradle) test --tests '*UnitTest'
 
 transfer:
 	scp build/distributions/*.zip projects:/srv/vrsvp/private/
