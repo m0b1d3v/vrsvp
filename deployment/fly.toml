@@ -1,0 +1,36 @@
+# https://fly.io/docs/reference/configuration/
+
+app = 'vrsvp'
+primary_region = 'atl'
+
+[build]
+dockerfile = 'Dockerfile'
+ignorefile = '.dockerignore'
+build-target = 'production'
+
+[deploy]
+strategy = 'bluegreen'
+
+[http_service]
+internal_port = 8080
+force_https = true
+auto_stop_machines = false
+auto_start_machines = true
+min_machines_running = 1
+processes = ['app']
+
+[[http_service.checks]]
+grace_period = "10s"
+interval = "10s"
+method = "GET"
+timeout = "5s"
+path = "/actuator/health"
+
+[env]
+JAVA_OPTS='--enable-preview'
+SERVER_ADDRESS='0.0.0.0'
+SERVER_PORT='8080'
+
+[[vm]]
+size = 'shared-cpu-1x'
+memory = '512mb'

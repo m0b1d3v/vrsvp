@@ -3,9 +3,6 @@ gradle = cd development && ./gradlew
 all:
 	cat --number Makefile
 
-build:
-	$(gradle) assembleBootDist
-
 buildToolUpdate:
 	$(gradle) wrapper --gradle-version latest
 
@@ -36,6 +33,12 @@ testI:
 testU:
 	$(gradle) test --tests '*UnitTest'
 
-transfer:
-	scp build/distributions/*.zip projects:/srv/vrsvp/private/
-	ssh projects 'cd /srv/vrsvp/private && unzip *.zip && rm *.zip'
+deploy:
+	fly deploy \
+		--local-only \
+		--config deployment/fly.toml \
+		--dockerfile deployment/Dockerfile \
+		--ignorefile .dockerignore
+
+logs:
+	fly logs -a vrsvp
