@@ -2,6 +2,11 @@
 
 Most recent entries are first.
 
+## 2024-05-26 (v1.8)
+
+- Migrated application to run on [Fly.io](https://fly.io)
+- Removed logging output JSON indentation for more information density
+
 ## 2024-04-14 (v1.7)
 
 - Application can no longer start without a bot token
