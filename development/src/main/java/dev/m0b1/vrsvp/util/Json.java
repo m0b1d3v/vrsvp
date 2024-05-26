@@ -11,7 +11,6 @@ public final class Json {
 
   private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper()
 	  .disable(SerializationFeature.FAIL_ON_EMPTY_BEANS)
-	  .enable(SerializationFeature.INDENT_OUTPUT)
 	  .enable(SerializationFeature.ORDER_MAP_ENTRIES_BY_KEYS);
 
   public static String write(Object input, String defaultValue) {
