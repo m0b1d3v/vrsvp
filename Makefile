@@ -1,7 +1,14 @@
 gradle = cd development && ./gradlew
+read = cat --number
+
+ifeq ($(OS), Windows_NT)
+	# Overwrite default Linux tasks for Windows users
+	gradle = cd development && gradlew.bat
+	read = type
+endif
 
 all:
-	cat --number Makefile
+	$(read) Makefile
 
 buildToolUpdate:
 	$(gradle) wrapper --gradle-version latest
