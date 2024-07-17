@@ -1,7 +1,6 @@
 application:
   discord:
     botSecretToken:
-    # logWebhook: # Intentionally commented out to work with logback-spring.xml
 
 sentry:
   dsn: # Intentionally left empty

@@ -2,12 +2,6 @@
 
 	<include resource="org/springframework/boot/logging/logback/defaults.xml"/>
 
-	<springProperty
-		name="webhook_destination"
-		source="application.discord.logWebhook"
-		defaultValue="${APPLICATION_DISCORD_LOG_WEBHOOK}"
-	/>
-
     <appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
 		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
 			<!-- Keywords at https://logback.qos.ch/manual/layouts.html#conversionWord -->
@@ -17,16 +11,11 @@
 		</encoder>
     </appender>
 
-	<appender name="webhook" class="dev.m0b1.vrsvp.logging.LoggingWebhook">
-		<destination>${webhook_destination}</destination>
-	</appender>
-
 	<logger name="org.apache.catalina" level="WARN"/>
 	<logger name="org.springframework" level="WARN"/>
 
     <root level="info">
         <appender-ref ref="stdout"/>
-		<appender-ref ref="webhook"/>
     </root>
 
 </configuration>
