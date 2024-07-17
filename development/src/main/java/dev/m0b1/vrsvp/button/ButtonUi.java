@@ -26,8 +26,7 @@ public class ButtonUi {
 	public static List<Button> buildRsvpActionPrompts() {
 		return List.of(
 			Button.primary(ButtonEnum.RSVP.getId(), ButtonEnum.RSVP.getLabel()).withEmoji(EMOJI_RSVP),
-			Button.secondary(ButtonEnum.EDIT.getId(), ButtonEnum.EDIT.getLabel()).withEmoji(EMOJI_EDIT),
-			Button.link(ButtonEnum.ABOUT.getId(), ButtonEnum.ABOUT.getLabel())
+			Button.secondary(ButtonEnum.EDIT.getId(), ButtonEnum.EDIT.getLabel()).withEmoji(EMOJI_EDIT)
 		);
 	}
 

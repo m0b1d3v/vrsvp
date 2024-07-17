@@ -7,7 +7,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum ButtonEnum {
 
-	ABOUT("https://m0b1.dev/git/vrsvp", "About"),
 	EDIT("edit", "Edit Event"),
 	EDIT_EVENT_ACTIVE("edit-toggle-rsvp-active", "Toggle RSVP Active"),
 	EDIT_EVENT_DESCRIPTION("edit-event-description", "Edit Description"),

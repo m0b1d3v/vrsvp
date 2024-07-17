@@ -25,10 +25,9 @@ class ButtonUiUnitTest extends TestBase {
 
 		var buttons = ButtonUi.buildRsvpActionPrompts();
 
-		assertEquals(3, buttons.size());
+		assertEquals(2, buttons.size());
 		assertButtonInformation(buttons.get(0), ButtonStyle.PRIMARY, ButtonEnum.RSVP, ButtonUi.EMOJI_RSVP);
 		assertButtonInformation(buttons.get(1), ButtonStyle.SECONDARY, ButtonEnum.EDIT, ButtonUi.EMOJI_EDIT);
-		assertButtonInformation(buttons.get(2), ButtonStyle.LINK, ButtonEnum.ABOUT, null);
 	}
 
 	@Test
