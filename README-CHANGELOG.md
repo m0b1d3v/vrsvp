@@ -2,6 +2,12 @@
 
 Most recent entries are first.
 
+## 2024-07-16 (v1.9)
+
+- Updated Discord API dependency from beta to stable
+- Removed Discord logging webhook as Fly.io maintains logs
+- Removed "About" button on generated polls for simplicity
+
 ## 2024-05-26 (v1.8)
 
 - Migrated application to run on [Fly.io](https://fly.io)
