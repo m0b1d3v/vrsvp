@@ -2,6 +2,10 @@
 
 Most recent entries are first.
 
+## 2024-09-02 (v1.10)
+
+- Updated Java version to JDK 22
+
 ## 2024-07-16 (v1.9)
 
 - Updated Discord API dependency from beta to stable
