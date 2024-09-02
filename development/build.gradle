@@ -20,7 +20,7 @@ description = 'Virtual RSVP system for Discord-based communities.'
 
 java {
 	toolchain {
-		languageVersion = JavaLanguageVersion.of(21)
+		languageVersion = JavaLanguageVersion.of(22)
 	}
 }
 
