@@ -5,13 +5,13 @@ plugins {
 	id 'application'
 	id 'jacoco'
 
-	id 'com.github.ben-manes.versions' version '0.51.0' // Dependency update checks
-	id 'io.freefair.lombok' version '8.11' // Boilerplate reduction
-	id 'io.sentry.jvm.gradle' version '4.14.1' // Exception monitoring
+	id 'com.github.ben-manes.versions' version '0.52.0' // Dependency update checks
+	id 'io.freefair.lombok' version '8.13.1' // Boilerplate reduction
+	id 'io.sentry.jvm.gradle' version '5.3.0' // Exception monitoring
 	id 'io.spring.dependency-management' version '1.1.7' // Transitive/exclusion dependency management
-	id 'org.owasp.dependencycheck' version '11.1.1' // Dependency vulnerability checks
-	id 'org.sonarqube' version '6.0.1.5171' // Source code analysis
-	id 'org.springframework.boot' version '3.4.1' // Framework
+	id 'org.owasp.dependencycheck' version '12.1.0' // Dependency vulnerability checks
+	id 'org.sonarqube' version '6.1.0.5360' // Source code analysis
+	id 'org.springframework.boot' version '3.4.4' // Framework
 }
 
 group = 'dev.m0b1.vrsvp'
@@ -51,7 +51,7 @@ dependencies {
 	developmentOnly('org.springframework.boot:spring-boot-devtools')
 
 	// Discord bot
-	implementation("net.dv8tion:JDA:5.2.2") {
+	implementation("net.dv8tion:JDA:5.3.1") {
 		exclude module: 'opus-java'
 	}
 
