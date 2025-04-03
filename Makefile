@@ -41,8 +41,8 @@ testU:
 	$(gradle) test --tests '*UnitTest'
 
 deploy:
+	# If you have Docker locally, add "--local-only" if you don't want to use Fly builder
 	fly deploy \
-		--local-only \
 		--config deployment/fly.toml \
 		--dockerfile deployment/Dockerfile \
 		--ignorefile .dockerignore
