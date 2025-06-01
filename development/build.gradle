@@ -7,11 +7,11 @@ plugins {
 
 	id 'com.github.ben-manes.versions' version '0.52.0' // Dependency update checks
 	id 'io.freefair.lombok' version '8.13.1' // Boilerplate reduction
-	id 'io.sentry.jvm.gradle' version '5.3.0' // Exception monitoring
+	id 'io.sentry.jvm.gradle' version '5.7.0' // Exception monitoring
 	id 'io.spring.dependency-management' version '1.1.7' // Transitive/exclusion dependency management
 	id 'org.owasp.dependencycheck' version '12.1.1' // Dependency vulnerability checks
-	id 'org.sonarqube' version '6.1.0.5360' // Source code analysis
-	id 'org.springframework.boot' version '3.4.5' // Framework
+	id 'org.sonarqube' version '6.2.0.5505' // Source code analysis
+	id 'org.springframework.boot' version '3.5.0' // Framework
 }
 
 group = 'dev.m0b1.vrsvp'
@@ -51,7 +51,7 @@ dependencies {
 	developmentOnly('org.springframework.boot:spring-boot-devtools')
 
 	// Discord bot
-	implementation("net.dv8tion:JDA:5.5.0") {
+	implementation("net.dv8tion:JDA:5.5.1") {
 		exclude module: 'opus-java'
 	}
 
