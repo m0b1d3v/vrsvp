@@ -20,7 +20,7 @@ description = 'Virtual RSVP system for Discord-based communities.'
 
 java {
 	toolchain {
-		languageVersion = JavaLanguageVersion.of(22)
+		languageVersion = JavaLanguageVersion.of(25)
 	}
 }
 
@@ -36,10 +36,6 @@ configurations {
 	compileOnly {
 		extendsFrom annotationProcessor
 	}
-}
-
-tasks.withType(JavaCompile).each {
-	it.options.compilerArgs.add('--enable-preview')
 }
 
 dependencies {

@@ -1,4 +1,4 @@
-FROM gradle:8.10.0-jdk22-alpine AS base
+FROM gradle:9.1.0-jdk25-alpine AS base
 
 WORKDIR /app
 COPY development/build.gradle ./
@@ -10,9 +10,8 @@ RUN cp build/distributions/*.zip /srv/ \
     && unzip *.zip \
     && rm *.zip
 
-FROM amazoncorretto:22.0.2-alpine AS production
+FROM amazoncorretto:25.0.1-alpine AS production
 
 COPY --from=base /srv/app* /srv
-ENV JAVA_OPTS "--enable-preview"
 EXPOSE 8080
 CMD /srv/bin/app
