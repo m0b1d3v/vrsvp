@@ -56,7 +56,7 @@ class ButtonUiUnitTest extends TestBase {
 	void buildIndexedButtonActionRowsFormButtonsCorrectly() {
 
 		var buttonRows = ButtonUi.buildIndexedButtonActionRows(ButtonEnum.RSVP.getId(), 2);
-		var buttons = buttonRows.get(0).getButtons();
+		var buttons = buttonRows.getFirst().getButtons();
 
 		assertButtonInformation(buttons.get(0), ButtonStyle.PRIMARY, "rsvp:0", "#1", null);
 		assertButtonInformation(buttons.get(1), ButtonStyle.PRIMARY, "rsvp:1", "#2", null);

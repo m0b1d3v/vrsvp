@@ -21,8 +21,8 @@ class ModalUiUnitTest extends TestBase {
 		var modal = ModalUi.editText(ModalEnum.EVENT_DESCRIPTION, "Testing");
 
 		assertEquals(1, modal.getComponents().size());
-		assertEquals(1, modal.getComponents().get(0).getActionComponents().size());
-		assertEquals(TextInputImpl.class, modal.getComponents().get(0).getActionComponents().get(0).getClass());
+		assertEquals(1, modal.getComponents().getFirst().getActionComponents().size());
+		assertEquals(TextInputImpl.class, modal.getComponents().getFirst().getActionComponents().getFirst().getClass());
 	}
 
 	@Test
@@ -30,7 +30,7 @@ class ModalUiUnitTest extends TestBase {
 
 		var modal = ModalUi.editText(ModalEnum.EVENT_DESCRIPTION, "Testing");
 
-		var textInput = (TextInputImpl) modal.getComponents().get(0).getActionComponents().get(0);
+		var textInput = (TextInputImpl) modal.getComponents().getFirst().getActionComponents().getFirst();
 		assertEquals(ModalEnum.EVENT_DESCRIPTION.getId(), textInput.getId());
 		assertEquals(ModalEnum.EVENT_DESCRIPTION.getLabel(), textInput.getLabel());
 		assertEquals(ModalEnum.EVENT_DESCRIPTION.getPlaceholder(), textInput.getPlaceHolder());

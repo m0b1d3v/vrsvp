@@ -116,7 +116,7 @@ class ButtonReplyUnitTest extends TestBase {
 		verify(message).editMessageComponents(actionRowArgumentCaptor.capture());
 
 		var buttons = actionRowArgumentCaptor.getValue().getButtons();
-		assertNotEquals(button.isDisabled(), buttons.get(0).isDisabled());
+		assertNotEquals(button.isDisabled(), buttons.getFirst().isDisabled());
 	}
 
 	@Test

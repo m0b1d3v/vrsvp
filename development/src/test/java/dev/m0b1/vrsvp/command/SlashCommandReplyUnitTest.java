@@ -39,7 +39,7 @@ class SlashCommandReplyUnitTest extends TestBase {
 
 		var modal = modalArgumentCaptor.getValue();
 
-		var textInput = (TextInputImpl) modal.getComponents().get(0).getActionComponents().get(0);
+		var textInput = (TextInputImpl) modal.getComponents().getFirst().getActionComponents().getFirst();
 		Assertions.assertEquals(ModalEnum.EVENT_CREATION.getId(), textInput.getId());
 		assertEquals(ModalEnum.EVENT_CREATION.getLabel(), textInput.getLabel());
 		assertEquals(ModalEnum.EVENT_CREATION.getPlaceholder(), textInput.getPlaceHolder());
@@ -59,7 +59,7 @@ class SlashCommandReplyUnitTest extends TestBase {
 		verify(slashCommandInteractionEvent).replyModal(modalArgumentCaptor.capture());
 
 		var modal = modalArgumentCaptor.getValue();
-		var textInput = (TextInputImpl) modal.getComponents().get(0).getActionComponents().get(0);
+		var textInput = (TextInputImpl) modal.getComponents().getFirst().getActionComponents().getFirst();
 
 		var expectation = """
 			**New Event**
@@ -88,7 +88,7 @@ class SlashCommandReplyUnitTest extends TestBase {
 		verify(slashCommandInteractionEvent).replyModal(modalArgumentCaptor.capture());
 
 		var modal = modalArgumentCaptor.getValue();
-		var textInput = (TextInputImpl) modal.getComponents().get(0).getActionComponents().get(0);
+		var textInput = (TextInputImpl) modal.getComponents().getFirst().getActionComponents().getFirst();
 
 		var expectation = """
 			**New Event**
