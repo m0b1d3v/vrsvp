@@ -102,7 +102,7 @@ class ButtonListenerUnitTest extends TestBase {
 	@Test
 	void onButtonInteractionForRsvpToggleFailsWithoutMessageSource() {
 
-		when(buttonInteractionEvent.getComponentId()).thenReturn(STR."\{ButtonEnum.RSVP.getId()}:1");
+		when(buttonInteractionEvent.getComponentId()).thenReturn("%s:1".formatted(ButtonEnum.RSVP.getId()));
 		when(buttonInteractionEvent.getMessage()).thenReturn(null);
 
 		listener.onButtonInteraction(buttonInteractionEvent);
@@ -169,7 +169,7 @@ class ButtonListenerUnitTest extends TestBase {
 	void onButtonInteractionForRsvpToggle() {
 
 		setupFetcher(message);
-		when(buttonInteractionEvent.getComponentId()).thenReturn(STR."\{ButtonEnum.RSVP.getId()}:1");
+		when(buttonInteractionEvent.getComponentId()).thenReturn("%s:1".formatted(ButtonEnum.RSVP.getId()));
 		when(buttonInteractionEvent.getMessage()).thenReturn(message);
 		when(buttonInteractionEvent.getMessageChannel()).thenReturn(messageChannel);
 

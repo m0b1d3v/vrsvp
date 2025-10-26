@@ -111,7 +111,7 @@ public class ButtonReply {
 
 			log.info("RSVP declined for signup limit");
 
-			var errorMessage = STR."Signup limit exceeded, cannot RSVP for slot #\{slotIndex + 1}";
+			var errorMessage = "Signup limit exceeded, cannot RSVP for slot #%d".formatted(slotIndex + 1);
 			event.editMessage(errorMessage).queue();
 			return;
 		}
@@ -122,7 +122,7 @@ public class ButtonReply {
 				.setContent(editedDescription)
 				.queue();
 
-			var reply = STR."RSVP state toggled for slot #\{slotIndex + 1}";
+			var reply = "RSVP state toggled for slot #%d".formatted(slotIndex + 1);
 			event.editMessage(reply).queue();
 
 		} catch (IllegalArgumentException e) {

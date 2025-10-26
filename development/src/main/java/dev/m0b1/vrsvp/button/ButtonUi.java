@@ -51,8 +51,8 @@ public class ButtonUi {
 
 		for (var buttonIndex = 0; buttonIndex < buttonCount; buttonIndex++) {
 
-			var id = STR."\{actionId}:\{buttonIndex}";
-			var label = STR."#\{buttonIndex + 1}";
+			var id = "%s:%d".formatted(actionId, buttonIndex);
+			var label = "#%d".formatted(buttonIndex + 1);
 
 			buttons.add(Button.primary(id, label));
 		}

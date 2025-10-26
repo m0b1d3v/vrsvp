@@ -78,7 +78,7 @@ public class Parser {
 	}
 
 	private static Pattern buildRegexPatternForLimit(SlashCommandEnum slashCommandEnum) {
-		var regex = STR."\{slashCommandEnum.getDescription()}: (\\d+)";
+		var regex = "%s: (\\d+)".formatted(slashCommandEnum.getDescription());
 		return Pattern.compile(regex);
 	}
 

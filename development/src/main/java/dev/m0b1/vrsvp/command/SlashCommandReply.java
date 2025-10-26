@@ -36,15 +36,15 @@ public class SlashCommandReply {
 
 		var description = new LinkedList<String>();
 		description.add("**New Event**\n");
-		description.add(STR."- Starts <t:\{startTimestamp}:R> on <t:\{startTimestamp}:F>");
-		description.add(STR."- Each slot is \{inputs.getDurationInMinutes()} minutes long");
+		description.add("- Starts <t:%d:R> on <t:%d:F>".formatted(startTimestamp, startTimestamp));
+		description.add("- Each slot is %d minutes long".formatted(inputs.getDurationInMinutes()));
 		description.add(buildRsvpLimitAddendum(SlashCommandEnum.RSVP_LIMIT_PER_SLOT, inputs.getRsvpLimitPerSlot()));
 		description.add(buildRsvpLimitAddendum(SlashCommandEnum.RSVP_LIMIT_PER_PERSON, inputs.getRsvpLimitPerPerson()));
 		description.add("");
 
 		for (var slotIndex = 0; slotIndex < inputs.getSlots(); slotIndex++) {
 			var slotTimestamp = startTimestamp + (slotDurationInSeconds * slotIndex);
-			var line = STR."> #\{slotIndex + 1}\{Parser.SIGNUP_DELIMITER}<t:\{slotTimestamp}:t>";
+			var line = "> #%d%s<t:%d:t>".formatted(slotIndex + 1, Parser.SIGNUP_DELIMITER, slotTimestamp);
 			description.add(line);
 		}
 
@@ -56,7 +56,7 @@ public class SlashCommandReply {
 	private String buildRsvpLimitAddendum(SlashCommandEnum slashCommandEnum, Integer limit) {
 
 		if (limit != null) {
-			return STR."- \{slashCommandEnum.getDescription()}: \{limit}";
+			return "- %s: %d".formatted(slashCommandEnum.getDescription(), limit);
 		}
 
 		return null;
