@@ -1,0 +1,8 @@
+# Automatically normalize line endings
+* text=auto
+
+# Explicit handling of certain files
+gradlew text eol=lf
+*.sh text eol=lf
+*.bat text eol=crlf
+*.jar binary
