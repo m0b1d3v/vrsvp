@@ -19,10 +19,13 @@ class SlashCommandReplyUnitTest extends TestBase {
 
 	@InjectMocks private SlashCommandReply reply;
 
-	private final SlashCommandInputs inputs = new SlashCommandInputs();
+	private SlashCommandInputs inputs;
 
 	@BeforeEach
-	public void beforeEach() {
+	void beforeEach() {
+
+		inputs = new SlashCommandInputs();
+
 		when(slashCommandInteractionEvent.replyModal(any())).thenReturn(modalCallbackAction);
 	}
 
@@ -49,7 +52,6 @@ class SlashCommandReplyUnitTest extends TestBase {
 	@Test
 	void rsvpCreationWithoutRsvpLimitAddendum() {
 
-		var inputs = new SlashCommandInputs();
 		inputs.setSlots(2);
 		inputs.setDurationInMinutes(5);
 		inputs.setStartTimestamp(10);
@@ -75,7 +77,6 @@ class SlashCommandReplyUnitTest extends TestBase {
 	@Test
 	void rsvpCreationWithRsvpLimitAddendum() {
 
-		var inputs = new SlashCommandInputs();
 		inputs.setSlots(3);
 		inputs.setDurationInMinutes(20);
 		inputs.setStartTimestamp(100);

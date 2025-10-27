@@ -25,7 +25,7 @@ class ModalListenerUnitTest extends TestBase {
 	private static final List<ModalEnum> VALID_MODAL_ENUMS = List.of(ModalEnum.EVENT_CREATION, ModalEnum.EVENT_DESCRIPTION);
 
 	@BeforeEach
-	public void beforeEach() {
+	void beforeEach() {
 		when(user.getName()).thenReturn("@Testing");
 		when(modalInteractionEvent.getUser()).thenReturn(user);
 		when(modalInteractionEvent.getMember()).thenReturn(member);

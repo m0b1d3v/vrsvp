@@ -16,7 +16,7 @@ import static org.mockito.Mockito.when;
 class ParserUnitTest extends TestBase {
 
 	@BeforeEach
-	public void beforeEach() {
+	void beforeEach() {
 		when(message.getContentRaw()).thenReturn("non-embed content");
 		when(message.getEmbeds()).thenReturn(List.of(messageEmbed));
 	}

@@ -28,7 +28,7 @@ class BotUnitTest extends TestBase {
 	@Mock private CommandListUpdateAction commandListUpdateAction;
 
 	@BeforeEach
-	public void beforeEach() {
+	void beforeEach() {
 
 		when(jda.updateCommands()).thenReturn(commandListUpdateAction);
 		when(jda.getGuilds()).thenReturn(Collections.emptyList());

@@ -22,7 +22,7 @@ class ModalReplyUnitTest extends TestBase {
 	@InjectMocks private ModalReply reply;
 
 	@BeforeEach
-	public void beforeEach() {
+	void beforeEach() {
 
 		when(message.getEmbeds()).thenReturn(List.of(messageEmbed));
 		when(message.editMessageEmbeds(Collections.emptyList())).thenReturn(messageEditAction);

@@ -19,7 +19,7 @@ import static org.mockito.Mockito.when;
 class GateKeeperUnitTest extends TestBase {
 
 	@BeforeEach
-	public void beforeEach() {
+	void beforeEach() {
 
 		when(genericInteractionCreateEvent.getMember()).thenReturn(member);
 		when(genericInteractionCreateEvent.getGuild()).thenReturn(guild);

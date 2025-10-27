@@ -28,7 +28,7 @@ class ButtonReplyUnitTest extends TestBase {
 	@InjectMocks private ButtonReply reply;
 
 	@BeforeEach
-	public void beforeEach() {
+	void beforeEach() {
 
 		when(user.getName()).thenReturn("@Testing");
 		when(user.getAsMention()).thenReturn("@Testing");
@@ -64,7 +64,9 @@ class ButtonReplyUnitTest extends TestBase {
 
 		reply.editInterest(buttonInteractionEvent);
 
-		var expectedReply = "Use these buttons to edit the RSVP form.\nWhen editing descriptions, it is suggested to copy the text into your favorite editor for making changes.";
+		var expectedReply = """
+			Use these buttons to edit the RSVP form.
+			When editing descriptions, it is suggested to copy the text into your favorite editor for making changes.""";
 
 		verify(buttonInteractionEvent).reply(expectedReply);
 		verify(replyCallbackAction).setEphemeral(true);
@@ -133,7 +135,7 @@ class ButtonReplyUnitTest extends TestBase {
 	void rsvpToggleFailsIfAddingUserMentionAndRsvpLimitPerPersonExceededWithoutEditingDescription() {
 
 		var rule = "%s: 0".formatted(SlashCommandEnum.RSVP_LIMIT_PER_PERSON.getDescription());
-		when(messageEmbed.getDescription()).thenReturn("%s\n> #1".formatted(rule));
+		when(messageEmbed.getDescription()).thenReturn("%s%n> #1".formatted(rule));
 
 		reply.rsvpToggle(buttonInteractionEvent, message, 0);
 
@@ -146,7 +148,7 @@ class ButtonReplyUnitTest extends TestBase {
 	void rsvpToggleFailsIfAddingUserMentionAndRsvpLimitPerSlotExceededWithoutEditingDescription() {
 
 		var rule = "%s: 0".formatted(SlashCommandEnum.RSVP_LIMIT_PER_SLOT.getDescription());
-		when(messageEmbed.getDescription()).thenReturn("%s\n> #1\n> #2".formatted(rule));
+		when(messageEmbed.getDescription()).thenReturn("%s%n> #1%n> #2".formatted(rule));
 
 		reply.rsvpToggle(buttonInteractionEvent, message, 1);
 
@@ -159,7 +161,7 @@ class ButtonReplyUnitTest extends TestBase {
 	void rsvpToggleDoesNotThrowExceptionIfThereAreSlotLimitsSetButNoSlots() {
 
 		var rule = "%s: 1".formatted(SlashCommandEnum.RSVP_LIMIT_PER_SLOT.getDescription());
-		when(messageEmbed.getDescription()).thenReturn("%s\n".formatted(rule));
+		when(messageEmbed.getDescription()).thenReturn("%s%n".formatted(rule));
 
 		assertDoesNotThrow(() -> reply.rsvpToggle(buttonInteractionEvent, message, 0));
 	}
@@ -184,7 +186,7 @@ class ButtonReplyUnitTest extends TestBase {
 	void rsvpToggleSucceedsIfRemovingUserMentionWhenRsvpLimitPerPersonExceeded() {
 
 		var rule = "%s: 0".formatted(SlashCommandEnum.RSVP_LIMIT_PER_PERSON.getDescription());
-		when(messageEmbed.getDescription()).thenReturn("%s\n> #1, @Testing".formatted(rule));
+		when(messageEmbed.getDescription()).thenReturn("%s%n> #1, @Testing".formatted(rule));
 
 		reply.rsvpToggle(buttonInteractionEvent, message, 0);
 
@@ -199,7 +201,7 @@ class ButtonReplyUnitTest extends TestBase {
 	void rsvpToggleSucceedsIfRemovingUserMentionWhenRsvpLimitPerSlotExceeded() {
 
 		var rule = "%s: 0".formatted(SlashCommandEnum.RSVP_LIMIT_PER_SLOT.getDescription());
-		when(messageEmbed.getDescription()).thenReturn("%s\n> #1\n> #2, @Testing".formatted(rule));
+		when(messageEmbed.getDescription()).thenReturn("%s%n> #1%n> #2, @Testing".formatted(rule));
 
 		reply.rsvpToggle(buttonInteractionEvent, message, 1);
 
@@ -253,7 +255,7 @@ class ButtonReplyUnitTest extends TestBase {
 
 		var limitPerson = "%s: 1".formatted(SlashCommandEnum.RSVP_LIMIT_PER_PERSON.getDescription());
 		var limitSlot = "%s: 1".formatted(SlashCommandEnum.RSVP_LIMIT_PER_SLOT.getDescription());
-		when(messageEmbed.getDescription()).thenReturn("%s\n%s\n> #1".formatted(limitPerson, limitSlot));
+		when(messageEmbed.getDescription()).thenReturn("%s%n%s%n> #1".formatted(limitPerson, limitSlot));
 
 		reply.rsvpToggle(buttonInteractionEvent, message, 0);
 
@@ -269,7 +271,7 @@ class ButtonReplyUnitTest extends TestBase {
 
 		var limitPerson = "%s: 2".formatted(SlashCommandEnum.RSVP_LIMIT_PER_PERSON.getDescription());
 		var limitSlot = "%s: 2".formatted(SlashCommandEnum.RSVP_LIMIT_PER_SLOT.getDescription());
-		when(messageEmbed.getDescription()).thenReturn("%s\n%s\n> #1".formatted(limitPerson, limitSlot));
+		when(messageEmbed.getDescription()).thenReturn("%s%n%s%n> #1".formatted(limitPerson, limitSlot));
 
 		reply.rsvpToggle(buttonInteractionEvent, message, 0);
 

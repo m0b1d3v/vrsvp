@@ -24,7 +24,7 @@ class ButtonListenerUnitTest extends TestBase {
 	@Mock private ButtonReply reply;
 
 	@BeforeEach
-	public void beforeEach() {
+	void beforeEach() {
 		when(user.getName()).thenReturn("@Testing");
 		when(buttonInteractionEvent.getUser()).thenReturn(user);
 		when(buttonInteractionEvent.getComponentId()).thenReturn(ButtonEnum.RSVP.getId());

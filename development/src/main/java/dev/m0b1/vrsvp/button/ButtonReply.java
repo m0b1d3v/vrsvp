@@ -130,7 +130,7 @@ public class ButtonReply {
 			var reply = "RSVP state toggled for slot #%d".formatted(slotIndex + 1);
 			event.editMessage(reply).queue();
 
-		} catch (IllegalArgumentException e) {
+		} catch (IllegalArgumentException _) {
 
 			var reply = """
 				VRSVP has hit the Discord message length limit when trying to RSVP.

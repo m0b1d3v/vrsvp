@@ -24,10 +24,10 @@ class SlashCommandListenerUnitTest extends TestBase {
 
 	@Mock private SlashCommandReply reply;
 
-	private final int SLASH_COMMAND_INPUT_COUNT = SlashCommandEnum.values().length;
+	private static final int SLASH_COMMAND_INPUT_COUNT = SlashCommandEnum.values().length;
 
 	@BeforeEach
-	public void beforeEach() {
+	void beforeEach() {
 		when(slashCommandInteractionEvent.getUser()).thenReturn(user);
 	}
 
