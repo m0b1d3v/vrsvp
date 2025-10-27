@@ -2,6 +2,11 @@
 
 Most recent entries are first.
 
+## 2025-10-26 (v1.11)
+
+- Updated Java version to JDK 25
+- Discord client library updated
+
 ## 2024-09-02 (v1.10)
 
 - Updated Java version to JDK 22
