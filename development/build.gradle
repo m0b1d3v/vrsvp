@@ -47,7 +47,7 @@ dependencies {
 	developmentOnly('org.springframework.boot:spring-boot-devtools')
 
 	// Discord bot
-	implementation("net.dv8tion:JDA:5.5.1") {
+	implementation("net.dv8tion:JDA:6.1.0") {
 		exclude module: 'opus-java'
 	}
 

@@ -2,9 +2,9 @@ package dev.m0b1.vrsvp.button;
 
 import dev.m0b1.vrsvp.TestBase;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.components.buttons.Button;
+import net.dv8tion.jda.api.components.buttons.ButtonStyle;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
-import net.dv8tion.jda.api.interactions.components.buttons.Button;
-import net.dv8tion.jda.api.interactions.components.buttons.ButtonStyle;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -118,14 +118,12 @@ class ButtonUiUnitTest extends TestBase {
 		assertEquals(emoji, button.getEmoji());
 
 		if (ButtonStyle.LINK.equals(buttonStyle)) {
-			assertNull(button.getId());
+			assertNull(button.getCustomId());
 			assertEquals(id, button.getUrl());
 		} else {
-			assertEquals(id, button.getId());
+			assertEquals(id, button.getCustomId());
 			assertNull(button.getUrl());
 		}
-
-		assertEquals(5, button.getMaxPerRow());
 	}
 
 	private String toggleRsvp(String slotValue) {

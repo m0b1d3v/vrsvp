@@ -1,6 +1,8 @@
 package dev.m0b1.vrsvp.modal;
 
 import dev.m0b1.vrsvp.TestBase;
+import net.dv8tion.jda.api.components.MessageTopLevelComponent;
+import net.dv8tion.jda.api.components.actionrow.ActionRow;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -11,7 +13,6 @@ import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyBoolean;
-import static org.mockito.ArgumentMatchers.anyCollection;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -33,7 +34,7 @@ class ModalReplyUnitTest extends TestBase {
 
 		when(replyCallbackAction.setEphemeral(anyBoolean())).thenReturn(replyCallbackAction);
 		when(replyCallbackAction.addEmbeds(any(MessageEmbed[].class))).thenReturn(replyCallbackAction);
-		when(replyCallbackAction.addActionRow(anyCollection())).thenReturn(replyCallbackAction);
+		when(replyCallbackAction.setComponents(any(MessageTopLevelComponent.class))).thenReturn(replyCallbackAction);
 	}
 
 	@Test
@@ -42,7 +43,7 @@ class ModalReplyUnitTest extends TestBase {
 		reply.createRsvpFromAdmin(modalInteractionEvent, "Testing");
 
 		verify(modalInteractionEvent).reply("Testing");
-		verify(replyCallbackAction).addActionRow(anyCollection());
+		verify(replyCallbackAction).setComponents(any(ActionRow.class));
 		verify(replyCallbackAction).queue();
 	}
 

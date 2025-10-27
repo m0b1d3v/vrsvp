@@ -2,8 +2,9 @@ package dev.m0b1.vrsvp.command;
 
 import dev.m0b1.vrsvp.TestBase;
 import dev.m0b1.vrsvp.modal.ModalEnum;
-import net.dv8tion.jda.api.interactions.components.text.TextInputStyle;
-import net.dv8tion.jda.internal.interactions.component.TextInputImpl;
+import net.dv8tion.jda.api.components.label.Label;
+import net.dv8tion.jda.api.components.textinput.TextInput;
+import net.dv8tion.jda.api.components.textinput.TextInputStyle;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -37,11 +38,10 @@ class SlashCommandReplyUnitTest extends TestBase {
 		verify(slashCommandInteractionEvent).replyModal(modalArgumentCaptor.capture());
 		verify(modalCallbackAction).queue();
 
-		var modal = modalArgumentCaptor.getValue();
-
-		var textInput = (TextInputImpl) modal.getComponents().getFirst().getActionComponents().getFirst();
-		Assertions.assertEquals(ModalEnum.EVENT_CREATION.getId(), textInput.getId());
-		assertEquals(ModalEnum.EVENT_CREATION.getLabel(), textInput.getLabel());
+		var label = getLabelComponentFromModal();
+		var textInput = getTextInputComponentFromModal();
+		Assertions.assertEquals(ModalEnum.EVENT_CREATION.getId(), textInput.getCustomId());
+		assertEquals(ModalEnum.EVENT_CREATION.getLabel(), label.getLabel());
 		assertEquals(ModalEnum.EVENT_CREATION.getPlaceholder(), textInput.getPlaceHolder());
 		assertEquals(TextInputStyle.PARAGRAPH, textInput.getStyle());
 	}
@@ -58,8 +58,7 @@ class SlashCommandReplyUnitTest extends TestBase {
 
 		verify(slashCommandInteractionEvent).replyModal(modalArgumentCaptor.capture());
 
-		var modal = modalArgumentCaptor.getValue();
-		var textInput = (TextInputImpl) modal.getComponents().getFirst().getActionComponents().getFirst();
+		var textInput = getTextInputComponentFromModal();
 
 		var expectation = """
 			**New Event**
@@ -87,8 +86,7 @@ class SlashCommandReplyUnitTest extends TestBase {
 
 		verify(slashCommandInteractionEvent).replyModal(modalArgumentCaptor.capture());
 
-		var modal = modalArgumentCaptor.getValue();
-		var textInput = (TextInputImpl) modal.getComponents().getFirst().getActionComponents().getFirst();
+		var textInput = getTextInputComponentFromModal();
 
 		var expectation = """
 			**New Event**
@@ -103,6 +101,20 @@ class SlashCommandReplyUnitTest extends TestBase {
 			> #3, <t:2500:t>""";
 
 		assertEquals(expectation, textInput.getValue());
+	}
+
+	private Label getLabelComponentFromModal() {
+		return modalArgumentCaptor
+			.getValue()
+			.getComponents()
+			.getFirst()
+			.asLabel();
+	}
+
+	private TextInput getTextInputComponentFromModal() {
+		return getLabelComponentFromModal()
+			.getChild()
+			.asTextInput();
 	}
 
 }

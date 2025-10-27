@@ -1,9 +1,13 @@
 package dev.m0b1.vrsvp.modal;
 
 import dev.m0b1.vrsvp.TestBase;
+import net.dv8tion.jda.api.components.label.Label;
+import net.dv8tion.jda.api.components.textinput.TextInput;
+import net.dv8tion.jda.api.components.textinput.TextInputStyle;
 import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.interactions.components.text.TextInputStyle;
-import net.dv8tion.jda.internal.interactions.component.TextInputImpl;
+import net.dv8tion.jda.api.modals.Modal;
+import net.dv8tion.jda.internal.components.label.LabelImpl;
+import net.dv8tion.jda.internal.components.textinput.TextInputImpl;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -21,8 +25,8 @@ class ModalUiUnitTest extends TestBase {
 		var modal = ModalUi.editText(ModalEnum.EVENT_DESCRIPTION, "Testing");
 
 		assertEquals(1, modal.getComponents().size());
-		assertEquals(1, modal.getComponents().getFirst().getActionComponents().size());
-		assertEquals(TextInputImpl.class, modal.getComponents().getFirst().getActionComponents().getFirst().getClass());
+		assertEquals(LabelImpl.class, modal.getComponents().getFirst().getClass());
+		assertEquals(TextInputImpl.class, modal.getComponents().getFirst().asLabel().getChild().getClass());
 	}
 
 	@Test
@@ -30,9 +34,10 @@ class ModalUiUnitTest extends TestBase {
 
 		var modal = ModalUi.editText(ModalEnum.EVENT_DESCRIPTION, "Testing");
 
-		var textInput = (TextInputImpl) modal.getComponents().getFirst().getActionComponents().getFirst();
-		assertEquals(ModalEnum.EVENT_DESCRIPTION.getId(), textInput.getId());
-		assertEquals(ModalEnum.EVENT_DESCRIPTION.getLabel(), textInput.getLabel());
+		var label = getLabelComponent(modal);
+		var textInput = getTextInputComponent(modal);
+		assertEquals(ModalEnum.EVENT_DESCRIPTION.getId(), textInput.getCustomId());
+		assertEquals(ModalEnum.EVENT_DESCRIPTION.getLabel(), label.getLabel());
 		assertEquals(ModalEnum.EVENT_DESCRIPTION.getPlaceholder(), textInput.getPlaceHolder());
 		assertEquals(TextInputStyle.PARAGRAPH, textInput.getStyle());
 		assertEquals(Message.MAX_CONTENT_LENGTH, textInput.getMaxLength());
@@ -46,6 +51,19 @@ class ModalUiUnitTest extends TestBase {
 
 		assertEquals(ModalEnum.EVENT_DESCRIPTION.getId(), modal.getId());
 		assertEquals("VRSVP", modal.getTitle());
+	}
+
+	private Label getLabelComponent(Modal modal) {
+		return modal
+			.getComponents()
+			.getFirst()
+			.asLabel();
+	}
+
+	private TextInput getTextInputComponent(Modal modal) {
+		return getLabelComponent(modal)
+			.getChild()
+			.asTextInput();
 	}
 
 }

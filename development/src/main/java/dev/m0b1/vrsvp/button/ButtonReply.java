@@ -7,9 +7,11 @@ import dev.m0b1.vrsvp.util.Parser;
 import jakarta.annotation.Nonnull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.dv8tion.jda.api.components.actionrow.ActionRow;
+import net.dv8tion.jda.api.components.buttons.Button;
+import net.dv8tion.jda.api.components.replacer.ComponentReplacer;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
-import net.dv8tion.jda.api.interactions.components.ActionRow;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
@@ -33,7 +35,7 @@ public class ButtonReply {
 
 		event.reply(reply)
 			.setEphemeral(true)
-			.addActionRow(buttons)
+			.setComponents(ActionRow.of(buttons))
 			.queue();
 	}
 
@@ -42,18 +44,21 @@ public class ButtonReply {
 	 */
 	public void editToggleRsvpActive(@Nonnull ButtonInteractionEvent event, @Nonnull Message message) {
 
-		var rsvpButton = message.getButtonById(ButtonEnum.RSVP.getId());
+		var rsvpButton = findRsvpButtonInMessage(message);
 		if (rsvpButton == null) {
 			event.editMessage("Could not toggle RSVP button").queue();
 			return;
 		}
 
-		rsvpButton = rsvpButton.withDisabled( ! rsvpButton.isDisabled());
+		var replacedMessageComponents = message
+			.getComponentTree()
+			.replace(ComponentReplacer.of(
+				Button.class,
+				button -> ButtonEnum.RSVP.getId().equals(button.getCustomId()),
+				button -> button.withDisabled( ! button.isDisabled())
+			));
 
-		var buttons = new LinkedList<>(message.getButtons());
-		buttons.set(0, rsvpButton);
-
-		message.editMessageComponents(ActionRow.of(buttons)).queue();
+		message.editMessageComponents(replacedMessageComponents).queue();
 
 		event.editMessage("RSVP button toggled").queue();
 	}
@@ -95,7 +100,7 @@ public class ButtonReply {
 
 		Mdc.put(event);
 
-		var rsvpButton = message.getButtonById(ButtonEnum.RSVP.getId());
+		var rsvpButton = findRsvpButtonInMessage(message);
 		if (rsvpButton == null || rsvpButton.isDisabled()) {
 
 			log.warn("RSVP declined for disabled event");
@@ -200,6 +205,13 @@ public class ButtonReply {
 		}
 
 		return count;
+	}
+
+	private Button findRsvpButtonInMessage(@Nonnull Message message) {
+		return message
+			.getComponentTree()
+			.find(Button.class, button -> ButtonEnum.RSVP.getId().equals(button.getCustomId()))
+			.orElse(null);
 	}
 
 }

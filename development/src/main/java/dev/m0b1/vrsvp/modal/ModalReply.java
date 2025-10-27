@@ -1,6 +1,7 @@
 package dev.m0b1.vrsvp.modal;
 
 import dev.m0b1.vrsvp.button.ButtonUi;
+import net.dv8tion.jda.api.components.actionrow.ActionRow;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.interaction.ModalInteractionEvent;
 import org.springframework.stereotype.Service;
@@ -16,7 +17,7 @@ public class ModalReply {
 	 */
 	public void createRsvpFromAdmin(@Nonnull ModalInteractionEvent event, String description) {
 		event.reply(description)
-			.addActionRow(ButtonUi.buildRsvpActionPrompts())
+			.setComponents(ActionRow.of(ButtonUi.buildRsvpActionPrompts()))
 			.queue();
 	}
 
