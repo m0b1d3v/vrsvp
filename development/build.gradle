@@ -69,8 +69,6 @@ dependencyCheck {
 
 test {
 
-	jvmArgs(['--enable-preview'])
-
 	useJUnitPlatform()
 
 	finalizedBy jacocoTestReport
