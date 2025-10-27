@@ -96,7 +96,7 @@ sonarqube {
 	properties {
 		property('sonar.host.url', 'https://sonarcloud.io')
 		property('sonar.organization', 'm0b1')
-		property('sonar.projectKey', 'mobiusk_vrsvp')
+		property('sonar.projectKey', 'm0b1d3v_vrsvp')
 		property('sonar.gradle.skipCompile', 'true')
 	}
 }
