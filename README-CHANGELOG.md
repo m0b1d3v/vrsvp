@@ -2,6 +2,10 @@
 
 Most recent entries are first.
 
+## 2026-08-01 (v1.12)
+
+- Dependency updates
+
 ## 2025-10-26 (v1.11)
 
 - Updated Java version to JDK 25
